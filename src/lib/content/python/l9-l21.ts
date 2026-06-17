@@ -1059,7 +1059,7 @@ packages = ["src/mypackage"]
 # Upload: twine upload dist/*
 # Install: pip install mypackage`, explanation: 'Complete pyproject.toml: metadata, deps, scripts, URLs, build config. Build with python -m build, upload with twine.' },
   ],
-  configFiles: [{ filename: '.github/workflows/publish.yml', language: 'yaml', content: 'name: Publish\non:\n  push:\n    tags: ["v*"]\njobs:\n  publish:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n      - run: pip install build twine\n      - run: python -m build\n      - run: twine upload dist/*\n        env:\n          TWINE_USERNAME: __token__\n          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}', comment: 'Auto-publish to PyPI on git tags' }],
+  configFiles: [{ filename: '.github/workflows/publish.yml', language: 'yaml', content: 'name: Publish\non:\n  push:\n    tags: ["v*"]\njobs:\n  publish:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n      - run: pip install build twine\n      - run: python -m build\n      - run: twine upload dist/*\n        env:\n          TWINE_USERNAME: __token__\n          TWINE_PASSWORD: $\{\{ secrets.PYPI_API_TOKEN }}', comment: 'Auto-publish to PyPI on git tags' }],
   lab: { title: 'Publish a Package', steps: [
     { step: 1, title: 'Create package', instruction: 'Set up src/ layout with pyproject.toml', command: 'mkdir -p src/mypackage && touch src/mypackage/__init__.py src/mypackage/py.typed' },
     { step: 2, title: 'Install editable', instruction: 'Install in dev mode', command: 'pip install -e ".[dev]"', verification: 'myapp command works' },

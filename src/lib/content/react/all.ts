@@ -1709,7 +1709,7 @@ CMD ["nginx", "-g", "daemon off;"]`, explanation: 'Multi-stage: build React in N
     }
 }`, explanation: 'try_files $uri /index.html = SPA fallback (all routes serve index.html). /assets/ cached for 1 year (hashed filenames = safe). /api/ proxied to backend.' },
   ],
-  configFiles: [{ filename: '.github/workflows/deploy.yml', language: 'yaml', content: 'name: Deploy\non:\n  push:\n    branches: [main]\njobs:\n  build-deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n      - run: npm ci\n      - run: npm run build\n      - uses: docker/build-push-action@v5\n        with:\n          context: .\n          push: true\n          tags: ghcr.io/${{ github.repository }}:latest', comment: 'CI/CD: build → Docker image → push to GHCR → deploy' }],
+  configFiles: [{ filename: '.github/workflows/deploy.yml', language: 'yaml', content: 'name: Deploy\non:\n  push:\n    branches: [main]\njobs:\n  build-deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n      - run: npm ci\n      - run: npm run build\n      - uses: docker/build-push-action@v5\n        with:\n          context: .\n          push: true\n          tags: ghcr.io/$\{\{ github.repository }}:latest', comment: 'CI/CD: build → Docker image → push to GHCR → deploy' }],
   lab: { title: 'Deploy Your React App', steps: [
     { step: 1, title: 'Build', instruction: 'Create production build', command: 'bun run build', expectedOutput: 'dist/ folder with index.html, assets/' },
     { step: 2, title: 'Create Dockerfile', instruction: 'Multi-stage build', command: 'Create Dockerfile with Node builder + Nginx runtime' },
