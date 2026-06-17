@@ -6,7 +6,7 @@ export const fastapiModule: Module = {
   icon: '⚡',
   color: '#009688',
   gradient: 'linear-gradient(135deg, #009688 0%, #FFC107 100%)',
-  description: 'Master FastAPI the way production engineers build it. 9 deep lessons across 4 phases — every concept drilled with multiple examples, real configurations, project setups, and trade-offs. Build APIs like z.ai by the end.',
+  description: 'Master FastAPI the way production engineers build it. 15 deep lessons across 4 phases — every concept drilled with multiple examples, real configurations, project setups, and trade-offs. Build APIs like z.ai by the end.',
   level: 'All Levels',
   learningPath: {
     title: 'FastAPI Engineer Path — Zero to Production',
@@ -704,7 +704,7 @@ blog-api/
           {
             title: 'Step 4: Test validation',
             instruction: 'Try various inputs to see validation in action',
-            code: '# Test 1: Valid registration\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Alice","email":"alice@x.com","username":"alice","password":"StrongP1!","confirm_password":"StrongP1!","accept_terms":true}\'\n# → 201 Created with UserResponse (no password!)\n\n# Test 2: Passwords don\'t match\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Bob","email":"bob@x.com","username":"bob","password":"StrongP1!","confirm_password":"Different1!","accept_terms":true}\'\n# → 422 "Passwords do not match"\n\n# Test 3: Weak password\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Bob","email":"bob@x.com","username":"bob","password":"weak","confirm_password":"weak","accept_terms":true}\'\n# → 422 multiple errors (min_length, no uppercase, no digit)\n\n# Test 4: Invalid email\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Bob","email":"not-an-email","username":"bob","password":"StrongP1!","confirm_password":"StrongP1!","accept_terms":true}\'\n# → 422 "value is not a valid email address"\n\n# Test 5: Username with special chars\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Bob","email":"bob@x.com","username":"bob!","password":"StrongP1!","confirm_password":"StrongP1!","accept_terms":true}\'\n# → 422 "String should match pattern ^[a-zA-Z0-9_]+$"',
+            code: '# Test 1: Valid registration\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Alice","email":"alice@x.com","username":"alice","password":"StrongP1!","confirm_password":"StrongP1!","accept_terms":true}\'\n# → 201 Created with UserResponse (no password!)\n\n# Test 2: Passwords dont match\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Bob","email":"bob@x.com","username":"bob","password":"StrongP1!","confirm_password":"Different1!","accept_terms":true}\'\n# → 422 "Passwords do not match"\n\n# Test 3: Weak password\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Bob","email":"bob@x.com","username":"bob","password":"weak","confirm_password":"weak","accept_terms":true}\'\n# → 422 multiple errors (min_length, no uppercase, no digit)\n\n# Test 4: Invalid email\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Bob","email":"not-an-email","username":"bob","password":"StrongP1!","confirm_password":"StrongP1!","accept_terms":true}\'\n# → 422 "value is not a valid email address"\n\n# Test 5: Username with special chars\ncurl -X POST http://localhost:8000/register \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"Bob","email":"bob@x.com","username":"bob!","password":"StrongP1!","confirm_password":"StrongP1!","accept_terms":true}\'\n# → 422 "String should match pattern ^[a-zA-Z0-9_]+$"',
             codeLanguage: 'bash',
           },
         ],
@@ -1412,6 +1412,1067 @@ KEY INSIGHTS:
         solutionCode: '# See all the code examples in this lesson.\n# Key files: Dockerfile, docker-compose.yml, nginx.conf, .github/workflows/ci.yml\n# Verify: https://your-domain.com/health returns 200\n# Verify: https://your-domain.com/docs shows Swagger UI',
         solutionLanguage: 'yaml'
       }
+    },
+
+    {
+      id: 'fa-10',
+      title: 'Redis Integration — Caching, Pub/Sub, Rate Limiting, Sessions',
+      subtitle: 'Master Redis with FastAPI — caching expensive queries, real-time pub/sub, rate limiting, session storage',
+      duration: 80,
+      difficulty: 'Advanced',
+      phase: 'Advanced',
+      content: [
+        'Redis is the most popular in-memory data store. In FastAPI apps, it solves 4 critical problems: (1) Caching — store expensive query results, (2) Pub/Sub — real-time notifications, (3) Rate limiting — prevent abuse, (4) Session storage — JWT blacklists, user sessions. Use redis.asyncio (or aioredis) for async operations.',
+        'Caching pattern: check Redis first → if hit, return cached → if miss, query DB → store in Redis with TTL → return. This reduces database load by 90%+ for read-heavy apps. Use JSON serialization for complex objects, set TTL on EVERY key to prevent memory leaks.',
+        'Pub/Sub enables real-time features: publish messages to channels, subscribers receive them instantly. Perfect for: notifications, live updates, chat. For multi-instance deployments, Redis pub/sub broadcasts across all FastAPI workers.',
+        'Rate limiting with Redis: use INCR + EXPIRE for sliding window, or sorted sets for token bucket. Store per-IP or per-user counters. Return 429 with Retry-After header when exceeded. For production, use redis-py with connection pooling.',
+      ],
+      visualization: {
+        title: 'Redis in FastAPI Architecture',
+        type: 'architecture',
+        diagram: `┌─────────────────────────────────────────────────────┐
+│                  FastAPI Application                  │
+│                                                       │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
+│  │  GET /posts  │  │ POST /login │  │ GET /search │  │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  │
+│         │                │                │          │
+│         ▼                ▼                ▼          │
+│  ┌─────────────────────────────────────────────────┐ │
+│  │            Redis Cache Layer                     │ │
+│  │                                                   │ │
+│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐         │ │
+│  │  │ Cache   │  │ Rate    │  │ Session │         │ │
+│  │  │ posts:1 │  │ Limit   │  │ Store   │         │ │
+│  │  │ (TTL 5m)│  │ ip:1.2..│  │ sess:abc│         │ │
+│  │  └─────────┘  └─────────┘  └─────────┘         │ │
+│  │                                                   │ │
+│  │  ┌─────────┐  ┌─────────┐                       │ │
+│  │  │ Pub/Sub │  │ Job     │                       │ │
+│  │  │ Channel │  │ Queue   │                       │ │
+│  │  │ events  │  │ celery  │                       │ │
+│  │  └─────────┘  └─────────┘                       │ │
+│  └─────────────────────────────────────────────────┘ │
+│         │                                            │
+│         ▼                                            │
+│  ┌─────────────┐                                    │
+│  │ PostgreSQL  │  ← only on cache miss              │
+│  │  Database   │                                    │
+│  └─────────────┘                                    │
+└─────────────────────────────────────────────────────┘
+
+USE CASES:
+• Cache: GET /posts/1 → check Redis → hit? return → miss? query DB, cache, return
+• Rate limit: INCR ip:1.2.3.4, EXPIRE 60 → if >100, return 429
+• Session: GET session:abc → user data (faster than DB)
+• Pub/Sub: publish "user:1:notification" → WebSocket subscribers receive
+• Queue: LPUSH jobs "send_email" → Celery worker BRPOP`,
+        legend: [
+          'Redis is in-memory — microsecond latency (1000x faster than DB)',
+          'Always set TTL on cache keys to prevent memory leaks',
+          'Cache invalidation is hard — use versioned keys or tags',
+          'Pub/Sub has no persistence — use streams for durability',
+          'Use connection pooling (max connections) for production',
+        ],
+      },
+      codeExamples: [
+        {
+          filename: 'redis_setup.py',
+          language: 'python',
+          code: '"""Redis setup and connection management."""\nimport redis.asyncio as aioredis\nfrom blog.core.config import settings\nimport json\nimport logging\nfrom typing import Optional, Any\n\nlogger = logging.getLogger(__name__)\n\n# === REDIS CONNECTION POOL ===\n# Create once at module level, reuse everywhere\nredis_pool = aioredis.ConnectionPool.from_url(\n    settings.REDIS_URL,\n    max_connections=20,  # adjust based on load\n    retry_on_timeout=True,\n    retry_on_error=[aioredis.ConnectionError],\n    health_check_interval=30,  # ping every 30s to detect dead connections\n    socket_timeout=5,\n    socket_connect_timeout=5,\n)\n\nasync def get_redis() -> aioredis.Redis:\n    """Get Redis client from pool."""\n    return aioredis.Redis(connection_pool=redis_pool)\n\n# === CACHE UTILITY ===\n\nclass Cache:\n    """Production-grade Redis cache with JSON serialization."""\n\n    def __init__(self, redis: aioredis.Redis, prefix: str = "cache"):\n        self.redis = redis\n        self.prefix = prefix\n\n    def _key(self, key: str) -> str:\n        return f"{self.prefix}:{key}"\n\n    async def get(self, key: str, model_type: type | None = None) -> Any:\n        """Get value from cache. Returns None on miss."""\n        data = await self.redis.get(self._key(key))\n        if data is None:\n            return None\n        try:\n            value = json.loads(data)\n            if model_type and hasattr(model_type, "model_validate"):\n                return model_type.model_validate(value)\n            return value\n        except (json.JSONDecodeError, ValueError) as e:\n            logger.warning(f"Cache deserialization error for {key}: {e}")\n            await self.redis.delete(self._key(key))  # delete corrupt entry\n            return None\n\n    async def set(\n        self,\n        key: str,\n        value: Any,\n        ttl: int = 300,  # 5 minutes default\n    ) -> None:\n        """Set value in cache with TTL."""\n        try:\n            if hasattr(value, "model_dump"):\n                value = value.model_dump(mode="json")\n            data = json.dumps(value, default=str)\n            await self.redis.setex(self._key(key), ttl, data)\n        except Exception as e:\n            logger.error(f"Cache set error for {key}: {e}")\n            # Do not raise — cache failures should not break the app\n\n    async def delete(self, key: str) -> None:\n        """Delete a key from cache."""\n        await self.redis.delete(self._key(key))\n\n    async def delete_pattern(self, pattern: str) -> int:\n        """Delete all keys matching pattern (e.g., \'posts:*\')."""\n        keys = await self.redis.keys(f"{self.prefix}:{pattern}")\n        if keys:\n            return await self.redis.delete(*keys)\n        return 0\n\n    async def get_or_set(\n        self,\n        key: str,\n        factory,  # async callable that produces the value\n        ttl: int = 300,\n    ) -> Any:\n        """Cache-aside pattern: get from cache, or compute and cache."""\n        cached = await self.get(key)\n        if cached is not None:\n            logger.debug(f"Cache HIT: {key}")\n            return cached\n\n        logger.debug(f"Cache MISS: {key}")\n        value = await factory()\n        await self.set(key, value, ttl)\n        return value',
+          explanation: 'Use connection pooling (max_connections=20). Cache class handles JSON serialization, TTL, and get_or_set pattern (cache-aside). Cache failures should NOT break the app — always catch and log.'
+        },
+        {
+          filename: 'cache_dependency.py',
+          language: 'python',
+          code: '"""FastAPI dependency for Redis cache."""\nfrom fastapi import Depends, Request\nfrom typing import Annotated\nimport redis.asyncio as aioredis\n\nasync def get_cache(request: Request) -> "Cache":\n    """Get cache instance from app state."""\n    return request.app.state.cache\n\n# === USAGE IN ROUTES ===\n\nfrom fastapi import APIRouter\nfrom sqlalchemy.ext.asyncio import AsyncSession\nfrom sqlalchemy import select\n\nrouter = APIRouter()\n\n@router.get("/posts/{post_id}")\nasync def get_post(\n    post_id: int,\n    db: Annotated[AsyncSession, Depends(get_db)],\n    cache: Annotated[Cache, Depends(get_cache)],\n):\n    """Get post with caching."""\n    cache_key = f"post:{post_id}"\n\n    # Try cache first\n    cached = await cache.get(cache_key)\n    if cached:\n        return cached  # cache hit — no DB query!\n\n    # Cache miss — query database\n    post = await db.get(Post, post_id)\n    if not post:\n        raise HTTPException(404, "Post not found")\n\n    # Cache for 5 minutes\n    await cache.set(cache_key, post, ttl=300)\n\n    return post\n\n# === CACHE INVALIDATION ===\n\n@router.put("/posts/{post_id}")\nasync def update_post(\n    post_id: int,\n    post_update: PostUpdate,\n    db: Annotated[AsyncSession, Depends(get_db)],\n    cache: Annotated[Cache, Depends(get_cache)],\n):\n    """Update post and invalidate cache."""\n    post = await db.get(Post, post_id)\n    # ... update post ...\n    await db.commit()\n\n    # Invalidate cache\n    await cache.delete(f"post:{post_id}")\n    # Also invalidate list caches\n    await cache.delete_pattern("posts:list:*")\n\n    return post\n\n# === CACHED LIST WITH PAGINATION ===\n\n@router.get("/posts")\nasync def list_posts(\n    skip: int = 0,\n    limit: int = 20,\n    tag: str | None = None,\n    db: Annotated[AsyncSession, Depends(get_db)],\n    cache: Annotated[Cache, Depends(get_cache)],\n):\n    """List posts with cache."""\n    # Cache key includes all parameters\n    cache_key = f"posts:list:{skip}:{limit}:{tag}"\n\n    async def fetch_from_db():\n        stmt = select(Post).where(Post.published == True)\n        if tag:\n            stmt = stmt.join(Post.tags).where(Tag.name == tag)\n        stmt = stmt.offset(skip).limit(limit)\n        result = await db.execute(stmt)\n        return result.scalars().all()\n\n    # get_or_set handles cache-aside pattern\n    return await cache.get_or_set(\n        cache_key,\n        fetch_from_db,\n        ttl=60,  # 1 minute for lists (shorter than single items)\n    )\n\n# === RATE LIMITING WITH REDIS ===\n\nclass RateLimiter:\n    """Sliding window rate limiter using Redis."""\n\n    def __init__(\n        self,\n        redis: aioredis.Redis,\n        key_prefix: str = "ratelimit",\n    ):\n        self.redis = redis\n        self.prefix = key_prefix\n\n    async def check(\n        self,\n        identifier: str,  # IP or user ID\n        limit: int,       # max requests\n        window: int,      # time window in seconds\n    ) -> tuple[bool, dict]:\n        """Check if request is allowed. Returns (allowed, info)."""\n        key = f"{self.prefix}:{identifier}"\n        now = time.time()\n\n        # Use Redis sorted set for sliding window\n        pipe = self.redis.pipeline()\n\n        # Remove old entries outside the window\n        pipe.zremrangebyscore(key, 0, now - window)\n\n        # Count current entries\n        pipe.zcard(key)\n\n        # Add current request\n        pipe.zadd(key, {str(now): now})\n\n        # Set expiry on the key\n        pipe.expire(key, window)\n\n        results = await pipe.execute()\n        current_count = results[1]\n\n        allowed = current_count < limit\n        info = {\n            "limit": limit,\n            "remaining": max(0, limit - current_count - 1),\n            "reset_at": now + window,\n        }\n\n        if not allowed:\n            # Remove the request we just added\n            await self.redis.zrem(key, str(now))\n\n        return allowed, info\n\n# === RATE LIMIT DEPENDENCY ===\n\nasync def rate_limit(\n    request: Request,\n    redis: Annotated[aioredis.Redis, Depends(get_redis)],\n) -> dict:\n    """Rate limit: 100 requests per minute per IP."""\n    limiter = RateLimiter(redis)\n    client_ip = request.client.host if request.client else "unknown"\n\n    allowed, info = await limiter.check(\n        identifier=f"ip:{client_ip}",\n        limit=100,\n        window=60,\n    )\n\n    if not allowed:\n        raise HTTPException(\n            status_code=429,\n            detail="Too many requests",\n            headers={\n                "Retry-After": str(int(info["reset_at"] - time.time())),\n                "X-RateLimit-Limit": str(info["limit"]),\n                "X-RateLimit-Remaining": "0",\n                "X-RateLimit-Reset": str(int(info["reset_at"])),\n            },\n        )\n\n    return info\n\n# Apply to all routes in a router\nrouter = APIRouter(dependencies=[Depends(rate_limit)])\n\n# Or per-route\n@router.get("/expensive-endpoint")\nasync def expensive():\n    pass',
+          explanation: 'Cache-aside pattern: check cache → miss → query DB → cache result. Invalidate cache on writes. Rate limiting with Redis sorted sets (sliding window). Use pipeline for atomic multi-command operations.'
+        },
+        {
+          filename: 'pubsub.py',
+          language: 'python',
+          code: '"""Redis Pub/Sub for real-time notifications."""\nimport redis.asyncio as aioredis\nimport json\nfrom typing import Callable, Any\nimport logging\nimport asyncio\n\nlogger = logging.getLogger(__name__)\n\nclass PubSubManager:\n    """Redis Pub/Sub for cross-instance communication."""\n\n    def __init__(self, redis: aioredis.Redis):\n        self.redis = redis\n        self._subscribers: dict[str, list[Callable]] = {}\n\n    async def publish(self, channel: str, message: Any) -> int:\n        """Publish message to a channel. Returns number of receivers."""\n        data = json.dumps(message, default=str)\n        return await self.redis.publish(channel, data)\n\n    async def subscribe(\n        self,\n        channel: str,\n        callback: Callable,\n    ) -> None:\n        """Subscribe to a channel with a callback."""\n        if channel not in self._subscribers:\n            self._subscribers[channel] = []\n        self._subscribers[channel].append(callback)\n\n    async def start_listening(self) -> None:\n        """Start listening to all subscribed channels (run in background)."""\n        if not self._subscribers:\n            return\n\n        pubsub = self.redis.pubsub()\n        await pubsub.subscribe(*self._subscribers.keys())\n\n        logger.info(f"Listening to channels: {list(self._subscribers.keys())}")\n\n        try:\n            async for message in pubsub.listen():\n                if message["type"] == "message":\n                    channel = message["channel"]\n                    if isinstance(channel, bytes):\n                        channel = channel.decode()\n\n                    try:\n                        data = json.loads(message["data"])\n                    except json.JSONDecodeError:\n                        data = message["data"]\n\n                    # Call all callbacks for this channel\n                    for callback in self._subscribers.get(channel, []):\n                        try:\n                            result = callback(data)\n                            if asyncio.iscoroutine(result):\n                                await result\n                        except Exception:\n                            logger.exception(f"Error in subscriber callback")\n        except asyncio.CancelledError:\n            logger.info("PubSub listener cancelled")\n        finally:\n            await pubsub.unsubscribe()\n            await pubsub.close()\n\n# === USAGE: NOTIFICATIONS ===\n\nclass NotificationService:\n    """Send real-time notifications via Redis Pub/Sub."""\n\n    def __init__(self, pubsub: PubSubManager):\n        self.pubsub = pubsub\n\n    async def notify_user(self, user_id: int, event: str, data: Any):\n        """Send notification to a specific user."""\n        await self.pubsub.publish(\n            f"user:{user_id}:notifications",\n            {"event": event, "data": data},\n        )\n\n    async def broadcast(self, event: str, data: Any):\n        """Broadcast to all connected clients."""\n        await self.pubsub.publish("broadcast", {"event": event, "data": data})\n\n# === WEBSOCKET + PUBSUB (multi-instance) ===\n\nfrom fastapi import WebSocket\n\nclass WebSocketManager:\n    """Manages WebSocket connections across multiple instances.\n\n    When you have multiple FastAPI workers/instances, each only knows\n    about its own WebSocket connections. Redis Pub/Sub broadcasts\n    messages to ALL instances, so any user on any instance receives them.\n    """\n\n    def __init__(self, redis: aioredis.Redis):\n        self.redis = redis\n        # Local connections: user_id -> set of WebSocket connections\n        self.connections: dict[int, set[WebSocket]] = {}\n        self.pubsub = redis.pubsub()\n\n    async def connect(self, websocket: WebSocket, user_id: int):\n        """Accept WebSocket and register connection."""\n        await websocket.accept()\n        if user_id not in self.connections:\n            self.connections[user_id] = set()\n        self.connections[user_id].add(websocket)\n\n    async def disconnect(self, websocket: WebSocket, user_id: int):\n        """Remove WebSocket connection."""\n        if user_id in self.connections:\n            self.connections[user_id].discard(websocket)\n            if not self.connections[user_id]:\n                del self.connections[user_id]\n\n    async def send_to_user(self, user_id: int, message: dict):\n        """Send message to a user (across ALL instances).\n\n        Publishes to Redis. All instances receive and deliver\n        to their local connections for that user.\n        """\n        await self.redis.publish(\n            f"ws:user:{user_id}",\n            json.dumps(message),\n        )\n\n    async def start_listener(self):\n        """Listen for Pub/Sub messages and deliver to local WebSockets."""\n        # Subscribe to all user channels (pattern subscription)\n        await self.pubsub.psubscribe("ws:user:*")\n\n        async for message in self.pubsub.listen():\n            if message["type"] == "pmessage":\n                # Extract user_id from channel name\n                channel = message["channel"]\n                if isinstance(channel, bytes):\n                    channel = channel.decode()\n                user_id = int(channel.split(":")[-1])\n\n                data = message["data"]\n                if isinstance(data, bytes):\n                    data = data.decode()\n\n                # Send to all local connections for this user\n                for ws in self.connections.get(user_id, set()):\n                    try:\n                        await ws.send_text(data)\n                    except Exception:\n                        pass  # connection closed\n\n# === STARTUP (in lifespan) ===\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    # ... other startup ...\n\n    redis = aioredis.from_url(settings.REDIS_URL)\n    app.state.redis = redis\n\n    ws_manager = WebSocketManager(redis)\n    app.state.ws_manager = ws_manager\n\n    # Start background listener\n    listener_task = asyncio.create_task(ws_manager.start_listener())\n    app.state.listener_task = listener_task\n\n    yield\n\n    # Shutdown\n    listener_task.cancel()\n    try:\n        await listener_task\n    except asyncio.CancelledError:\n        pass\n    await redis.close()',
+          explanation: 'Pub/Sub broadcasts to all subscribers instantly. WebSocketManager uses pattern subscription (ws:user:*) to route messages to the right user across multiple FastAPI instances. Start listener as background task in lifespan.'
+        },
+      ],
+      lab: {
+        title: 'Add Redis Caching to Your Blog API',
+        objective: 'Cache posts, rate limit API, add real-time notifications',
+        estTime: '90-120 minutes',
+        difficulty: 'Advanced',
+        setup: [
+          'Redis running (docker compose includes redis service)',
+          'pip install redis',
+        ],
+        steps: [
+          {
+            title: 'Step 1: Add Redis to docker-compose',
+            instruction: 'Add Redis service',
+            code: '# docker-compose.yml — add redis service\nservices:\n  # ... existing services ...\n\n  redis:\n    image: redis:7-alpine\n    ports:\n      - "6379:6379"\n    volumes:\n      - redisdata:/data\n    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru\n    restart: unless-stopped\n\nvolumes:\n  redisdata:',
+            codeLanguage: 'yaml',
+          },
+          {
+            title: 'Step 2: Create cache utility',
+            instruction: 'Cache class with get/set/delete',
+            code: '# src/blog/core/cache.py\nimport redis.asyncio as aioredis\nimport json\nfrom typing import Any\n\nclass Cache:\n    def __init__(self, redis: aioredis.Redis):\n        self.redis = redis\n\n    async def get(self, key: str) -> Any | None:\n        data = await self.redis.get(key)\n        return json.loads(data) if data else None\n\n    async def set(self, key: str, value: Any, ttl: int = 300) -> None:\n        await self.redis.setex(key, ttl, json.dumps(value, default=str))\n\n    async def delete(self, key: str) -> None:\n        await self.redis.delete(key)\n\n    async def get_or_set(self, key: str, factory, ttl: int = 300) -> Any:\n        cached = await self.get(key)\n        if cached is not None:\n            return cached\n        value = await factory()\n        await self.set(key, value, ttl)\n        return value',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 3: Add caching to routes',
+            instruction: 'Cache GET requests, invalidate on writes',
+            code: '# src/blog/api/v1/posts.py\nfrom blog.core.cache import Cache\n\n@router.get("/{post_id}", response_model=PostResponse)\nasync def get_post(\n    post_id: int,\n    db: Annotated[AsyncSession, Depends(get_db)],\n    cache: Annotated[Cache, Depends(get_cache)],\n):\n    cache_key = f"post:{post_id}"\n\n    async def fetch():\n        post = await db.get(Post, post_id)\n        if not post:\n            raise HTTPException(404, "Post not found")\n        return post\n\n    return await cache.get_or_set(cache_key, fetch, ttl=300)\n\n@router.put("/{post_id}")\nasync def update_post(...):\n    # ... update logic ...\n    await cache.delete(f"post:{post_id}")  # invalidate\n    await cache.delete_pattern("posts:list:*")  # invalidate lists\n    return post',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 4: Add rate limiting',
+            instruction: 'Rate limit expensive endpoints',
+            code: '# src/blog/core/rate_limit.py\nimport time\n\nclass RateLimiter:\n    def __init__(self, redis):\n        self.redis = redis\n\n    async def check(self, key: str, limit: int, window: int):\n        pipe = self.redis.pipeline()\n        now = time.time()\n        pipe.zremrangebyscore(key, 0, now - window)\n        pipe.zcard(key)\n        pipe.zadd(key, {str(now): now})\n        pipe.expire(key, window)\n        results = await pipe.execute()\n        return results[1] < limit\n\n# Usage:\n@router.post("/expensive", dependencies=[Depends(rate_limit_dependency)])\nasync def expensive_op():\n    pass',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 5: Benchmark the improvement',
+            instruction: 'Compare cached vs uncached performance',
+            code: '# Without cache: 50ms per request (DB query)\n# With cache: 2ms per request (Redis hit)\n# 25x faster!\n\n# Test with ab (Apache Bench):\nab -n 1000 -c 10 http://localhost:8000/api/v1/posts/1\n\n# Without cache:\n# Time per request: 50ms\n# Requests per second: 200\n\n# With cache:\n# Time per request: 2ms\n# Requests per second: 5000\n# 25x improvement!',
+            codeLanguage: 'bash',
+          },
+        ],
+        verification: 'Cached requests are 25x faster. Rate limiting returns 429 after limit. Cache invalidation works on updates.',
+      },
+      exercises: [
+        {
+          prompt: 'Write a cached function get_user_stats(user_id) that caches for 5 minutes. If cache miss, query DB for user\'s post count, comment count, and last activity.',
+          starterCode: 'async def get_user_stats(\n    user_id: int,\n    db: AsyncSession,\n    cache: Cache,\n) -> dict:\n    # your code\n    pass\n',
+          hint: 'Use cache.get_or_set with key f"user_stats:{user_id}", factory queries DB.',
+          solution: 'async def get_user_stats(\n    user_id: int,\n    db: AsyncSession,\n    cache: Cache,\n) -> dict:\n    cache_key = f"user_stats:{user_id}"\n\n    async def fetch():\n        post_count = await db.scalar(\n            select(func.count(Post.id)).where(Post.author_id == user_id)\n        )\n        comment_count = await db.scalar(\n            select(func.count(Comment.id)).where(Comment.author_id == user_id)\n        )\n        last_post = await db.scalar(\n            select(func.max(Post.created_at))\n            .where(Post.author_id == user_id)\n        )\n        return {\n            "post_count": post_count or 0,\n            "comment_count": comment_count or 0,\n            "last_activity": last_post.isoformat() if last_post else None,\n        }\n\n    return await cache.get_or_set(cache_key, fetch, ttl=300)',
+          solutionLanguage: 'python'
+        },
+      ],
+      quiz: [
+        {
+          question: 'Why use Redis instead of in-memory dict for caching?',
+          options: [
+            'Faster',
+            'Shared across multiple FastAPI workers/instances, survives restarts',
+            'Required by FastAPI',
+            'Uses less memory',
+          ],
+          correctIndex: 1,
+          explanation: 'In-memory dict is per-process — each FastAPI worker has its own cache. Redis is shared across ALL workers and survives restarts. It also has TTL, data structures, and pub/sub.'
+        },
+        {
+          question: 'What is the cache-aside pattern?',
+          options: [
+            'Write to cache, then DB',
+            'Check cache first, on miss query DB and cache result, on hit return cached',
+            'Always query DB, cache for next time',
+            'Cache invalidates automatically',
+          ],
+          correctIndex: 1,
+          explanation: 'Cache-aside: 1) Check cache. 2) If hit, return. 3) If miss, query DB, cache result with TTL, return. Simple and effective. Invalidate cache on writes.'
+        },
+        {
+          question: 'Why use Redis Pub/Sub with WebSockets?',
+          options: [
+            'Faster than WebSockets',
+            'Broadcasts across multiple FastAPI instances (each only knows its own connections)',
+            'Required by WebSockets',
+            'For security',
+          ],
+          correctIndex: 1,
+          explanation: 'With multiple FastAPI workers/instances, each only knows its own WebSocket connections. Redis Pub/Sub broadcasts to ALL instances, so messages reach users connected to any instance.'
+        },
+        {
+          question: 'What happens if Redis goes down?',
+          options: [
+            'App crashes',
+            'Cache misses → queries DB directly (app should degrade gracefully)',
+            'Returns 500 errors',
+            'Stops accepting requests',
+          ],
+          correctIndex: 1,
+          explanation: 'Cache failures should NOT break the app. Always catch Redis errors in cache get/set, log them, and fall through to DB. The app degrades gracefully (slower but still works).'
+        },
+      ],
+      keyTakeaways: [
+        'Redis solves 4 problems: caching, pub/sub, rate limiting, sessions',
+        'Use redis.asyncio with connection pooling (max_connections=20)',
+        'Cache-aside pattern: check cache → miss → query DB → cache with TTL → return',
+        'Always set TTL on cache keys to prevent memory leaks',
+        'Invalidate cache on writes: delete key, delete_pattern for lists',
+        'Rate limiting: use sorted sets for sliding window (INCR+EXPIRE simpler)',
+        'Pub/Sub broadcasts to all subscribers instantly (no persistence)',
+        'WebSocketManager + Pub/Sub: route messages across multiple instances',
+        'Cache failures should NOT break the app — catch and log, fall through to DB',
+        'Pipeline multiple Redis commands for atomicity and performance',
+      ],
+      resources: [
+        { title: 'redis-py Documentation', url: 'https://redis-py.readthedocs.io/', type: 'docs' },
+        { title: 'Redis Documentation', url: 'https://redis.io/docs/', type: 'docs' },
+        { title: 'Try Redis (interactive)', url: 'https://try.redis.io/', type: 'interactive', isHiddenGem: true },
+        { title: 'FastAPI + Redis Guide', url: 'https://fastapi.tiangolo.com/advanced/using-request-directly/', type: 'article' },
+      ]
+    },
+
+    {
+      id: 'fa-11',
+      title: 'Server-Side ML Model Serving with FastAPI',
+      subtitle: 'Deploy ML models as APIs — PyTorch, TensorFlow, scikit-learn, ONNX inference',
+      duration: 90,
+      difficulty: 'Advanced',
+      phase: 'Advanced',
+      content: [
+        'FastAPI is the go-to framework for serving ML models in production. Why? 1) Async support for high throughput, 2) Automatic input validation with Pydantic, 3) Auto-generated docs for data scientists, 4) Easy to containerize and scale. Companies like Uber, Netflix, and Spotify use FastAPI (or similar) for ML serving.',
+        'The ML serving pattern: load model ONCE at startup (not per request — that would be 1000x slower), store in app.state, use for inference. For PyTorch: torch.no_grad() + model.eval(). For TensorFlow: model.predict(). For ONNX: onnxruntime.InferenceSession.',
+        'Input validation is critical — ML models expect specific input shapes and types. Use Pydantic to validate input before inference. Validate: shape (e.g., 784 pixels for MNIST), value range (0-1 for normalized images), data type (float32). Return 422 on invalid input.',
+        'Performance considerations: 1) Batch requests for throughput (process 32 at once instead of 1), 2) Use ONNX Runtime for 2-5x speedup over PyTorch, 3) GPU inference for deep learning, 4) Async model loading, 5) A/B testing with multiple models, 6) Model versioning for rollback.',
+      ],
+      visualization: {
+        title: 'ML Model Serving Architecture',
+        type: 'architecture',
+        diagram: `┌─────────────────────────────────────────────────────┐
+│              Client (Web/Mobile/CLI)                 │
+└──────────────────────┬──────────────────────────────┘
+                       │ POST /predict
+                       │ {"features": [0.1, 0.2, ...]}
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│              FastAPI Application                     │
+│                                                       │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
+│  │ Pydantic    │  │ Preprocess  │  │ Postprocess │  │
+│  │ Validation  │  │ Normalize   │  │ Softmax     │  │
+│  │ (422 error) │  │ Reshape     │  │ Argmax      │  │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  │
+│         │                │                │          │
+│         ▼                ▼                │          │
+│  ┌──────────────────────────────┐         │          │
+│  │     Model Registry           │         │          │
+│  │  (loaded at startup)         │         │          │
+│  │                              │         │          │
+│  │  ┌────────┐  ┌────────┐    │         │          │
+│  │  │PyTorch │  │ ONNX   │    │         │          │
+│  │  │Model v1│  │Runtime │    │         │          │
+│  │  └────────┘  └────────┘    │         │          │
+│  │                              │         │          │
+│  │  app.state.model = loaded    │         │          │
+│  │  ONCE in lifespan()          │         │          │
+│  └──────────────┬───────────────┘         │          │
+│                 │                          │          │
+│                 ▼                          │          │
+│         ┌──────────────┐                  │          │
+│         │  Inference   │──────────────────┘          │
+│         │  (GPU/CPU)   │                             │
+│         └──────────────┘                             │
+└─────────────────────────────────────────────────────┘
+
+KEY INSIGHTS:
+• Model loaded ONCE at startup (lifespan), reused for ALL requests
+• NEVER load model per request (1000x slower)
+• Pydantic validates input BEFORE inference (fast fail)
+• torch.no_grad() + model.eval() for inference (no gradients)
+• Batch requests for 10-100x throughput improvement
+• ONNX Runtime is 2-5x faster than PyTorch for inference`,
+        legend: [
+          'Model loaded at startup in lifespan event, stored in app.state',
+          'Pydantic validates input (shape, type, range) — 422 on invalid',
+          'Preprocess: normalize, reshape. Postprocess: softmax, argmax',
+          'Use torch.no_grad() for PyTorch inference (no gradient tracking)',
+          'ONNX Runtime is faster than native PyTorch/TF for inference',
+        ],
+      },
+      codeExamples: [
+        {
+          filename: 'pytorch_serving.py',
+          language: 'python',
+          code: '"""Serve a PyTorch model with FastAPI."""\nfrom fastapi import FastAPI, HTTPException\nfrom pydantic import BaseModel, Field\nfrom typing import Annotated\nimport torch\nimport torch.nn as nn\nimport numpy as np\nfrom contextlib import asynccontextmanager\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n# === MODEL DEFINITION (same as training) ===\n\nclass MNISTModel(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(784, 256)\n        self.fc2 = nn.Linear(256, 128)\n        self.fc3 = nn.Linear(128, 10)\n        self.relu = nn.ReLU()\n        self.dropout = nn.Dropout(0.2)\n\n    def forward(self, x):\n        x = self.dropout(self.relu(self.fc1(x)))\n        x = self.dropout(self.relu(self.fc2(x)))\n        return self.fc3(x)  # logits (pre-softmax)\n\n# === INPUT/OUTPUT SCHEMAS ===\n\nclass PredictRequest(BaseModel):\n    """Input for single prediction."""\n    features: list[float] = Field(\n        ...,\n        min_length=784,\n        max_length=784,\n        description="784 pixel values (0-1 normalized)",\n        example=[0.0] * 784,\n    )\n\nclass BatchPredictRequest(BaseModel):\n    """Input for batch prediction."""\n    features: list[list[float]] = Field(\n        ...,\n        min_length=1,\n        max_length=128,  # max batch size\n        description="List of 784-element arrays",\n    )\n\nclass PredictResponse(BaseModel):\n    """Prediction output."""\n    prediction: int\n    confidence: float\n    probabilities: list[float]\n\nclass BatchPredictResponse(BaseModel):\n    predictions: list[PredictResponse]\n    model_version: str\n    inference_time_ms: float\n\n# === LIFESPAN — LOAD MODEL ONCE AT STARTUP ===\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    # Load model ONCE at startup\n    logger.info("Loading ML model...")\n\n    model = MNISTModel()\n\n    # Load trained weights\n    model.load_state_dict(torch.load("models/mnist_v1.pt", map_location="cpu"))\n    model.eval()  # CRITICAL: set to eval mode (disables dropout, batchnorm)\n\n    # Store in app state (accessible from routes)\n    app.state.model = model\n    app.state.model_version = "1.0.0"\n    app.state.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")\n    model.to(app.state.device)\n\n    logger.info(f"Model loaded on {app.state.device}")\n\n    yield\n\n    # Cleanup\n    logger.info("Cleaning up model...")\n    del app.state.model\n    if torch.cuda.is_available():\n        torch.cuda.empty_cache()\n\napp = FastAPI(lifespan=lifespan)\n\n# === PREDICTION ENDPOINTS ===\n\n@app.post("/predict", response_model=PredictResponse)\nasync def predict(request: PredictRequest):\n    """Single prediction."""\n    import time\n    start = time.perf_counter()\n\n    # Convert input to tensor\n    features = torch.tensor(\n        request.features,\n        dtype=torch.float32,\n    ).to(app.state.device)\n\n    # Inference (no gradients!)\n    with torch.no_grad():\n        logits = app.state.model(features)\n        probabilities = torch.softmax(logits, dim=0)\n        confidence, prediction = torch.max(probabilities, dim=0)\n\n    elapsed = (time.perf_counter() - start) * 1000\n    logger.info(f"Inference: {elapsed:.2f}ms")\n\n    return PredictResponse(\n        prediction=prediction.item(),\n        confidence=confidence.item(),\n        probabilities=probabilities.tolist(),\n    )\n\n@app.post("/predict/batch", response_model=BatchPredictResponse)\nasync def predict_batch(request: BatchPredictRequest):\n    """Batch prediction (10-100x faster than individual)."""\n    import time\n    start = time.perf_counter()\n\n    # Convert to batch tensor\n    features = torch.tensor(\n        request.features,\n        dtype=torch.float32,\n    ).to(app.state.device)\n\n    # Batch inference\n    with torch.no_grad():\n        logits = app.state.model(features)  # (batch_size, 10)\n        probabilities = torch.softmax(logits, dim=1)\n        confidences, predictions = torch.max(probabilities, dim=1)\n\n    elapsed = (time.perf_counter() - start) * 1000\n\n    results = [\n        PredictResponse(\n            prediction=pred.item(),\n            confidence=conf.item(),\n            probabilities=probs.tolist(),\n        )\n        for pred, conf, probs in zip(\n            predictions, confidences, probabilities\n        )\n    ]\n\n    return BatchPredictResponse(\n        predictions=results,\n        model_version=app.state.model_version,\n        inference_time_ms=elapsed,\n    )\n\n# === HEALTH CHECK ===\n\n@app.get("/health")\nasync def health():\n    return {\n        "status": "healthy",\n        "model_loaded": hasattr(app.state, "model"),\n        "model_version": getattr(app.state, "model_version", None),\n        "device": str(getattr(app.state, "device", "unknown")),\n    }',
+          explanation: 'Load model ONCE in lifespan, store in app.state. Use torch.no_grad() for inference (no gradient tracking = faster + less memory). Batch requests are 10-100x faster than individual. model.eval() disables dropout/batchnorm.'
+        },
+        {
+          filename: 'onnx_serving.py',
+          language: 'python',
+          code: '"""Serve ONNX model — 2-5x faster than PyTorch for inference."""\nfrom fastapi import FastAPI\nfrom pydantic import BaseModel, Field\nimport onnxruntime as ort\nimport numpy as np\nfrom contextlib import asynccontextmanager\nimport time\nimport logging\n\nlogger = logging.getLogger(__name__)\n\nclass PredictRequest(BaseModel):\n    features: list[float] = Field(min_length=784, max_length=784)\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    # ONNX Runtime session (faster than PyTorch!)\n    # Providers: CPUExecutionProvider, CUDAExecutionProvider, TensorrtExecutionProvider\n    session = ort.InferenceSession(\n        "models/mnist.onnx",\n        providers=[\n            ("CUDAExecutionProvider", {"device_id": 0}),\n            "CPUExecutionProvider",  # fallback\n        ],\n    )\n\n    app.state.session = session\n    app.state.input_name = session.get_inputs()[0].name\n    app.state.output_name = session.get_outputs()[0].name\n\n    logger.info(f"ONNX model loaded. Providers: {session.get_providers()}")\n\n    yield\n\n    del app.state.session\n\napp = FastAPI(lifespan=lifespan)\n\n@app.post("/predict")\nasync def predict(request: PredictRequest):\n    start = time.perf_counter()\n\n    # ONNX Runtime expects numpy arrays (not torch tensors)\n    features = np.array(\n        request.features,\n        dtype=np.float32,\n    ).reshape(1, 784)  # batch dimension\n\n    # Run inference\n    outputs = app.state.session.run(\n        [app.state.output_name],\n        {app.state.input_name: features},\n    )\n\n    logits = outputs[0]\n\n    # Softmax (ONNX model might not include it)\n    exp = np.exp(logits - logits.max(axis=1, keepdims=True))\n    probabilities = exp / exp.sum(axis=1, keepdims=True)\n\n    prediction = int(probabilities.argmax())\n    confidence = float(probabilities[0][prediction])\n\n    elapsed = (time.perf_counter() - start) * 1000\n    logger.info(f"ONNX inference: {elapsed:.2f}ms")\n\n    return {\n        "prediction": prediction,\n        "confidence": confidence,\n        "probabilities": probabilities.tolist()[0],\n        "inference_time_ms": elapsed,\n    }\n\n# === IMAGE CLASSIFICATION (real-world) ===\n\nclass ImageRequest(BaseModel):\n    """Image as base64 or list of pixel values."""\n    image: list[list[list[float]]] = Field(  # [height, width, channels]\n        ...,\n        description="Image as 3D array [H][W][C], values 0-1",\n    )\n\nclass ImageResponse(BaseModel):\n    class_name: str\n    class_index: int\n    confidence: float\n    top_5: list[dict]\n\n# Preprocessing (same as training)\nIMAGENET_MEAN = np.array([0.485, 0.456, 0.406])\nIMAGENET_STD = np.array([0.229, 0.224, 0.225])\n\ndef preprocess_image(image: list) -> np.ndarray:\n    """Preprocess image for model input."""\n    img = np.array(image, dtype=np.float32)\n\n    # Normalize (if values are 0-255)\n    if img.max() > 1.0:\n        img = img / 255.0\n\n    # Normalize with ImageNet mean/std\n    img = (img - IMAGENET_MEAN) / IMAGENET_STD\n\n    # Transpose to [C, H, W] (PyTorch format)\n    img = np.transpose(img, (2, 0, 1))\n\n    # Add batch dimension\n    img = np.expand_dims(img, axis=0)\n\n    return img\n\n@app.post("/classify", response_model=ImageResponse)\nasync def classify_image(request: ImageRequest):\n    """Classify an image."""\n    # Preprocess\n    input_data = preprocess_image(request.image)\n\n    # Inference\n    outputs = app.state.session.run(\n        [app.state.output_name],\n        {app.state.input_name: input_data},\n    )\n\n    # Postprocess\n    probabilities = softmax(outputs[0][0])\n\n    # Get top 5 predictions\n    top_5_idx = np.argsort(probabilities)[::-1][:5]\n\n    # Map to class names (load from file)\n    class_names = app.state.class_names\n\n    return ImageResponse(\n        class_name=class_names[top_5_idx[0]],\n        class_index=int(top_5_idx[0]),\n        confidence=float(probabilities[top_5_idx[0]]),\n        top_5=[\n            {"class": class_names[i], "confidence": float(probabilities[i])}\n            for i in top_5_idx\n        ],\n    )\n\ndef softmax(x):\n    e = np.exp(x - x.max())\n    return e / e.sum()',
+          explanation: 'ONNX Runtime is 2-5x faster than PyTorch for inference. Providers: CUDAExecutionProvider (GPU), CPUExecutionProvider (fallback). Preprocess input (normalize, reshape) exactly as during training. Postprocess: softmax, argmax.'
+        },
+        {
+          filename: 'model_registry.py',
+          language: 'python',
+          code: '"""Model registry — versioning, A/B testing, hot-swapping."""\nfrom fastapi import FastAPI, Request\nfrom pydantic import BaseModel\nfrom typing import Optional\nimport torch\nimport os\nfrom pathlib import Path\nimport logging\nfrom dataclasses import dataclass, field\n\nlogger = logging.getLogger(__name__)\n\n@dataclass\nclass ModelInfo:\n    name: str\n    version: str\n    model: object\n    loaded_at: float\n    request_count: int = 0\n    avg_latency_ms: float = 0.0\n\nclass ModelRegistry:\n    """Manages multiple model versions with A/B testing support."""\n\n    def __init__(self):\n        self.models: dict[str, ModelInfo] = {}  # version -> ModelInfo\n        self.default_version: Optional[str] = None\n        self.traffic_split: dict[str, float] = {}  # version -> % traffic\n\n    def register(\n        self,\n        version: str,\n        model: object,\n        is_default: bool = False,\n    ):\n        """Register a model version."""\n        import time\n        self.models[version] = ModelInfo(\n            name="mnist",\n            version=version,\n            model=model,\n            loaded_at=time.time(),\n        )\n        if is_default or not self.default_version:\n            self.default_version = version\n            self.traffic_split = {version: 1.0}\n        logger.info(f"Registered model version {version}")\n\n    def get_model(self, version: Optional[str] = None) -> tuple[object, str]:\n        """Get model, optionally specific version or A/B test."""\n        import random\n\n        if version and version in self.models:\n            return self.models[version].model, version\n\n        if not self.traffic_split:\n            raise RuntimeError("No models registered")\n\n        # A/B testing — select based on traffic split\n        versions = list(self.traffic_split.keys())\n        weights = list(self.traffic_split.values())\n        selected = random.choices(versions, weights=weights)[0]\n\n        return self.models[selected].model, selected\n\n    def set_traffic_split(self, split: dict[str, float]):\n        """Set traffic distribution (e.g., {"v1": 0.9, "v2": 0.1})."""\n        total = sum(split.values())\n        if not (0.99 <= total <= 1.01):\n            raise ValueError("Traffic split must sum to 1.0")\n        self.traffic_split = split\n        logger.info(f"Traffic split updated: {split}")\n\n    def list_models(self) -> list[dict]:\n        """List all registered models."""\n        return [\n            {\n                "version": info.version,\n                "loaded_at": info.loaded_at,\n                "request_count": info.request_count,\n                "avg_latency_ms": info.avg_latency_ms,\n            }\n            for info in self.models.values()\n        ]\n\n    def record_request(self, version: str, latency_ms: float):\n        """Record request metrics."""\n        if version in self.models:\n            info = self.models[version]\n            # Running average\n            info.avg_latency_ms = (\n                (info.avg_latency_ms * info.request_count + latency_ms)\n                / (info.request_count + 1)\n            )\n            info.request_count += 1\n\n# === USAGE WITH FASTAPI ===\n\nfrom contextlib import asynccontextmanager\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    registry = ModelRegistry()\n\n    # Load all model versions\n    models_dir = Path("models")\n    for model_path in models_dir.glob("*.pt"):\n        version = model_path.stem  # e.g., "v1" from "v1.pt"\n        model = MNISTModel()\n        model.load_state_dict(torch.load(model_path, map_location="cpu"))\n        model.eval()\n        registry.register(version, model, is_default=(version == "v1"))\n\n    # Set traffic split: 90% v1, 10% v2 (A/B test)\n    if "v2" in registry.models:\n        registry.set_traffic_split({"v1": 0.9, "v2": 0.1})\n\n    app.state.registry = registry\n    yield\n\napp = FastAPI(lifespan=lifespan)\n\nclass PredictRequest(BaseModel):\n    features: list[float]\n    model_version: Optional[str] = None  # optional — for testing specific version\n\n@app.post("/predict")\nasync def predict(request: PredictRequest):\n    import time\n    start = time.perf_counter()\n\n    registry: ModelRegistry = app.state.registry\n\n    # Get model (A/B test or specific version)\n    model, version = registry.get_model(request.model_version)\n\n    # Inference\n    features = torch.tensor(request.features, dtype=torch.float32)\n    with torch.no_grad():\n        logits = model(features)\n        probabilities = torch.softmax(logits, dim=0)\n        confidence, prediction = torch.max(probabilities, dim=0)\n\n    elapsed = (time.perf_counter() - start) * 1000\n\n    # Record metrics\n    registry.record_request(version, elapsed)\n\n    return {\n        "prediction": prediction.item(),\n        "confidence": confidence.item(),\n        "model_version": version,  # tell client which version was used\n        "inference_time_ms": elapsed,\n    }\n\n@app.get("/models")\nasync def list_models():\n    """List all model versions and metrics."""\n    return app.state.registry.list_models()\n\n@app.post("/models/traffic-split")\nasync def update_traffic_split(split: dict[str, float]):\n    """Update A/B test traffic split."""\n    app.state.registry.set_traffic_split(split)\n    return {"message": "Traffic split updated", "split": split}\n\n# === HOT MODEL SWAPPING (zero downtime) ===\n\n@app.post("/models/{version}/activate")\nasync def activate_model(version: str):\n    """Switch default model version (hot swap, no restart)."""\n    registry = app.state.registry\n    if version not in registry.models:\n        raise HTTPException(404, f"Model {version} not found")\n\n    # Switch 100% traffic to new version\n    registry.set_traffic_split({version: 1.0})\n    registry.default_version = version\n\n    return {"message": f"Activated {version}", "traffic_split": registry.traffic_split}\n\n# === GRADUAL ROLLOUT ===\n\n@app.post("/models/{version}/rollout")\nasync def gradual_rollout(version: str, percentage: float):\n    """Gradually shift traffic to new version (canary deployment)."""\n    registry = app.state.registry\n    if version not in registry.models:\n        raise HTTPException(404, f"Model {version} not found")\n\n    current = registry.default_version\n    registry.set_traffic_split({\n        current: 1.0 - percentage,\n        version: percentage,\n    })\n\n    return {\n        "message": f"Rollout {version} at {percentage*100}%",\n        "traffic_split": registry.traffic_split,\n    }',
+          explanation: 'Model registry: load multiple versions, A/B test with traffic split, hot-swap without restart, gradual rollout (canary). Track metrics per version. Essential for production ML — update models without downtime.'
+        },
+      ],
+      lab: {
+        title: 'Deploy an ML Model as a Production API',
+        objective: 'Train, export, and serve a model with FastAPI',
+        estTime: '2-3 hours',
+        difficulty: 'Advanced',
+        setup: [
+          'pip install torch onnxruntime fastapi uvicorn',
+          'MNIST dataset (auto-downloaded)',
+        ],
+        steps: [
+          {
+            title: 'Step 1: Train a simple model',
+            instruction: 'Train MNIST classifier with PyTorch',
+            code: '# train.py\nimport torch\nimport torch.nn as nn\nfrom torch.utils.data import DataLoader\nfrom torchvision import datasets, transforms\n\nclass MNISTModel(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(784, 256)\n        self.fc2 = nn.Linear(256, 128)\n        self.fc3 = nn.Linear(128, 10)\n        self.relu = nn.ReLU()\n\n    def forward(self, x):\n        x = self.relu(self.fc1(x))\n        x = self.relu(self.fc2(x))\n        return self.fc3(x)\n\n# Load data\ntransform = transforms.Compose([\n    transforms.ToTensor(),\n    transforms.Flatten(),\n])\ntrain_data = datasets.MNIST(".", train=True, download=True, transform=transform)\ntrain_loader = DataLoader(train_data, batch_size=64, shuffle=True)\n\n# Train\nmodel = MNISTModel()\noptimizer = torch.optim.Adam(model.parameters())\ncriterion = nn.CrossEntropyLoss()\n\nfor epoch in range(5):\n    for batch_idx, (data, target) in enumerate(train_loader):\n        optimizer.zero_grad()\n        output = model(data)\n        loss = criterion(output, target)\n        loss.backward()\n        optimizer.step()\n    print(f"Epoch {epoch+1} done")\n\n# Save\ntorch.save(model.state_dict(), "models/mnist_v1.pt")\nprint("Model saved")',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 2: Export to ONNX (faster inference)',
+            instruction: 'Convert PyTorch to ONNX',
+            code: '# export_onnx.py\nimport torch\nfrom train import MNISTModel\n\nmodel = MNISTModel()\nmodel.load_state_dict(torch.load("models/mnist_v1.pt"))\nmodel.eval()\n\n# Create dummy input\ndummy = torch.randn(1, 784)\n\n# Export\ntorch.onnx.export(\n    model,\n    dummy,\n    "models/mnist.onnx",\n    input_names=["input"],\n    output_names=["output"],\n    dynamic_axes={\n        "input": {0: "batch_size"},\n        "output": {0: "batch_size"},\n    },\n    opset_version=14,\n)\nprint("Exported to ONNX")',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 3: Create FastAPI serving app',
+            instruction: 'Use the pytorch_serving.py or onnx_serving.py from examples',
+            code: '# Use the code from onnx_serving.py example\n# Key points:\n# - Load model in lifespan (ONCE)\n# - Store in app.state\n# - Use torch.no_grad() or onnxruntime for inference\n# - Validate input with Pydantic\n# - Add /health endpoint\n\n# Run:\nuvicorn main:app --reload\n# Visit http://localhost:8000/docs',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 4: Add input validation and error handling',
+            instruction: 'Validate input shape, handle errors gracefully',
+            code: 'from fastapi import HTTPException\n\nclass PredictRequest(BaseModel):\n    features: list[float] = Field(\n        min_length=784, max_length=784,\n        description="Exactly 784 float values (0-1)",\n    )\n\n    @field_validator("features")\n    @classmethod\n    def validate_range(cls, v):\n        if any(x < 0 or x > 1 for x in v):\n            raise ValueError("All values must be between 0 and 1")\n        return v\n\n@app.post("/predict")\nasync def predict(request: PredictRequest):\n    try:\n        # inference\n        return result\n    except Exception as e:\n        logger.exception("Inference failed")\n        raise HTTPException(500, "Prediction failed")',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 5: Benchmark and optimize',
+            instruction: 'Compare PyTorch vs ONNX, single vs batch',
+            code: '# Benchmark with ab:\nab -n 1000 -c 10 -p request.json -T application/json http://localhost:8000/predict\n\n# Expected results:\n# PyTorch:  ~50ms per request, 200 req/s\n# ONNX:     ~15ms per request, 650 req/s (3x faster!)\n# Batch(32): ~5ms per item, 6000 items/s (30x faster!)\n\n# Optimize:\n# 1. Use ONNX Runtime (2-5x faster)\n# 2. Batch requests (10-100x throughput)\n# 3. GPU inference (if available)\n# 4. Quantization (int8 — 4x smaller, 2x faster)\n# 5. Connection pooling for DB calls',
+            codeLanguage: 'bash',
+          },
+          {
+            title: 'Step 6: Deploy with Docker',
+            instruction: 'Containerize the ML API',
+            code: '# Dockerfile\nFROM python:3.12-slim\n\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    libgomp1 && rm -rf /var/lib/apt/lists/*\n\nWORKDIR /app\nCOPY pyproject.toml .\nRUN pip install --no-cache-dir fastapi uvicorn onnxruntime pydantic\n\nCOPY . .\n\nHEALTHCHECK CMD curl -f http://localhost:8000/health || exit 1\n\nCMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]\n\n# Build and run:\ndocker build -t mnist-api .\ndocker run -p 8000:8000 mnist-api',
+            codeLanguage: 'dockerfile',
+          },
+        ],
+        verification: 'API serves predictions. ONNX is 3x faster than PyTorch. Batch is 30x faster than single. Docker container works.',
+      },
+      exercises: [
+        {
+          prompt: 'Write an endpoint POST /predict/batch that takes a list of inputs and returns predictions. Include batch size limit (max 128) and timing.',
+          starterCode: '@app.post("/predict/batch")\nasync def predict_batch(request: BatchPredictRequest):\n    # your code\n    pass\n',
+          hint: 'Convert to batch tensor, single inference call, iterate results.',
+          solution: '@app.post("/predict/batch", response_model=BatchPredictResponse)\nasync def predict_batch(request: BatchPredictRequest):\n    import time\n    start = time.perf_counter()\n\n    # Convert to batch tensor\n    features = torch.tensor(\n        request.features,\n        dtype=torch.float32,\n    ).to(app.state.device)\n\n    # Single batch inference (10-100x faster than loop)\n    with torch.no_grad():\n        logits = app.state.model(features)\n        probabilities = torch.softmax(logits, dim=1)\n        confidences, predictions = torch.max(probabilities, dim=1)\n\n    elapsed = (time.perf_counter() - start) * 1000\n\n    results = [\n        {"prediction": p.item(), "confidence": c.item()}\n        for p, c in zip(predictions, confidences)\n    ]\n\n    return BatchPredictResponse(\n        predictions=results,\n        model_version=app.state.model_version,\n        inference_time_ms=elapsed,\n    )',
+          solutionLanguage: 'python'
+        },
+      ],
+      quiz: [
+        {
+          question: 'When should you load the ML model?',
+          options: [
+            'Per request (each time)',
+            'ONCE at startup (lifespan), reuse for all requests',
+            'Every 100 requests',
+            'Never — load on client side',
+          ],
+          correctIndex: 1,
+          explanation: 'Loading a model takes 1-10 seconds. Doing it per request would make your API 1000x slower. Load ONCE in lifespan, store in app.state, reuse for all requests.'
+        },
+        {
+          question: 'Why use ONNX Runtime instead of PyTorch for inference?',
+          options: [
+            'More accurate',
+            '2-5x faster (optimized C++ runtime, graph optimizations)',
+            'Required by FastAPI',
+            'Uses less memory only',
+          ],
+          correctIndex: 1,
+          explanation: 'ONNX Runtime is optimized for inference — graph optimizations, quantization, hardware acceleration. 2-5x faster than PyTorch. Also works with any framework (TF, sklearn, XGBoost).'
+        },
+        {
+          question: 'What does torch.no_grad() do?',
+          options: [
+            'Disables the model',
+            'Disables gradient tracking (faster inference, less memory)',
+            'Disables GPU',
+            'Required for training',
+          ],
+          correctIndex: 1,
+          explanation: 'During inference, you do not need gradients. torch.no_grad() disables gradient tracking, saving memory and computation. Always use for inference.'
+        },
+        {
+          question: 'Why batch predictions?',
+          options: [
+            'More accurate',
+            '10-100x throughput improvement (GPU parallelism, amortized overhead)',
+            'Required by PyTorch',
+            'Uses less memory',
+          ],
+          correctIndex: 1,
+          explanation: 'Batching processes multiple inputs in one forward pass. GPU parallelism makes batch of 32 nearly as fast as single. 10-100x throughput vs individual requests.'
+        },
+      ],
+      keyTakeaways: [
+        'Load model ONCE in lifespan, store in app.state, reuse for all requests',
+        'Use torch.no_grad() + model.eval() for PyTorch inference',
+        'ONNX Runtime is 2-5x faster than PyTorch for inference',
+        'Batch requests for 10-100x throughput improvement',
+        'Pydantic validates input BEFORE inference (shape, type, range)',
+        'Preprocess input exactly as during training (normalize, reshape)',
+        'Model registry for versioning, A/B testing, hot-swapping',
+        'Gradual rollout (canary): 10% → 50% → 100% traffic to new model',
+        'GPU inference for deep learning (CUDAExecutionProvider)',
+        'Quantization (int8): 4x smaller model, 2x faster inference',
+      ],
+      resources: [
+        { title: 'ONNX Runtime', url: 'https://onnxruntime.ai/', type: 'docs' },
+        { title: 'FastAPI + ML Guide', url: 'https://fastapi.tiangolo.com/advanced/', type: 'article' },
+        { title: 'MLflow Model Registry', url: 'https://mlflow.org/', type: 'tool' },
+        { title: 'BentoML (ML serving)', url: 'https://bentoml.com/', type: 'tool', isHiddenGem: true },
+      ],
+      miniProject: {
+        title: 'Build an Image Classification API',
+        description: 'Train an image classifier, export to ONNX, serve with FastAPI, deploy with Docker',
+        requirements: [
+          'Train model (transfer learning with ResNet/EfficientNet)',
+          'Export to ONNX format',
+          'FastAPI app with /predict, /predict/batch, /health',
+          'Input validation (image shape, value range)',
+          'A/B testing with 2 model versions',
+          'Model metrics (latency, request count)',
+          'Docker deployment',
+          'Benchmark: PyTorch vs ONNX vs batch',
+        ],
+        estTime: '4-6 hours',
+        solutionCode: '# See lab steps above for patterns.\n# Key files:\n# - train.py: train model with transfer learning\n# - export_onnx.py: convert to ONNX\n# - main.py: FastAPI serving app\n# - Dockerfile: containerize\n# Verify: curl -X POST http://localhost:8000/predict -d \'{"features": [...]}\'',
+        solutionLanguage: 'python'
+      }
+    },
+
+    {
+      id: 'fa-12',
+      title: 'External API Integration — httpx, Async HTTP Clients, Webhooks',
+      subtitle: 'Call external APIs (Stripe, SendGrid, GitHub), handle webhooks, retries, circuit breakers',
+      duration: 75,
+      difficulty: 'Advanced',
+      phase: 'Real-World',
+      content: [
+        'Every production app calls external APIs: Stripe for payments, SendGrid for email, GitHub for auth, Twilio for SMS. Use httpx (modern, sync + async) or aiohttp. Always: set timeouts, handle errors, retry with backoff, rate limit your own requests.',
+        'Webhooks receive notifications from external services: "payment succeeded", "email delivered", "push to GitHub". Create POST endpoints, verify signatures (security!), process idempotently (webhooks can be sent multiple times).',
+        'Circuit breaker pattern: if an external API is down, stop calling it temporarily (fail fast instead of waiting for timeout). States: closed (normal), open (failing, reject immediately), half-open (testing if recovered). Use circuitbreaker library or implement manually.',
+        'Retry with exponential backoff: 1s → 2s → 4s → 8s. Add jitter (random delay) to avoid thundering herd. Never retry on 4xx (client error — will fail again). Always retry on 5xx and network errors. Use tenacity library for production.',
+      ],
+      codeExamples: [
+        {
+          filename: 'httpx_client.py',
+          language: 'python',
+          code: '"""Async HTTP client with httpx — production patterns."""\nimport httpx\nfrom typing import Any, Optional\nimport logging\nimport asyncio\nfrom tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type\n\nlogger = logging.getLogger(__name__)\n\n# === PRODUCTION HTTPX CLIENT ===\n\nclass HttpClient:\n    """Production HTTP client with retries, timeouts, connection pooling."""\n\n    def __init__(\n        self,\n        base_url: str = "",\n        api_key: Optional[str] = None,\n        timeout: float = 30.0,\n        max_retries: int = 3,\n    ):\n        self.base_url = base_url\n        self.api_key = api_key\n        self.timeout = timeout\n        self.max_retries = max_retries\n\n        # Create persistent client (connection pooling)\n        self.client = httpx.AsyncClient(\n            base_url=base_url,\n            timeout=httpx.Timeout(\n                connect=10.0,  # connection timeout\n                read=30.0,     # read timeout\n                write=10.0,    # write timeout\n                pool=5.0,      # pool timeout (waiting for connection)\n            ),\n            limits=httpx.Limits(\n                max_connections=100,\n                max_keepalive_connections=20,\n                keepalive_expiry=30.0,\n            ),\n            headers=self._default_headers(),\n        )\n\n    def _default_headers(self) -> dict:\n        headers = {"Content-Type": "application/json", "Accept": "application/json"}\n        if self.api_key:\n            headers["Authorization"] = f"Bearer {self.api_key}"\n        return headers\n\n    @retry(\n        stop=stop_after_attempt(3),\n        wait=wait_exponential(multiplier=1, min=1, max=10),\n        retry=retry_if_exception_type((httpx.ConnectError, httpx.TimeoutException)),\n    )\n    async def get(self, path: str, **kwargs) -> dict:\n        """GET with automatic retry on network errors."""\n        response = await self.client.get(path, **kwargs)\n        response.raise_for_status()  # raise on 4xx/5xx\n        return response.json()\n\n    @retry(\n        stop=stop_after_attempt(3),\n        wait=wait_exponential(multiplier=1, min=1, max=10),\n    )\n    async def post(self, path: str, **kwargs) -> dict:\n        """POST with retry."""\n        response = await self.client.post(path, **kwargs)\n        response.raise_for_status()\n        return response.json()\n\n    async def close(self):\n        """Close the client (call on shutdown)."""\n        await self.client.aclose()\n\n# === USAGE: STRIPE PAYMENT API ===\n\nclass StripeClient:\n    """Stripe API client."""\n\n    def __init__(self, api_key: str):\n        self.client = HttpClient(\n            base_url="https://api.stripe.com/v1",\n            api_key=api_key,\n        )\n\n    async def create_payment_intent(\n        self,\n        amount: int,  # cents!\n        currency: str = "usd",\n        customer_id: Optional[str] = None,\n    ) -> dict:\n        """Create a Stripe PaymentIntent."""\n        data = {\n            "amount": amount,\n            "currency": currency,\n        }\n        if customer_id:\n            data["customer"] = customer_id\n\n        return await self.client.post(\n            "/payment_intents",\n            data=data,  # Stripe uses form encoding\n        )\n\n    async def retrieve_payment(self, payment_id: str) -> dict:\n        """Get payment status."""\n        return await self.client.get(f"/payment_intents/{payment_id}")\n\n    async def create_customer(self, email: str, name: str) -> dict:\n        """Create a customer."""\n        return await self.client.post(\n            "/customers",\n            data={"email": email, "name": name},\n        )\n\n    async def close(self):\n        await self.client.close()\n\n# === USAGE: SENDGRID EMAIL ===\n\nclass EmailClient:\n    """SendGrid email client."""\n\n    def __init__(self, api_key: str):\n        self.client = HttpClient(\n            base_url="https://api.sendgrid.com/v3",\n            api_key=api_key,\n        )\n\n    async def send_email(\n        self,\n        to: str,\n        subject: str,\n        html_content: str,\n        from_email: str = "noreply@myapp.com",\n    ) -> dict:\n        """Send transactional email."""\n        return await self.client.post(\n            "/mail/send",\n            json={\n                "personalizations": [{\n                    "to": [{"email": to}],\n                    "subject": subject,\n                }],\n                "from": {"email": from_email},\n                "content": [{\n                    "type": "text/html",\n                    "value": html_content,\n                }],\n            },\n        )\n\n    async def send_template_email(\n        self,\n        to: str,\n        template_id: str,\n        dynamic_data: dict,\n    ) -> dict:\n        """Send email using a SendGrid template."""\n        return await self.client.post(\n            "/mail/send",\n            json={\n                "personalizations": [{\n                    "to": [{"email": to}],\n                    "dynamic_template_data": dynamic_data,\n                }],\n                "template_id": template_id,\n                "from": {"email": "noreply@myapp.com"},\n            },\n        )\n\n# === USAGE: GITHUB API ===\n\nclass GitHubClient:\n    """GitHub API client."""\n\n    def __init__(self, token: str):\n        self.client = HttpClient(\n            base_url="https://api.github.com",\n            api_key=token,\n        )\n\n    async def get_user(self, username: str) -> dict:\n        """Get GitHub user info."""\n        return await self.client.get(f"/users/{username}")\n\n    async def get_repo(self, owner: str, repo: str) -> dict:\n        """Get repository info."""\n        return await self.client.get(f"/repos/{owner}/{repo}")\n\n    async def create_issue(\n        self,\n        owner: str,\n        repo: str,\n        title: str,\n        body: str,\n    ) -> dict:\n        """Create an issue."""\n        return await self.client.post(\n            f"/repos/{owner}/{repo}/issues",\n            json={"title": title, "body": body},\n        )',
+          explanation: 'Production HTTP client: persistent (connection pooling), timeouts (connect/read/write), retries with exponential backoff (tenacity). Wrap external APIs (Stripe, SendGrid, GitHub) in client classes. Always close on shutdown.'
+        },
+        {
+          filename: 'webhooks.py',
+          language: 'python',
+          code: '"""Webhook handlers — receive notifications from external services."""\nfrom fastapi import APIRouter, Request, HTTPException, Header, BackgroundTasks\nfrom pydantic import BaseModel\nfrom typing import Annotated, Optional\nimport hmac\nimport hashlib\nimport json\nimport logging\nfrom blog.core.config import settings\n\nrouter = APIRouter(prefix="/webhooks", tags=["webhooks"])\nlogger = logging.getLogger(__name__)\n\n# === STRIPE WEBHOOK ===\n\nclass StripeWebhookEvent(BaseModel):\n    id: str\n    type: str\n    data: dict\n\ndef verify_stripe_signature(\n    payload: bytes,\n    signature: str,\n    secret: str,\n) -> bool:\n    """Verify Stripe webhook signature (security!)."""\n    # Stripe sends: t=1234567890,v1=abc123...\n    elements = signature.split(",")\n    timestamp = None\n    signatures = []\n\n    for element in elements:\n        key, value = element.split("=")\n        if key == "t":\n            timestamp = value\n        elif key == "v1":\n            signatures.append(value)\n\n    if not timestamp:\n        return False\n\n    # Create expected signature\n    signed_payload = f"{timestamp}.".encode() + payload\n    expected = hmac.new(\n        secret.encode(),\n        signed_payload,\n        hashlib.sha256,\n    ).hexdigest()\n\n    # Compare securely (constant time to prevent timing attacks)\n    return hmac.compare_digest(expected, signatures[0]) if signatures else False\n\n@router.post("/stripe")\nasync def stripe_webhook(\n    request: Request,\n    background_tasks: BackgroundTasks,\n    stripe_signature: Annotated[str, Header(alias="Stripe-Signature")],\n):\n    """Handle Stripe webhook events.\n\n    Stripe sends events for: payment_succeeded, payment_failed,\n    customer_created, subscription_updated, etc.\n    """\n    payload = await request.body()\n\n    # 1. VERIFY SIGNATURE (security — do not skip!)\n    if not verify_stripe_signature(\n        payload,\n        stripe_signature,\n        settings.STRIPE_WEBHOOK_SECRET,\n    ):\n        logger.warning("Invalid Stripe webhook signature")\n        raise HTTPException(400, "Invalid signature")\n\n    # 2. PARSE EVENT\n    event = json.loads(payload)\n    event_type = event["type"]\n    event_id = event["id"]  # for idempotency\n\n    logger.info(f"Stripe webhook: {event_type} ({event_id})")\n\n    # 3. IDEMPOTENCY CHECK (webhooks can be sent multiple times!)\n    # Check if we already processed this event\n    if await is_event_processed(event_id):\n        logger.info(f"Event {event_id} already processed")\n        return {"status": "already_processed"}\n\n    # 4. PROCESS EVENT (in background for fast response)\n    background_tasks.add_task(\n        process_stripe_event,\n        event_id,\n        event_type,\n        event["data"]["object"],\n    )\n\n    # 5. MARK EVENT AS PROCESSED\n    await mark_event_processed(event_id)\n\n    # Return 200 quickly (Stripe expects fast response)\n    return {"status": "received"}\n\nasync def process_stripe_event(\n    event_id: str,\n    event_type: str,\n    data: dict,\n):\n    """Process Stripe event in background."""\n    try:\n        if event_type == "payment_intent.succeeded":\n            payment_id = data["id"]\n            amount = data["amount"]\n            customer = data.get("customer")\n\n            # Update order status, send confirmation email, etc.\n            await update_order_status(payment_id, "paid")\n            await send_payment_confirmation(customer, amount)\n\n        elif event_type == "payment_intent.payment_failed":\n            payment_id = data["id"]\n            failure_reason = data.get("last_payment_error", {}).get("message")\n\n            await update_order_status(payment_id, "failed")\n            await send_payment_failure_notification(customer, failure_reason)\n\n        elif event_type == "customer.subscription.deleted":\n            customer_id = data["customer"]\n            await cancel_subscription(customer_id)\n\n        elif event_type == "invoice.payment_succeeded":\n            invoice_id = data["id"]\n            await send_invoice(invoice_id)\n\n        else:\n            logger.info(f"Unhandled event type: {event_type}")\n\n    except Exception:\n        logger.exception(f"Error processing Stripe event {event_id}")\n        # Mark as failed for retry\n        await mark_event_failed(event_id)\n\n# === GITHUB WEBHOOK ===\n\ndef verify_github_signature(\n    payload: bytes,\n    signature: str,\n    secret: str,\n) -> bool:\n    """Verify GitHub webhook signature."""\n    if not signature.startswith("sha256="):\n        return False\n\n    expected = hmac.new(\n        secret.encode(),\n        payload,\n        hashlib.sha256,\n    ).hexdigest()\n\n    received = signature[7:]  # strip "sha256="\n    return hmac.compare_digest(expected, received)\n\n@router.post("/github")\nasync def github_webhook(\n    request: Request,\n    background_tasks: BackgroundTasks,\n    x_github_event: Annotated[str, Header()],\n    x_hub_signature_256: Annotated[str, Header()],\n    x_github_delivery: Annotated[str, Header()],\n):\n    """Handle GitHub webhook events.\n\n    Events: push, pull_request, issues, issue_comment, release, etc.\n    """\n    payload = await request.body()\n\n    # Verify signature\n    if not verify_github_signature(\n        payload,\n        x_hub_signature_256,\n        settings.GITHUB_WEBHOOK_SECRET,\n    ):\n        raise HTTPException(400, "Invalid signature")\n\n    event_data = json.loads(payload)\n\n    # Process in background\n    background_tasks.add_task(\n        process_github_event,\n        x_github_event,\n        x_github_delivery,\n        event_data,\n    )\n\n    return {"status": "received"}\n\nasync def process_github_event(\n    event: str,\n    delivery_id: str,\n    data: dict,\n):\n    """Process GitHub event."""\n    if event == "push":\n        repo = data["repository"]["name"]\n        pusher = data["pusher"]["name"]\n        commits = data["commits"]\n        logger.info(f"Push to {repo} by {pusher}: {len(commits)} commits")\n\n    elif event == "pull_request":\n        action = data["action"]\n        pr_number = data["number"]\n        repo = data["repository"]["name"]\n        logger.info(f"PR {pr_number} {action} in {repo}")\n\n    elif event == "issues":\n        action = data["action"]\n        issue_number = data["issue"]["number"]\n        logger.info(f"Issue {issue_number} {action}")\n\n# === IDEMPOTENCY HELPERS ===\n\nasync def is_event_processed(event_id: str) -> bool:\n    """Check if event was already processed (Redis)."""\n    # Use Redis SET with event_id\n    # return await redis.sismember("processed_events", event_id)\n    return False  # placeholder\n\nasync def mark_event_processed(event_id: str):\n    """Mark event as processed."""\n    # await redis.sadd("processed_events", event_id)\n    # await redis.expire("processed_events", 86400 * 7)  # 7 days\n    pass\n\nasync def mark_event_failed(event_id: str):\n    """Mark event as failed (for retry)."""\n    # await redis.sadd("failed_events", event_id)\n    pass',
+          explanation: 'Webhooks: verify signatures (security!), check idempotency (webhooks sent multiple times), process in background (fast response), handle errors. Use Redis SET to track processed events. Stripe/GitHub send X-Signature headers.'
+        },
+        {
+          filename: 'circuit_breaker.py',
+          language: 'python',
+          code: '"""Circuit breaker — fail fast when external service is down."""\nimport time\nfrom enum import Enum\nfrom typing import Callable, Any\nimport logging\nfrom functools import wraps\n\nlogger = logging.getLogger(__name__)\n\nclass CircuitState(Enum):\n    CLOSED = "closed"      # normal — requests flow through\n    OPEN = "open"          # failing — reject immediately\n    HALF_OPEN = "half_open" # testing — allow one request\n\nclass CircuitBreaker:\n    """Circuit breaker for external service calls.\n\n    States:\n    - CLOSED: normal operation, requests pass through\n    - OPEN: too many failures, reject immediately (fail fast)\n    - HALF_OPEN: testing if service recovered (allow one request)\n\n    When failures exceed threshold → OPEN\n    After recovery_timeout → HALF_OPEN\n    If test request succeeds → CLOSED\n    If test request fails → OPEN (reset timer)\n    """\n\n    def __init__(\n        self,\n        failure_threshold: int = 5,\n        recovery_timeout: float = 60.0,\n        expected_exception: type = Exception,\n    ):\n        self.failure_threshold = failure_threshold\n        self.recovery_timeout = recovery_timeout\n        self.expected_exception = expected_exception\n        self.state = CircuitState.CLOSED\n        self.failure_count = 0\n        self.last_failure_time = 0\n        self.success_count = 0\n\n    def __call__(self, func: Callable) -> Callable:\n        @wraps(func)\n        async def wrapper(*args, **kwargs):\n            return await self.call(func, *args, **kwargs)\n        return wrapper\n\n    async def call(self, func: Callable, *args, **kwargs) -> Any:\n        """Call function with circuit breaker protection."""\n        # Check if circuit is open\n        if self.state == CircuitState.OPEN:\n            if time.time() - self.last_failure_time > self.recovery_timeout:\n                logger.info("Circuit breaker: OPEN → HALF_OPEN (testing)")\n                self.state = CircuitState.HALF_OPEN\n            else:\n                raise CircuitBreakerOpenError(\n                    f"Circuit breaker is OPEN (failures: {self.failure_count})"\n                )\n\n        try:\n            result = await func(*args, **kwargs)\n\n            # Success\n            if self.state == CircuitState.HALF_OPEN:\n                logger.info("Circuit breaker: HALF_OPEN → CLOSED (recovered)")\n                self.state = CircuitState.CLOSED\n                self.failure_count = 0\n\n            self.success_count += 1\n            return result\n\n        except self.expected_exception as e:\n            self.failure_count += 1\n            self.last_failure_time = time.time()\n\n            if self.state == CircuitState.HALF_OPEN:\n                # Test failed — back to OPEN\n                logger.warning("Circuit breaker: HALF_OPEN → OPEN (test failed)")\n                self.state = CircuitState.OPEN\n\n            elif self.failure_count >= self.failure_threshold:\n                # Threshold exceeded — OPEN\n                logger.warning(\n                    f"Circuit breaker: CLOSED → OPEN "\n                    f"(failures: {self.failure_count})"\n                )\n                self.state = CircuitState.OPEN\n\n            raise\n\nclass CircuitBreakerOpenError(Exception):\n    """Raised when circuit breaker is open."""\n    pass\n\n# === USAGE ===\n\n# Create circuit breakers for each external service\nstripe_breaker = CircuitBreaker(\n    failure_threshold=5,\n    recovery_timeout=60,\n    expected_exception=httpx.HTTPError,\n)\n\nsendgrid_breaker = CircuitBreaker(\n    failure_threshold=3,\n    recovery_timeout=120,\n)\n\n# Apply to client methods\nclass PaymentService:\n    @stripe_breaker\n    async def charge_customer(self, customer_id: str, amount: int):\n        """Charge customer via Stripe (circuit breaker protected)."""\n        response = await stripe_client.post(\n            "/payment_intents",\n            json={"customer": customer_id, "amount": amount},\n        )\n        return response\n\nclass EmailService:\n    @sendgrid_breaker\n    async def send_email(self, to: str, subject: str, body: str):\n        """Send email via SendGrid (circuit breaker protected)."""\n        return await sendgrid_client.post(\n            "/mail/send",\n            json={"to": to, "subject": subject, "body": body},\n        )\n\n# === FALLBACK WHEN CIRCUIT IS OPEN ===\n\nclass ResilientEmailService:\n    """Email service with fallback when SendGrid is down."""\n\n    def __init__(self, primary, fallback):\n        self.primary = primary  # SendGrid\n        self.fallback = fallback  # e.g., AWS SES\n        self.breaker = CircuitBreaker(failure_threshold=3, recovery_timeout=60)\n\n    async def send_email(self, to: str, subject: str, body: str):\n        try:\n            return await self.breaker.call(\n                self.primary.send_email, to, subject, body\n            )\n        except CircuitBreakerOpenError:\n            # Circuit open — use fallback\n            logger.warning("SendGrid circuit open, using fallback (SES)")\n            return await self.fallback.send_email(to, subject, body)\n        except Exception:\n            # Other error — use fallback\n            logger.exception("SendGrid failed, using fallback")\n            return await self.fallback.send_email(to, subject, body)\n\n# === CIRCUIT BREAKER STATUS ENDPOINT ===\n\nfrom fastapi import APIRouter\n\nrouter = APIRouter(prefix="/admin", tags=["admin"])\n\n@router.get("/circuit-breakers")\nasync def circuit_breaker_status():\n    """Get circuit breaker status (for monitoring)."""\n    return {\n        "stripe": {\n            "state": stripe_breaker.state.value,\n            "failures": stripe_breaker.failure_count,\n            "successes": stripe_breaker.success_count,\n        },\n        "sendgrid": {\n            "state": sendgrid_breaker.state.value,\n            "failures": sendgrid_breaker.failure_count,\n            "successes": sendgrid_breaker.success_count,\n        },\n    }',
+          explanation: 'Circuit breaker: CLOSED (normal) → OPEN (failing, fail fast) → HALF_OPEN (testing) → CLOSED (recovered). Prevents cascading failures when external service is down. Use fallback service when circuit is open. Monitor status via endpoint.'
+        },
+      ],
+      lab: {
+        title: 'Integrate Stripe Payments + SendGrid Email',
+        objective: 'Add payment processing and email notifications to your API',
+        estTime: '2-3 hours',
+        difficulty: 'Advanced',
+        setup: [
+          'Stripe account (test mode)',
+          'SendGrid account (free tier)',
+          'ngrok for local webhook testing',
+        ],
+        steps: [
+          {
+            title: 'Step 1: Create Stripe client',
+            instruction: 'Set up Stripe payment integration',
+            code: '# src/blog/services/stripe.py\nimport httpx\nfrom blog.core.config import settings\n\nclass StripeService:\n    def __init__(self):\n        self.client = httpx.AsyncClient(\n            base_url="https://api.stripe.com/v1",\n            auth=(settings.STRIPE_SECRET_KEY, ""),\n            timeout=30.0,\n        )\n\n    async def create_payment_intent(self, amount: int, currency="usd"):\n        response = await self.client.post(\n            "/payment_intents",\n            data={"amount": amount, "currency": currency},\n        )\n        response.raise_for_status()\n        return response.json()\n\n    async def create_customer(self, email: str, name: str):\n        response = await self.client.post(\n            "/customers",\n            data={"email": email, "name": name},\n        )\n        response.raise_for_status()\n        return response.json()\n\nstripe_service = StripeService()',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 2: Create payment endpoints',
+            instruction: 'API endpoints for payments',
+            code: '# src/blog/api/v1/payments.py\n@router.post("/create-payment")\nasync def create_payment(\n    amount: int,  # in cents\n    current_user: User = Depends(get_current_user),\n):\n    intent = await stripe_service.create_payment_intent(amount)\n    return {\n        "client_secret": intent["client_secret"],\n        "payment_id": intent["id"],\n    }\n\n@router.get("/payment/{payment_id}")\nasync def get_payment_status(payment_id: str):\n    payment = await stripe_service.retrieve_payment(payment_id)\n    return {"status": payment["status"], "amount": payment["amount"]}',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 3: Set up webhook handler',
+            instruction: 'Receive Stripe webhooks',
+            code: '# src/blog/api/v1/webhooks.py\n@router.post("/webhooks/stripe")\nasync def stripe_webhook(\n    request: Request,\n    background_tasks: BackgroundTasks,\n    stripe_signature: str = Header(alias="Stripe-Signature"),\n):\n    payload = await request.body()\n\n    # Verify signature!\n    if not verify_stripe_signature(payload, stripe_signature):\n        raise HTTPException(400, "Invalid signature")\n\n    event = json.loads(payload)\n\n    # Process in background\n    background_tasks.add_task(process_event, event)\n\n    return {"status": "received"}\n\nasync def process_event(event):\n    if event["type"] == "payment_intent.succeeded":\n        # Update order, send email\n        pass\n    elif event["type"] == "payment_intent.payment_failed":\n        # Notify customer\n        pass',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 4: Add SendGrid email',
+            instruction: 'Send transactional emails',
+            code: '# src/blog/services/email.py\nclass EmailService:\n    def __init__(self):\n        self.client = httpx.AsyncClient(\n            base_url="https://api.sendgrid.com/v3",\n            headers={"Authorization": f"Bearer {settings.SENDGRID_API_KEY}"},\n            timeout=30.0,\n        )\n\n    async def send_welcome(self, to: str, name: str):\n        await self.client.post("/mail/send", json={\n            "from": {"email": "welcome@myapp.com"},\n            "personalizations": [{"to": [{"email": to}]}],\n            "subject": "Welcome!",\n            "content": [{"type": "text/html", "value": f"<h1>Hi {name}!</h1>"}],\n        })\n\nemail_service = EmailService()\n\n# Send in background after registration\n@router.post("/register")\nasync def register(user: UserCreate, background_tasks: BackgroundTasks):\n    # ... create user ...\n    background_tasks.add_task(email_service.send_welcome, user.email, user.name)\n    return user',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 5: Test with ngrok',
+            instruction: 'Expose local server for webhooks',
+            code: '# Install ngrok\n# Run your FastAPI server\nuvicorn blog.main:app --reload\n\n# In another terminal, expose with ngrok\nngrok http 8000\n\n# Use the ngrok URL for Stripe webhook:\n# https://abc123.ngrok.io/api/v1/webhooks/stripe\n\n# Add this URL to Stripe Dashboard > Webhooks\n\n# Test: create payment in your app\n# Stripe will send webhook → your handler processes it',
+            codeLanguage: 'bash',
+          },
+        ],
+        verification: 'Payment creation works. Webhook received and verified. Email sent on registration. ngrok tunnel active.',
+      },
+      exercises: [
+        {
+          prompt: 'Write a retry decorator that retries on httpx.ConnectError with exponential backoff (1s, 2s, 4s), max 3 attempts.',
+          starterCode: 'import asyncio\nimport httpx\nfrom functools import wraps\n\ndef retry_async(max_retries=3, base_delay=1):\n    # your code\n    pass\n',
+          hint: 'Use asyncio.sleep with exponential backoff. Catch specific exceptions. Re-raise after max retries.',
+          solution: 'import asyncio\nimport httpx\nfrom functools import wraps\n\ndef retry_async(max_retries=3, base_delay=1):\n    def decorator(func):\n        @wraps(func)\n        async def wrapper(*args, **kwargs):\n            last_exception = None\n            for attempt in range(max_retries):\n                try:\n                    return await func(*args, **kwargs)\n                except (httpx.ConnectError, httpx.TimeoutException) as e:\n                    last_exception = e\n                    if attempt < max_retries - 1:\n                        delay = base_delay * (2 ** attempt)  # 1, 2, 4\n                        print(f"Attempt {attempt+1} failed, retrying in {delay}s...")\n                        await asyncio.sleep(delay)\n            raise last_exception\n        return wrapper\n    return decorator\n\n@retry_async(max_retries=3, base_delay=1)\nasync def fetch_data(url):\n    response = await httpx.AsyncClient().get(url)\n    return response.json()',
+          solutionLanguage: 'python'
+        },
+      ],
+      quiz: [
+        {
+          question: 'Why verify webhook signatures?',
+          options: [
+            'For logging',
+            'Security — prevent fake webhooks from attackers',
+            'Required by FastAPI',
+            'For performance',
+          ],
+          correctIndex: 1,
+          explanation: 'Without signature verification, anyone can send fake webhooks to your endpoint. Verify with HMAC — the secret is shared between you and the service (Stripe, GitHub).'
+        },
+        {
+          question: 'Why check idempotency in webhooks?',
+          options: [
+            'For performance',
+            'Webhooks can be sent multiple times — prevent duplicate processing',
+            'Required by HTTP',
+            'For security',
+          ],
+          correctIndex: 1,
+          explanation: 'Stripe/GitHub may send the same webhook multiple times (retries, network issues). Use event_id to check if already processed. Store in Redis SET with TTL.'
+        },
+        {
+          question: 'What does a circuit breaker do?',
+          options: [
+            'Improves performance',
+            'Fails fast when external service is down (prevents cascading failures)',
+            'Encrypts requests',
+            'Required by law',
+          ],
+          correctIndex: 1,
+          explanation: 'Circuit breaker: when external service fails repeatedly, OPEN the circuit (reject immediately instead of waiting for timeout). After recovery timeout, try again (HALF_OPEN). Prevents cascading failures.'
+        },
+        {
+          question: 'When should you NOT retry an HTTP request?',
+          options: [
+            'On 500 errors',
+            'On network errors',
+            'On 4xx errors (client error — will fail again)',
+            'On timeouts',
+          ],
+          correctIndex: 2,
+          explanation: '4xx errors (400 Bad Request, 401 Unauthorized, 404 Not Found) are client errors — retrying will give the same result. Retry on 5xx (server error) and network errors (ConnectError, TimeoutException).'
+        },
+      ],
+      keyTakeaways: [
+        'Use httpx.AsyncClient with connection pooling (persistent client)',
+        'Always set timeouts: connect, read, write, pool',
+        'Retry with exponential backoff + jitter (tenacity library)',
+        'Never retry on 4xx (client error), always retry on 5xx and network errors',
+        'Verify webhook signatures (HMAC) — security critical',
+        'Check idempotency in webhooks (sent multiple times) — use Redis SET',
+        'Process webhooks in background (fast 200 response)',
+        'Circuit breaker: fail fast when external service is down',
+        'Circuit states: CLOSED → OPEN (failing) → HALF_OPEN (testing) → CLOSED',
+        'Use fallback service when circuit is open (Stripe → AWS SES for email)',
+      ],
+      resources: [
+        { title: 'httpx Documentation', url: 'https://www.python-httpx.org/', type: 'docs' },
+        { title: 'tenacity (retry library)', url: 'https://github.com/jd/tenacity', type: 'docs' },
+        { title: 'Stripe Webhooks', url: 'https://stripe.com/docs/webhooks', type: 'docs' },
+        { title: 'GitHub Webhooks', url: 'https://docs.github.com/webhooks', type: 'docs' },
+      ]
+    },
+
+    {
+      id: 'fa-13',
+      title: 'Database Advanced — Transactions, Connection Pooling, Performance',
+      subtitle: 'Master database performance — transactions, N+1 queries, connection pooling, indexing',
+      duration: 85,
+      difficulty: 'Advanced',
+      phase: 'Advanced',
+      content: [
+        'Database performance is the #1 bottleneck in most APIs. Master: 1) Transactions (atomic operations), 2) Connection pooling (reuse connections), 3) Avoiding N+1 queries (eager loading), 4) Indexing strategy, 5) Query optimization. These separate senior engineers from juniors.',
+        'Transactions ensure atomicity — all operations succeed or all fail. Use `async with session.begin():` for automatic commit/rollback. For nested transactions, use `session.begin_nested()` (savepoints). Never leave transactions open long (locks).',
+        'N+1 query problem: loading 100 users with their posts fires 101 queries (1 for users + 1 per user for posts). Fix with eager loading: `selectinload(User.posts)` (2 queries total) or `joinedload(User.posts)` (1 query with JOIN). Detect with logging.',
+        'Connection pooling: SQLAlchemy maintains a pool of DB connections. Default pool_size=5, max_overflow=10. For async with asyncpg, use NullPool in serverless (Lambda) to avoid connection leaks. Use pool_pre_ping=True to detect stale connections.',
+      ],
+      visualization: {
+        title: 'N+1 Query Problem vs Eager Loading',
+        type: 'comparison',
+        diagram: `N+1 PROBLEM (BAD — 101 queries for 100 users):
+
+  Query 1: SELECT * FROM users               → 100 users
+  Query 2: SELECT * FROM posts WHERE user=1  → posts for user 1
+  Query 3: SELECT * FROM posts WHERE user=2  → posts for user 2
+  ...
+  Query 101: SELECT * FROM posts WHERE user=100
+
+  Total: 101 DB queries → SLOW (100ms+ for 100 users)
+
+
+EAGER LOADING WITH selectinload (GOOD — 2 queries):
+
+  Query 1: SELECT * FROM users               → 100 users
+  Query 2: SELECT * FROM posts WHERE user IN (1,2,3,...,100)  → all posts
+
+  Total: 2 DB queries → FAST (5ms for 100 users)
+
+
+EAGER LOADING WITH joinedload (GOOD — 1 query):
+
+  Query 1: SELECT * FROM users JOIN posts ON posts.user_id = users.id
+
+  Total: 1 DB query → FASTEST (but larger result set)
+
+
+RULE: Use selectinload by default, joinedload for one-to-one
+
+DETECT N+1: Enable SQLAlchemy echo=True and count queries`,
+        legend: [
+          'N+1: 1 query loads N items, then 1 query PER ITEM for relations',
+          'selectinload: 2 queries (1 for items, 1 IN query for all relations)',
+          'joinedload: 1 query with JOIN (fastest, but can produce huge results)',
+          'lazy="selectin" on model = always eager load (default behavior)',
+          'Detect with echo=True or query counting middleware',
+        ],
+      },
+      codeExamples: [
+        {
+          filename: 'transactions.py',
+          language: 'python',
+          code: '"""Database transactions — atomic operations."""\nfrom sqlalchemy.ext.asyncio import AsyncSession\nfrom sqlalchemy import select\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n# === BASIC TRANSACTION (auto-commit) ===\n\nasync def transfer_money(\n    db: AsyncSession,\n    from_id: int,\n    to_id: int,\n    amount: float,\n):\n    """Transfer money between accounts (atomic)."""\n    try:\n        from_acct = await db.get(Account, from_id)\n        to_acct = await db.get(Account, to_id)\n\n        if from_acct.balance < amount:\n            raise ValueError("Insufficient funds")\n\n        from_acct.balance -= amount\n        to_acct.balance += amount\n\n        await db.commit()  # both changes saved atomically\n        return True\n\n    except Exception:\n        await db.rollback()  # undo ALL changes\n        raise\n\n# === EXPLICIT TRANSACTION (async with) ===\n\nasync def create_order_with_items(\n    db: AsyncSession,\n    order_data: dict,\n    items: list[dict],\n):\n    """Create order and items in one transaction."""\n    # async with session.begin() = auto commit on success, rollback on exception\n    async with db.begin():\n        # Create order\n        order = Order(**order_data)\n        db.add(order)\n        await db.flush()  # get order.id without committing\n\n        # Create items\n        for item_data in items:\n            item_data["order_id"] = order.id\n            db.add(OrderItem(**item_data))\n\n        # If we get here, commit happens automatically\n        # If exception, rollback happens automatically\n\n    return order\n\n# === NESTED TRANSACTIONS (savepoints) ===\n\nasync def complex_operation(db: AsyncSession):\n    """Nested transactions with savepoints."""\n    async with db.begin():  # outer transaction\n        # Do something\n        db.add(User(name="Alice"))\n\n        try:\n            # Nested transaction (savepoint)\n            async with db.begin_nested():\n                db.add(Post(title="Post 1", author_id=1))\n                # This might fail\n                if some_condition:\n                    raise ValueError("Something went wrong")\n                # If we get here, savepoint is released\n        except ValueError:\n            # Only the nested transaction is rolled back\n            # The outer transaction (User) is still active!\n            pass\n\n        db.add(Post(title="Post 2", author_id=1))\n        # Outer transaction commits: User + Post 2 (not Post 1)\n\n# === TRANSACTION ISOLATION LEVELS ===\n\nfrom sqlalchemy import create_engine\n\n# READ COMMITTED (default): sees committed changes from other transactions\n# REPEATABLE READ: same query returns same result within transaction\n# SERIALIZABLE: as if transactions ran one at a time (slowest, safest)\n\nengine = create_engine(\n    "postgresql://user:pass@localhost/db",\n    isolation_level="REPEATABLE READ",\n)\n\n# Per-transaction isolation\nasync def critical_operation(db: AsyncSession):\n    """Use serializable for critical operations (e.g., money transfer)."""\n    async with db.begin():\n        await db.execute(\n            text("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")\n        )\n        # Now this transaction is serializable\n        # ... do critical operations ...\n\n# === OPTIMISTIC LOCKING (version field) ===\n\nfrom sqlalchemy import Integer, mapped_column\n\nclass Product(Base):\n    __tablename__ = "products"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    name: Mapped[str]\n    stock: Mapped[int]\n    version: Mapped[int] = mapped_column(Integer, default=1)  # optimistic lock\n\nasync def update_stock(db: AsyncSession, product_id: int, quantity: int):\n    """Update stock with optimistic locking (prevents lost updates)."""\n    async with db.begin():\n        product = await db.get(Product, product_id)\n        original_version = product.version\n\n        product.stock -= quantity\n        product.version += 1\n\n        # Flush and check if row was modified by someone else\n        await db.flush()\n\n        # If version changed, someone else modified — raise\n        result = await db.execute(\n            select(Product.version).where(Product.id == product_id)\n        )\n        if result.scalar() != product.version:\n            raise ConcurrentModificationError(\n                "Product was modified by another transaction"\n            )\n\n# === PESSIMISTIC LOCKING (SELECT FOR UPDATE) ===\n\nfrom sqlalchemy import text\n\nasync def transfer_with_lock(db: AsyncSession, from_id: int, to_id: int, amount: float):\n    """Transfer with pessimistic locking (prevents concurrent modifications)."""\n    async with db.begin():\n        # Lock the rows (other transactions wait)\n        result = await db.execute(\n            text("SELECT * FROM accounts WHERE id = :id FOR UPDATE"),\n            {"id": from_id},\n        )\n        from_acct = result.fetchone()\n\n        result = await db.execute(\n            text("SELECT * FROM accounts WHERE id = :id FOR UPDATE"),\n            {"id": to_id},\n        )\n        to_acct = result.fetchone()\n\n        # Now we have exclusive lock on both rows\n        # No other transaction can modify them until we commit\n\n        if from_acct.balance < amount:\n            raise ValueError("Insufficient funds")\n\n        await db.execute(\n            text("UPDATE accounts SET balance = balance - :amt WHERE id = :id"),\n            {"amt": amount, "id": from_id},\n        )\n        await db.execute(\n            text("UPDATE accounts SET balance = balance + :amt WHERE id = :id"),\n            {"amt": amount, "id": to_id},\n        )',
+          explanation: 'Transactions: async with db.begin() for auto commit/rollback. Nested: begin_nested() for savepoints. Isolation levels: READ COMMITTED (default), REPEATABLE READ, SERIALIZABLE. Optimistic: version field. Pessimistic: SELECT FOR UPDATE.'
+        },
+        {
+          filename: 'eager_loading.py',
+          language: 'python',
+          code: '"""Avoid N+1 queries with eager loading."""\nfrom sqlalchemy import select\nfrom sqlalchemy.orm import selectinload, joinedload, subqueryload\nfrom sqlalchemy.ext.asyncio import AsyncSession\n\n# === N+1 PROBLEM (BAD) ===\n\nasync def get_users_with_posts_bad(db: AsyncSession):\n    """N+1: 1 query for users + N queries for posts."""\n    result = await db.execute(select(User))\n    users = result.scalars().all()\n\n    for user in users:  # 100 users\n        print(user.posts)  # Each access fires a query!\n\n    # Total: 101 queries (1 + 100)\n    # 100 users: ~500ms\n\n# === FIX 1: selectinload (RECOMMENDED) ===\n\nasync def get_users_with_posts_good(db: AsyncSession):\n    """selectinload: 2 queries total."""\n    stmt = select(User).options(selectinload(User.posts))\n    result = await db.execute(stmt)\n    users = result.scalars().all()\n\n    for user in users:\n        print(user.posts)  # already loaded!\n\n    # Total: 2 queries\n    # Query 1: SELECT * FROM users\n    # Query 2: SELECT * FROM posts WHERE user_id IN (1,2,3,...,100)\n    # 100 users: ~10ms\n\n# === FIX 2: joinedload (1 query) ===\n\nasync def get_users_with_posts_joined(db: AsyncSession):\n    """joinedload: 1 query with JOIN."""\n    stmt = select(User).options(joinedload(User.posts))\n    result = await db.execute(stmt)\n    users = result.scalars().all()\n\n    # Total: 1 query\n    # SELECT * FROM users JOIN posts ON posts.user_id = users.id\n    # 100 users: ~8ms (fastest, but larger result set)\n\n# === CHOOSE: selectinload vs joinedload ===\n# selectinload: separate IN query (better for collections, avoids duplicates)\n# joinedload: single JOIN (better for one-to-one, smaller collections)\n# Rule: use selectinload for one-to-many, joinedload for one-to-one/many-to-one\n\n# === MULTIPLE RELATIONS ===\n\nasync def get_posts_with_everything(db: AsyncSession):\n    """Load posts with author, comments, and tags."""\n    stmt = (\n        select(Post)\n        .options(\n            joinedload(Post.author),  # one-to-one (join)\n            selectinload(Post.comments),  # one-to-many (IN query)\n            selectinload(Post.tags),  # many-to-many (IN query)\n        )\n        .where(Post.published == True)\n    )\n    result = await db.execute(stmt)\n    return result.scalars().all()\n\n    # 3 queries total:\n    # 1. SELECT * FROM posts JOIN users ON ...\n    # 2. SELECT * FROM comments WHERE post_id IN (...)\n    # 3. SELECT * FROM tags JOIN post_tags WHERE post_id IN (...)\n\n# === NESTED EAGER LOADING ===\n\nasync def get_users_with_posts_and_comments(db: AsyncSession):\n    """Load users → their posts → comments on those posts."""\n    stmt = (\n        select(User)\n        .options(\n            selectinload(User.posts).selectinload(Post.comments)\n        )\n    )\n    result = await db.execute(stmt)\n    return result.scalars().all()\n\n    # 3 queries:\n    # 1. SELECT * FROM users\n    # 2. SELECT * FROM posts WHERE user_id IN (...)\n    # 3. SELECT * FROM comments WHERE post_id IN (...)\n\n# === LAZY LOADING CONFIGURATION (model level) ===\n\nclass User(Base):\n    __tablename__ = "users"\n\n    posts: Mapped[list["Post"]] = relationship(\n        back_populates="author",\n        lazy="selectin",  # ALWAYS eager load (default for this relation)\n    )\n\n# Options:\n# lazy="select" (default): lazy load (N+1 risk!)\n# lazy="selectin": eager load with IN query (recommended)\n# lazy="joined": eager load with JOIN\n# lazy="raise": raise exception if accessed without eager loading (catches N+1!)\n# lazy="noload": always return empty (disable relation)\n\n# === DETECT N+1 WITH RAISE ===\n\nclass User(Base):\n    posts: Mapped[list["Post"]] = relationship(\n        lazy="raise",  # force developers to be explicit\n    )\n\n# Now: accessing user.posts without eager loading raises exception\n# Forces developers to use selectinload/joinedload explicitly\n\n# === QUERY COUNTING (for testing) ===\n\nfrom sqlalchemy import event\n\nquery_count = 0\n\n@event.listens_for(engine.sync_engine, "before_cursor_execute")\ndef count_queries(conn, cursor, statement, parameters, context, executemany):\n    global query_count\n    query_count += 1\n    logger.debug(f"Query {query_count}: {statement[:100]}...")\n\n# In tests:\nasync def test_no_n_plus_one():\n    global query_count\n    query_count = 0\n\n    users = await get_users_with_posts(db)\n    for user in users:\n        _ = user.posts  # should not fire query\n\n    assert query_count <= 2  # max 2 queries (users + posts)\n\n# === BULK OPERATIONS (avoid loops) ===\n\n# BAD: 1000 INSERT queries\nfor user in users:\n    db.add(user)\nawait db.commit()\n\n# GOOD: 1 INSERT with all values\nfrom sqlalchemy import insert\n\nawait db.execute(\n    insert(User),\n    [{"name": u.name, "email": u.email} for u in users]\n)\nawait db.commit()\n\n# Bulk update\nfrom sqlalchemy import update\n\nawait db.execute(\n    update(User)\n    .where(User.is_active == True)\n    .values(is_active=False)\n)\nawait db.commit()  # 1 query updates all',
+          explanation: 'selectinload: 2 queries (recommended for collections). joinedload: 1 query (for one-to-one). lazy="selectin" on model for always-eager. lazy="raise" to catch N+1 in development. Use bulk insert/update instead of loops.'
+        },
+        {
+          filename: 'indexing.py',
+          language: 'python',
+          code: '"""Database indexing strategy and query optimization."""\nfrom sqlalchemy import Index, String, Integer, ForeignKey, text\nfrom sqlalchemy.orm import mapped_column\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n# === INDEXING STRATEGY ===\n\nclass User(Base):\n    __tablename__ = "users"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    email: Mapped[str] = mapped_column(String(255), unique=True, index=True)  # lookup by email\n    username: Mapped[str] = mapped_column(String(50), unique=True, index=True)  # lookup by username\n    name: Mapped[str] = mapped_column(String(100))  # no index (rarely filtered)\n    is_active: Mapped[bool] = mapped_column(default=True)  # no index (low cardinality)\n    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, index=True)  # sort by date\n\nclass Post(Base):\n    __tablename__ = "posts"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    title: Mapped[str] = mapped_column(String(200), index=True)  # search by title\n    slug: Mapped[str] = mapped_column(String(200), unique=True, index=True)  # lookup by slug\n    published: Mapped[bool] = mapped_column(default=False, index=True)  # filter by published\n    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)  # join by author\n    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, index=True)\n\n    # COMPOSITE INDEX (multiple columns)\n    __table_args__ = (\n        # For: WHERE published=True ORDER BY created_at DESC\n        Index("ix_posts_published_created", "published", "created_at"),\n        # For: WHERE author_id=? AND published=True\n        Index("ix_posts_author_published", "author_id", "published"),\n    )\n\n# === WHEN TO INDEX ===\n# DO index:\n# - Foreign keys (joins)\n# - Columns in WHERE clauses\n# - Columns in ORDER BY / GROUP BY\n# - Columns with UNIQUE constraint\n#\n# DO NOT index:\n# - Low cardinality (boolean, gender — won\'t use index anyway)\n# - Frequently updated columns (index maintenance overhead)\n# - Small tables (seq scan is faster)\n# - Columns never used in queries\n\n# === ANALYZE QUERY PERFORMANCE ===\n\nasync def analyze_query(db: AsyncSession):\n    """Use EXPLAIN ANALYZE to see query plan."""\n    result = await db.execute(\n        text("EXPLAIN ANALYZE SELECT * FROM users WHERE email = \'alice@x.com\'")\n    )\n    for row in result:\n        print(row[0])\n\n    # Look for:\n    # - Seq Scan (BAD — full table scan)\n    # - Index Scan (GOOD — uses index)\n    # - Index Only Scan (BEST — all data from index)\n\n# === COMMON OPTIMIZATIONS ===\n\n# 1. Use EXISTS instead of COUNT\n# BAD: SELECT COUNT(*) FROM posts WHERE author_id = 1\n# GOOD: SELECT EXISTS(SELECT 1 FROM posts WHERE author_id = 1)\n\nasync def user_has_posts(db: AsyncSession, user_id: int) -> bool:\n    result = await db.execute(\n        select(func.exists().where(Post.author_id == user_id))\n    )\n    return result.scalar()\n\n# 2. Use LIMIT with ORDER BY (dont sort entire table)\nasync def get_latest_posts(db: AsyncSession, limit: int = 10):\n    stmt = (\n        select(Post)\n        .where(Post.published == True)\n        .order_by(Post.created_at.desc())\n        .limit(limit)  # only fetch N rows\n    )\n    return (await db.execute(stmt)).scalars().all()\n\n# 3. Use OFFSET for pagination (or keyset for large tables)\nasync def paginate_posts(db: AsyncSession, page: int, per_page: int = 20):\n    # Simple (works for small datasets)\n    stmt = (\n        select(Post)\n        .order_by(Post.created_at.desc())\n        .offset((page - 1) * per_page)\n        .limit(per_page)\n    )\n    return (await db.execute(stmt)).scalars().all()\n\n# Keyset pagination (better for large datasets — no offset scanning)\nasync def paginate_keyset(db: AsyncSession, last_id: int = 0, limit: int = 20):\n    stmt = (\n        select(Post)\n        .where(Post.id > last_id)  # instead of OFFSET\n        .order_by(Post.id.asc())\n        .limit(limit)\n    )\n    return (await db.execute(stmt)).scalars().all()\n\n# 4. Select only needed columns (not SELECT *)\nasync def get_post_titles(db: AsyncSession):\n    # BAD: select(Post) — fetches ALL columns\n    # GOOD: select(Post.id, Post.title) — only needed columns\n    stmt = select(Post.id, Post.title).where(Post.published == True)\n    result = await db.execute(stmt)\n    return result.all()  # list of Row objects\n\n# 5. Use covering indexes (index includes all needed columns)\n# CREATE INDEX ix_posts_published_title ON posts(published, title)\n# Now: SELECT title FROM posts WHERE published = True\n# Uses index only — no table access!\n\n# === CONNECTION POOL TUNING ===\n\nfrom sqlalchemy.ext.asyncio import create_async_engine\n\nengine = create_async_engine(\n    "postgresql+asyncpg://user:pass@localhost/db",\n    pool_size=20,          # base connections\n    max_overflow=10,       # extra connections under load (total: 30)\n    pool_timeout=30,       # wait 30s for connection before erroring\n    pool_recycle=3600,     # recycle connections after 1 hour\n    pool_pre_ping=True,    # check connection health before use\n    echo=False,            # set True to log all SQL (debugging only!)\n)\n\n# === FOR SERVERLESS (AWS Lambda) ===\n# Use NullPool — no connection pooling (each invocation creates fresh connection)\nfrom sqlalchemy.pool import NullPool\n\nserverless_engine = create_async_engine(\n    "postgresql+asyncpg://...",\n    poolclass=NullPool,  # no pool (Lambda has no persistent state)\n)\n\n# === MONITOR SLOW QUERIES ===\n\nimport time\n\n@event.listens_for(engine.sync_engine, "before_cursor_execute")\ndef before_query(conn, cursor, statement, parameters, context, executemany):\n    context._query_start = time.perf_counter()\n\n@event.listens_for(engine.sync_engine, "after_cursor_execute")\ndef after_query(conn, cursor, statement, parameters, context, executemany):\n    elapsed = time.perf_counter() - context._query_start\n    if elapsed > 0.1:  # log queries slower than 100ms\n        logger.warning(\n            f"Slow query ({elapsed:.3f}s): {statement[:200]}..."\n        )',
+          explanation: 'Index: FKs, WHERE/ORDER BY columns, unique constraints. Composite indexes for multi-column queries. Use EXPLAIN ANALYZE to find slow queries. Keyset pagination > OFFSET for large tables. Select only needed columns. Monitor slow queries.'
+        },
+      ],
+      lab: {
+        title: 'Optimize Database Performance',
+        objective: 'Fix N+1 queries, add indexes, optimize slow queries',
+        estTime: '90 minutes',
+        difficulty: 'Advanced',
+        setup: [
+          'Blog API with database from previous lessons',
+          'Generate test data (1000+ posts)',
+        ],
+        steps: [
+          {
+            title: 'Step 1: Generate test data',
+            instruction: 'Create 1000 posts for testing',
+            code: '# scripts/generate_data.py\nimport asyncio\nfrom blog.db.base import async_session\nfrom blog.models.post import Post\nfrom blog.models.user import User\n\nasync def generate():\n    async with async_session() as db:\n        # Create 10 users\n        for i in range(10):\n            db.add(User(\n                email=f"user{i}@test.com",\n                username=f"user{i}",\n                name=f"User {i}",\n                hashed_password="x",\n            ))\n        await db.commit()\n\n        # Create 1000 posts\n        for i in range(1000):\n            db.add(Post(\n                title=f"Post {i}",\n                slug=f"post-{i}",\n                content=f"Content {i}",\n                author_id=(i % 10) + 1,\n                published=True,\n            ))\n        await db.commit()\n\nasyncio.run(generate())',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 2: Find N+1 queries',
+            instruction: 'Enable query logging and find N+1',
+            code: '# Enable SQL logging\nimport logging\nlogging.basicConfig()\nlogging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)\n\n# Or add echo=True to engine\nengine = create_async_engine(DATABASE_URL, echo=True)\n\n# Now call your endpoint and count queries:\n# GET /users — should see 1 query for users + 1 per user for posts = N+1!\n# Fix with selectinload:',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 3: Fix N+1 with eager loading',
+            instruction: 'Add selectinload to queries',
+            code: '# Before (N+1):\nstmt = select(User)\nusers = (await db.execute(stmt)).scalars().all()\nfor u in users:\n    print(u.posts)  # query per user!\n\n# After (2 queries):\nfrom sqlalchemy.orm import selectinload\nstmt = select(User).options(selectinload(User.posts))\nusers = (await db.execute(stmt)).scalars().all()\nfor u in users:\n    print(u.posts)  # already loaded!\n\n# Or set on model:\nclass User(Base):\n    posts = relationship(lazy="selectin")  # always eager',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 4: Add missing indexes',
+            instruction: 'Find slow queries and add indexes',
+            code: '# Find slow queries with EXPLAIN ANALYZE\nSELECT * FROM posts WHERE published = true ORDER BY created_at DESC LIMIT 10;\n# If Seq Scan → add index\n\n# Add composite index:\n# CREATE INDEX ix_posts_published_created ON posts(published, created_at);\n\n# In SQLAlchemy model:\nclass Post(Base):\n    __table_args__ = (\n        Index("ix_posts_published_created", "published", "created_at"),\n    )\n\n# Create Alembic migration:\nalembic revision --autogenerate -m "add indexes"\nalembic upgrade head',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 5: Benchmark improvement',
+            instruction: 'Compare before/after performance',
+            code: '# Benchmark with ab:\nab -n 100 -c 10 http://localhost:8000/api/v1/posts\n\n# Before optimization:\n# Time per request: 200ms (N+1 queries, no indexes)\n# Requests per second: 50\n\n# After optimization:\n# Time per request: 20ms (eager loading, indexed)\n# Requests per second: 500\n# 10x improvement!\n\n# Add slow query logging:\n@event.listens_for(engine.sync_engine, "after_cursor_execute")\ndef log_slow(conn, cursor, statement, parameters, context, executemany):\n    elapsed = time.perf_counter() - context._query_start\n    if elapsed > 0.1:  # > 100ms\n        logger.warning(f"Slow query: {statement[:200]}")',
+            codeLanguage: 'bash',
+          },
+        ],
+        verification: 'N+1 queries eliminated. All queries use indexes. 10x performance improvement. No slow queries.',
+      },
+      exercises: [
+        {
+          prompt: 'Write a query to get all posts with their authors and tags, avoiding N+1. Should be 3 queries max.',
+          starterCode: 'from sqlalchemy import select\nfrom sqlalchemy.orm import selectinload, joinedload\n\n# your query\n',
+          hint: 'Use joinedload for author (one-to-one), selectinload for tags (many-to-many).',
+          solution: 'from sqlalchemy import select\nfrom sqlalchemy.orm import selectinload, joinedload\n\nstmt = (\n    select(Post)\n    .options(\n        joinedload(Post.author),  # 1 query with JOIN\n        selectinload(Post.tags),   # 1 IN query\n    )\n    .where(Post.published == True)\n)\nresult = await db.execute(stmt)\nposts = result.scalars().all()\n# Total: 2 queries (1 for posts+author, 1 for tags)\n# Accessing post.author and post.tags fires NO additional queries',
+          solutionLanguage: 'python'
+        },
+      ],
+      quiz: [
+        {
+          question: 'What is the N+1 query problem?',
+          options: [
+            'N queries for 1 item',
+            '1 query loads N items, then 1 query PER ITEM for relations (N+1 total)',
+            'N+1 indexes needed',
+            'Network latency',
+          ],
+          correctIndex: 1,
+          explanation: 'N+1: 1 query loads N items (e.g., 100 users), then 1 query PER ITEM to load relations (100 queries for posts). Total: 101 queries. Fix with selectinload (2 queries).'
+        },
+        {
+          question: 'Which is better: selectinload or joinedload?',
+          options: [
+            'joinedload always',
+            'selectinload for one-to-many (collections), joinedload for one-to-one',
+            'selectinload always',
+            'They are identical',
+          ],
+          correctIndex: 1,
+          explanation: 'selectinload uses separate IN query (better for collections, avoids duplicate rows). joinedload uses JOIN (better for one-to-one, smaller relations). Rule: selectinload for collections, joinedload for scalars.'
+        },
+        {
+          question: 'When should you NOT add a database index?',
+          options: [
+            'On foreign keys',
+            'On low-cardinality columns (boolean, gender)',
+            'On columns in WHERE clauses',
+            'On unique columns',
+          ],
+          correctIndex: 1,
+          explanation: 'Low-cardinality columns (boolean, gender) do not benefit from indexes — the query planner uses a sequential scan anyway. Index overhead (maintenance, storage) outweighs benefit.'
+        },
+        {
+          question: 'What does SELECT FOR UPDATE do?',
+          options: [
+            'Selects and locks rows until transaction ends (pessimistic locking)',
+            'Updates selected rows',
+            'Faster SELECT',
+            'Required by PostgreSQL',
+          ],
+          correctIndex: 1,
+          explanation: 'SELECT FOR UPDATE locks the rows so no other transaction can modify them until you commit/rollback. Used for pessimistic locking (e.g., money transfer — prevent concurrent modifications).'
+        },
+      ],
+      keyTakeaways: [
+        'Transactions: async with db.begin() for atomic operations (auto commit/rollback)',
+        'Nested transactions: db.begin_nested() for savepoints',
+        'N+1 problem: 1 query + N queries for relations — use selectinload/joinedload',
+        'selectinload: 2 queries (recommended for collections)',
+        'joinedload: 1 query with JOIN (for one-to-one relations)',
+        'lazy="selectin" on model for always-eager, lazy="raise" to catch N+1',
+        'Index: foreign keys, WHERE/ORDER BY columns, unique constraints',
+        'Composite indexes for multi-column queries',
+        'Keyset pagination (WHERE id > last_id) > OFFSET for large tables',
+        'Select only needed columns, use EXISTS instead of COUNT',
+        'Connection pooling: pool_size, max_overflow, pool_pre_ping=True',
+        'Use NullPool for serverless (AWS Lambda)',
+      ],
+      resources: [
+        { title: 'SQLAlchemy 2.0 — Loading', url: 'https://docs.sqlalchemy.org/en/20/orm/queryguide/relationships.html', type: 'docs' },
+        { title: 'PostgreSQL EXPLAIN', url: 'https://www.postgresql.org/docs/current/sql-explain.html', type: 'docs' },
+        { title: 'Use The Index, Luke!', url: 'https://use-the-index-luke.com/', type: 'book', isHiddenGem: true },
+      ]
+    },
+
+    {
+      id: 'fa-14',
+      title: 'Celery Background Tasks — Async Jobs, Scheduled Tasks, Workers',
+      subtitle: 'Heavy background processing with Celery + Redis — emails, ML training, reports',
+      duration: 80,
+      difficulty: 'Advanced',
+      phase: 'Real-World',
+      content: [
+        'FastAPI BackgroundTasks are for SHORT tasks (send email, log event). For HEAVY work (ML training, video processing, report generation, batch jobs), use Celery. Celery runs in separate worker processes, uses Redis/RabbitMQ as broker, supports retries, scheduling, monitoring.',
+        'Celery architecture: 1) Your FastAPI app calls task.delay() (puts message on broker), 2) Worker process picks up message and executes task, 3) Results stored in result backend (optional). Workers scale horizontally — run as many as you need.',
+        'Common patterns: .delay() for fire-and-forget, .apply_async(countdown=60) for delayed execution, chains for sequential tasks, groups for parallel, chords for fan-out-fan-in. Use @task(bind=True) for self-retry with exponential backoff.',
+        'Always set time limits (soft_time_limit, time_limit) — a stuck task can hang a worker. Use idempotent tasks (safe to retry). Store progress for long tasks. Use celery beat for periodic tasks (cron-like). Monitor with Flower.',
+      ],
+      codeExamples: [
+        {
+          filename: 'celery_setup.py',
+          language: 'python',
+          code: '"""Celery setup — background task processing."""\nfrom celery import Celery\nfrom celery.schedules import crontab\nfrom blog.core.config import settings\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n# Create Celery app\ncelery_app = Celery(\n    "blog",\n    broker=settings.REDIS_URL,        # message queue (Redis/RabbitMQ)\n    backend=settings.REDIS_URL,        # result storage\n    include=["blog.tasks"],            # task modules to load\n)\n\n# Configuration\ncelery_app.conf.update(\n    # Serialization\n    task_serializer="json",\n    accept_content=["json"],\n    result_serializer="json",\n    timezone="UTC",\n    enable_utc=True,\n\n    # Time limits (CRITICAL — stuck tasks hang workers!)\n    task_time_limit=300,         # hard kill after 5 min\n    task_soft_time_limit=240,    # soft limit at 4 min (raise SoftTimeLimitExceeded)\n\n    # Reliability\n    task_acks_late=True,          # acknowledge AFTER completion (crash-safe)\n    worker_prefetch_multiplier=1, # fair scheduling (dont hoard tasks)\n    task_reject_on_worker_lost=True, # re-queue if worker crashes\n\n    # Retries\n    task_default_max_retries=3,\n    task_default_retry_delay=60,  # 1 min between retries\n\n    # Results\n    result_expires=3600,          # results expire after 1 hour\n    task_ignore_result=True,      # dont store results (unless needed)\n\n    # Monitoring\n    worker_send_task_events=True,\n    task_send_sent_event=True,\n)\n\n# === SCHEDULED TASKS (celery beat) ===\n\ncelery_app.conf.beat_schedule = {\n    # Send daily digest email at 9 AM\n    "send-daily-digest": {\n        "task": "blog.tasks.send_daily_digest",\n        "schedule": crontab(hour=9, minute=0),\n    },\n    # Clean up expired sessions every hour\n    "cleanup-sessions": {\n        "task": "blog.tasks.cleanup_expired_sessions",\n        "schedule": crontab(minute=0),  # every hour\n    },\n    # Generate weekly report every Monday at 8 AM\n    "weekly-report": {\n        "task": "blog.tasks.generate_weekly_report",\n        "schedule": crontab(hour=8, minute=0, day_of_week=1),\n    },\n    # Health check every 5 minutes\n    "health-check": {\n        "task": "blog.tasks.health_check",\n        "schedule": 300.0,  # 5 minutes\n    },\n}\n\n# === DEFINE TASKS ===\n\n@celery_app.task(bind=True)\ndef send_welcome_email(self, user_id: int):\n    """Send welcome email to new user."""\n    try:\n        user = get_user_by_id(user_id)\n        send_email(\n            to=user.email,\n            subject="Welcome to Blog!",\n            body=f"Hi {user.name}, welcome!"\n        )\n        logger.info(f"Welcome email sent to {user.email}")\n    except Exception as e:\n        logger.error(f"Failed to send welcome email: {e}")\n        raise self.retry(exc=e, countdown=60)  # retry in 1 min\n\n@celery_app.task(bind=True, max_retries=3)\ndef process_image(self, image_path: str):\n    """Process uploaded image (resize, optimize)."""\n    try:\n        # Simulate slow processing\n        import time\n        time.sleep(30)\n\n        # Resize image\n        resize_image(image_path, sizes=[(800, 600), (400, 300)])\n\n        # Optimize\n        optimize_image(image_path)\n\n        logger.info(f"Image processed: {image_path}")\n\n    except SoftTimeLimitExceeded:\n        logger.warning(f"Image processing timed out: {image_path}")\n        raise\n    except Exception as e:\n        logger.error(f"Image processing failed: {e}")\n        # Retry with exponential backoff\n        raise self.retry(\n            exc=e,\n            countdown=2 ** self.request.retries,  # 1, 2, 4 seconds\n        )\n\n@celery_app.task(bind=True)\ndef train_ml_model(self, dataset_path: str, model_type: str = "random_forest"):\n    """Train ML model (very long task)."""\n    try:\n        # Update progress\n        self.update_state(\n            state="PROGRESS",\n            meta={"current": 0, "total": 100, "status": "Loading data..."}\n        )\n\n        # Load data\n        data = load_data(dataset_path)\n\n        self.update_state(\n            state="PROGRESS",\n            meta={"current": 25, "total": 100, "status": "Preprocessing..."}\n        )\n\n        # Preprocess\n        X, y = preprocess(data)\n\n        self.update_state(\n            state="PROGRESS",\n            meta={"current": 50, "total": 100, "status": "Training..."}\n        )\n\n        # Train\n        model = train(X, y, model_type=model_type)\n\n        self.update_state(\n            state="PROGRESS",\n            meta={"current": 75, "total": 100, "status": "Evaluating..."}\n        )\n\n        # Evaluate\n        score = evaluate(model, X, y)\n\n        self.update_state(\n            state="PROGRESS",\n            meta={"current": 90, "total": 100, "status": "Saving..."}\n        )\n\n        # Save model\n        save_model(model, f"models/{model_type}_{int(time.time())}.pkl")\n\n        return {"status": "SUCCESS", "score": score}\n\n    except SoftTimeLimitExceeded:\n        return {"status": "TIMEOUT", "message": "Training timed out"}\n    except Exception as e:\n        return {"status": "FAILED", "error": str(e)}\n\n# === CALL TASKS FROM FASTAPI ===\n\nfrom fastapi import APIRouter, BackgroundTasks\nfrom blog.tasks import send_welcome_email, process_image, train_ml_model\n\nrouter = APIRouter()\n\n@router.post("/register")\nasync def register(user: UserCreate):\n    # ... create user ...\n\n    # Option 1: FastAPI BackgroundTasks (simple, short tasks)\n    # background_tasks.add_task(send_welcome_email, user.id)\n\n    # Option 2: Celery (for heavy/long tasks — RECOMMENDED)\n    send_welcome_email.delay(user.id)  # async, returns immediately\n\n    return user\n\n@router.post("/upload-image")\nasync def upload_image(file: UploadFile):\n    # Save file\n    file_path = f"uploads/{file.filename}"\n    # ... save ...\n\n    # Queue processing (heavy task → Celery, not BackgroundTasks)\n    process_image.delay(file_path)\n\n    return {"message": "Upload received, processing in background"}\n\n@router.post("/train-model")\nasync def start_training(dataset: str, model_type: str = "rf"):\n    """Start ML training (long task)."""\n    # Queue task\n    task = train_ml_model.delay(dataset, model_type)\n\n    return {\n        "task_id": task.id,\n        "status": "STARTED",\n        "check_status": f"/tasks/{task.id}"\n    }\n\n@router.get("/tasks/{task_id}")\nasync def get_task_status(task_id: str):\n    """Check task status and progress."""\n    from celery.result import AsyncResult\n\n    result = AsyncResult(task_id, app=celery_app)\n\n    if result.state == "PENDING":\n        return {"status": "PENDING", "message": "Task waiting to start"}\n    elif result.state == "PROGRESS":\n        return {\n            "status": "PROGRESS",\n            "progress": result.info,\n        }\n    elif result.state == "SUCCESS":\n        return {"status": "SUCCESS", "result": result.result}\n    elif result.state == "FAILURE":\n        return {"status": "FAILED", "error": str(result.info)}\n    else:\n        return {"status": result.state}',
+          explanation: 'Celery for heavy tasks (ML, video, reports). .delay() for fire-and-forget. update_state() for progress tracking. Set time limits! task_acks_late=True for crash safety. celery beat for scheduled tasks.'
+        },
+        {
+          filename: 'task_patterns.py',
+          language: 'python',
+          code: '"""Advanced Celery patterns — chains, groups, chords."""\nfrom celery import chain, group, chord\nfrom blog.tasks import celery_app\n\n# === CHAIN — sequential tasks (output of one feeds into next) ===\n\n@celery_app.task\ndef download_file(url: str) -> str:\n    """Download file from URL."""\n    # ... download ...\n    return f"/tmp/{hash(url)}"\n\n@celery_app.task\ndef process_file(file_path: str) -> str:\n    """Process downloaded file."""\n    # ... process ...\n    return file_path.replace("file", "processed")\n\n@celery_app.task\ndef upload_result(file_path: str) -> str:\n    """Upload processed file."""\n    # ... upload ...\n    return f"s3://bucket/{file_path}"\n\n# Chain: download → process → upload (each passes result to next)\nworkflow = chain(\n    download_file.s("https://example.com/data.csv"),\n    process_file.s(),\n    upload_result.s(),\n)\nresult = workflow.apply_async()\nprint(result.get())  # final result: "s3://bucket/..."\n\n# === GROUP — parallel tasks (all run at once) ===\n\n@celery_app.task\ndef fetch_user_data(user_id: int) -> dict:\n    """Fetch data for one user."""\n    return {"id": user_id, "data": "..."}\n\n# Group: fetch data for 10 users in parallel\nuser_ids = list(range(1, 11))\njob = group(fetch_user_data.s(uid) for uid in user_ids)\nresult = job.apply_async()\n\n# Wait for all to complete\nresults = result.get()  # list of results in order\n# [{"id": 1, ...}, {"id": 2, ...}, ...]\n\n# === CHORD — group + callback (fan-out, then reduce) ===\n\n@celery_app.task\ndef process_chunk(chunk: list) -> int:\n    """Process a chunk of data."""\n    return sum(chunk)\n\n@celery_app.task\ndef aggregate_results(results: list[int]) -> int:\n    """Aggregate all chunk results."""\n    return sum(results)\n\n# Chord: process 10 chunks in parallel, then aggregate\ndata = list(range(100))\nchunks = [data[i::10] for i in range(10)]  # 10 chunks\n\nworkflow = chord(\n    [process_chunk.s(chunk) for chunk in chunks],\n    aggregate_results.s(),  # callback after all chunks done\n)\nresult = workflow.apply_async()\nprint(result.get())  # total sum\n\n# === REAL-WORLD: SEND BULK EMAILS ===\n\n@celery_app.task(bind=True, max_retries=3)\ndef send_email(self, to: str, subject: str, body: str):\n    """Send single email."""\n    try:\n        # ... sendgrid ...\n        pass\n    except Exception as e:\n        raise self.retry(exc=e, countdown=2 ** self.request.retries)\n\n@celery_app.task\ndef send_bulk_emails(recipients: list[dict]):\n    """Send bulk emails in parallel."""\n    job = group(\n        send_email.s(r["email"], r["subject"], r["body"])\n        for r in recipients\n    )\n    result = job.apply_async()\n    return result.id  # track progress\n\n# === REAL-WORLD: ML PIPELINE ===\n\n@celery_app.task\ndef fetch_data(source: str) -> str:\n    """Fetch training data."""\n    return f"/data/{source}.csv"\n\n@celery_app.task\ndef preprocess(data_path: str) -> str:\n    """Preprocess data."""\n    return f"/processed/{data_path}"\n\n@celery_app.task(bind=True)\ndef train_model(self, data_path: str) -> dict:\n    """Train model."""\n    self.update_state(state="PROGRESS", meta={"progress": 50})\n    # ... train ...\n    return {"model_path": "/models/model.pkl", "accuracy": 0.95}\n\n@celery_app.task\ndef evaluate_model(model_info: dict) -> dict:\n    """Evaluate model."""\n    # ... evaluate ...\n    return {**model_info, "evaluated": True}\n\n@celery_app.task\ndef deploy_model(model_info: dict) -> str:\n    """Deploy model to production."""\n    return f"Deployed: {model_info[\'model_path\']}"\n\n# Full ML pipeline\npipeline = chain(\n    fetch_data.s("dataset_v1"),\n    preprocess.s(),\n    train_model.s(),\n    evaluate_model.s(),\n    deploy_model.s(),\n)\nresult = pipeline.apply_async()\nprint(result.get())  # "Deployed: /models/model.pkl"\n\n# === TASK RETRY WITH BACKOFF ===\n\n@celery_app.task(bind=True, max_retries=5)\ndef call_external_api(self, url: str):\n    """Call external API with retry."""\n    try:\n        response = requests.get(url, timeout=10)\n        response.raise_for_status()\n        return response.json()\n    except (ConnectionError, TimeoutError) as e:\n        # Network error — retry with exponential backoff\n        raise self.retry(\n            exc=e,\n            countdown=2 ** self.request.retries,  # 1, 2, 4, 8, 16 seconds\n            max_retries=5,\n        )\n    except HTTPError as e:\n        if e.response.status_code >= 500:\n            # Server error — retry\n            raise self.retry(exc=e, countdown=60)\n        else:\n            # Client error — do not retry\n            raise\n\n# === IDEMPOTENT TASKS ===\n# Tasks may be executed multiple times (retries, redelivery)\n# Make them idempotent — safe to run multiple times\n\n@celery_app.task(bind=True)\ndef process_payment(self, payment_id: str):\n    """Process payment (idempotent — safe to retry)."""\n    # Check if already processed\n    payment = get_payment(payment_id)\n    if payment.status == "completed":\n        return {"status": "already_processed"}  # idempotent!\n\n    # Process\n    charge_customer(payment)\n    payment.status = "completed"\n    save_payment(payment)\n\n    return {"status": "processed"}\n\n# === RUN CELERY WORKER ===\n# celery -A blog.tasks worker --loglevel=info --concurrency=4\n# celery -A blog.tasks beat --loglevel=info  # for scheduled tasks\n# celery -A blog.tasks flower  # monitoring dashboard',
+          explanation: 'Chains: sequential (output feeds next). Groups: parallel (all at once). Chords: fan-out + reduce. Use .s() for signatures. Make tasks idempotent (safe to retry). Exponential backoff for retries.'
+        },
+      ],
+      lab: {
+        title: 'Add Background Processing to Your API',
+        objective: 'Set up Celery for emails, image processing, and scheduled tasks',
+        estTime: '90-120 minutes',
+        difficulty: 'Advanced',
+        setup: [
+          'Redis running (from previous lessons)',
+          'pip install celery flower',
+        ],
+        steps: [
+          {
+            title: 'Step 1: Set up Celery',
+            instruction: 'Create Celery app and config',
+            code: '# src/blog/core/celery.py\nfrom celery import Celery\nfrom blog.core.config import settings\n\ncelery_app = Celery(\n    "blog",\n    broker=settings.REDIS_URL,\n    backend=settings.REDIS_URL,\n    include=["blog.tasks"],\n)\n\ncelery_app.conf.update(\n    task_serializer="json",\n    accept_content=["json"],\n    timezone="UTC",\n    enable_utc=True,\n    task_time_limit=300,\n    task_soft_time_limit=240,\n    task_acks_late=True,\n    worker_prefetch_multiplier=1,\n)\n\n# src/blog/tasks.py\nfrom blog.core.celery import celery_app\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n@celery_app.task(bind=True, max_retries=3)\ndef send_email_task(self, to: str, subject: str, body: str):\n    try:\n        # send email via SendGrid\n        pass\n    except Exception as e:\n        raise self.retry(exc=e, countdown=2 ** self.request.retries)',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 2: Add tasks for common operations',
+            instruction: 'Email, image processing, reports',
+            code: '# src/blog/tasks.py (continued)\n\n@celery_app.task(bind=True)\ndef process_image_task(self, image_path: str):\n    """Resize and optimize image."""\n    from PIL import Image\n    import time\n\n    self.update_state(state="PROGRESS", meta={"step": "resizing"})\n    img = Image.open(image_path)\n    img.thumbnail((800, 600))\n    img.save(image_path.replace(".", "_thumb."))\n\n    self.update_state(state="PROGRESS", meta={"step": "done"})\n    return {"thumbnail": image_path.replace(".", "_thumb.")}\n\n@celery_app.task\ndef generate_daily_report():\n    """Generate daily stats report."""\n    # query DB for stats\n    # generate PDF/CSV\n    # send email to admins\n    pass\n\n# Scheduled tasks\ncelery_app.conf.beat_schedule = {\n    "daily-report": {\n        "task": "blog.tasks.generate_daily_report",\n        "schedule": crontab(hour=9, minute=0),\n    },\n}',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 3: Call tasks from FastAPI',
+            instruction: 'Queue tasks from endpoints',
+            code: '# src/blog/api/v1/posts.py\nfrom blog.tasks import send_email_task, process_image_task\n\n@router.post("/posts/{id}/notify")\nasync def notify_subscribers(id: int):\n    post = await get_post(id)\n    subscribers = await get_subscribers(post.author_id)\n\n    # Queue email for each subscriber (parallel via group)\n    from celery import group\n    job = group(\n        send_email_task.s(sub.email, f"New post: {post.title}", post.excerpt)\n        for sub in subscribers\n    )\n    result = job.apply_async()\n\n    return {"task_id": result.id, "subscribers": len(subscribers)}\n\n@router.post("/upload")\nasync def upload(file: UploadFile):\n    # save file\n    file_path = f"uploads/{file.filename}"\n    # ... save ...\n\n    # Queue processing\n    task = process_image_task.delay(file_path)\n    return {"task_id": task.id, "check": f"/tasks/{task.id}"}',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 4: Add task status endpoint',
+            instruction: 'Check task progress',
+            code: '# src/blog/api/v1/tasks.py\nfrom celery.result import AsyncResult\nfrom blog.core.celery import celery_app\n\n@router.get("/tasks/{task_id}")\nasync def get_task(task_id: str):\n    result = AsyncResult(task_id, app=celery_app)\n\n    response = {"task_id": task_id, "state": result.state}\n\n    if result.state == "PENDING":\n        response["message"] = "Waiting to start"\n    elif result.state == "PROGRESS":\n        response["info"] = result.info\n    elif result.state == "SUCCESS":\n        response["result"] = result.result\n    elif result.state == "FAILURE":\n        response["error"] = str(result.info)\n\n    return response',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 5: Run with Docker',
+            instruction: 'Add worker and beat to docker-compose',
+            code: '# docker-compose.yml\nservices:\n  # ... api, db, redis ...\n\n  worker:\n    build: .\n    command: celery -A blog.tasks worker --loglevel=info --concurrency=4\n    environment:\n      - DATABASE_URL=postgresql+asyncpg://blog:blogpass@db:5432/blog\n      - REDIS_URL=redis://redis:6379/0\n    depends_on:\n      - db\n      - redis\n    restart: unless-stopped\n\n  beat:\n    build: .\n    command: celery -A blog.tasks beat --loglevel=info\n    environment:\n      - REDIS_URL=redis://redis:6379/0\n    depends_on:\n      - redis\n    restart: unless-stopped\n\n  flower:\n    image: mher/flower\n    command: celery --broker=redis://redis:6379/0 flower --port=5555\n    ports:\n      - "5555:5555"\n    depends_on:\n      - redis\n\n# Start everything:\ndocker compose up -d\n# Monitor at http://localhost:5555',
+            codeLanguage: 'yaml',
+          },
+        ],
+        verification: 'Tasks queued and processed. Progress tracking works. Flower dashboard shows workers. Scheduled tasks run on time.',
+      },
+      exercises: [
+        {
+          prompt: 'Write a Celery task that processes a video: 1) download, 2) transcode, 3) upload. Use a chain.',
+          starterCode: 'from celery import chain\nfrom blog.tasks import celery_app\n\n@celery_app.task\ndef download_video(url): pass\n\n@celery_app.task\ndef transcode_video(path): pass\n\n@celery_app.task\ndef upload_video(path): pass\n\n# create chain\n',
+          hint: 'chain(download.s(url), transcode.s(), upload.s())',
+          solution: 'from celery import chain\nfrom blog.tasks import celery_app\n\n@celery_app.task\ndef download_video(url: str) -> str:\n    # download\n    return f"/tmp/{hash(url)}.mp4"\n\n@celery_app.task\ndef transcode_video(path: str) -> str:\n    # transcode\n    return path.replace(".mp4", "_transcoded.mp4")\n\n@celery_app.task\ndef upload_video(path: str) -> str:\n    # upload to S3\n    return f"s3://bucket/{path}"\n\n# Chain: download → transcode → upload\nworkflow = chain(\n    download_video.s("https://example.com/video.mp4"),\n    transcode_video.s(),\n    upload_video.s(),\n)\n\nresult = workflow.apply_async()\nfinal_url = result.get()  # "s3://bucket/..."\nprint(f"Video available at: {final_url}")',
+          solutionLanguage: 'python'
+        },
+      ],
+      quiz: [
+        {
+          question: 'When to use Celery vs FastAPI BackgroundTasks?',
+          options: [
+            'Always use Celery',
+            'BackgroundTasks for short tasks (email), Celery for heavy work (ML, video)',
+            'Always use BackgroundTasks',
+            'They are identical',
+          ],
+          correctIndex: 1,
+          explanation: 'BackgroundTasks run in the same process (blocks worker if slow). Celery runs in separate worker processes, supports retries, scheduling, monitoring. Use Celery for anything > 1 second.'
+        },
+        {
+          question: 'What does task_acks_late=True do?',
+          options: [
+            'Faster execution',
+            'Acknowledge AFTER completion (crash-safe — task re-queued if worker dies)',
+            'Required by Celery',
+            'For ordering',
+          ],
+          correctIndex: 1,
+          explanation: 'Default: acknowledge on receive (task lost if worker crashes). acks_late: acknowledge after completion. If worker crashes mid-task, task goes back to queue and another worker picks it up.'
+        },
+        {
+          question: 'What is a Celery chord?',
+          options: [
+            'A musical term',
+            'Group of parallel tasks + callback that runs after all complete (fan-out + reduce)',
+            'Sequential tasks',
+            'A retry mechanism',
+          ],
+          correctIndex: 1,
+          explanation: 'Chord = group (parallel) + callback. Run N tasks in parallel, when ALL complete, run callback with all results. Perfect for map-reduce patterns (process chunks, aggregate).'
+        },
+        {
+          question: 'Why make tasks idempotent?',
+          options: [
+            'Faster',
+            'Tasks may be retried/redelivered — idempotent means safe to run multiple times',
+            'Required by Celery',
+            'Uses less memory',
+          ],
+          correctIndex: 1,
+          explanation: 'Celery may retry tasks (network error, worker crash). If task charges a customer, running it twice = double charge! Check if already processed at start (idempotency key).'
+        },
+      ],
+      keyTakeaways: [
+        'Use Celery for heavy/long tasks (ML, video, reports), BackgroundTasks for short ones',
+        'Architecture: FastAPI → broker (Redis) → worker processes → result backend',
+        '.delay() for fire-and-forget, .apply_async(countdown=N) for delayed',
+        'Chains: sequential (output feeds next), Groups: parallel, Chords: fan-out + reduce',
+        'Always set time limits (task_time_limit, task_soft_time_limit)',
+        'task_acks_late=True: crash-safe (task re-queued if worker dies)',
+        'Make tasks idempotent (safe to retry) — check if already processed',
+        'Exponential backoff for retries: countdown=2 ** self.request.retries',
+        'celery beat for scheduled tasks (cron-like)',
+        'Monitor with Flower (web dashboard at :5555)',
+        'update_state() for progress tracking on long tasks',
+      ],
+      resources: [
+        { title: 'Celery Documentation', url: 'https://docs.celeryq.dev/', type: 'docs' },
+        { title: 'Celery Best Practices', url: 'https://docs.celeryq.dev/en/stable/userguide/tasks.html#best-practices', type: 'article' },
+        { title: 'Flower (monitoring)', url: 'https://flower.readthedocs.io/', type: 'tool' },
+      ]
+    },
+
+    {
+      id: 'fa-15',
+      title: 'Monitoring, Logging & Observability — Prometheus, Grafana, Sentry',
+      subtitle: 'Production observability — metrics, structured logging, error tracking, alerting',
+      duration: 70,
+      difficulty: 'Advanced',
+      phase: 'Real-World',
+      content: [
+        'Production observability has 3 pillars: 1) Metrics (Prometheus) — request count, latency, error rate, 2) Logs (structured JSON) — what happened, when, why, 3) Traces (OpenTelemetry) — request flow across services. Without these, you are flying blind in production.',
+        'Prometheus scrapes metrics from your /metrics endpoint. Use prometheus-fastapi-instrumentator for automatic metrics (request count, latency histogram, status codes). Add custom metrics for business logic (users registered, posts created).',
+        'Structured logging (JSON) is essential for production. Each log line is a JSON object with timestamp, level, message, request_id, user_id, etc. Tools like ELK (Elasticsearch + Logstash + Kibana) or Datadog parse and search these logs.',
+        'Sentry captures unhandled exceptions in production. It shows the exact stack trace, request context, user info, and release version. Integrates with FastAPI automatically. Set up alerts for new errors. Use for error tracking, not for logging.',
+      ],
+      codeExamples: [
+        {
+          filename: 'metrics.py',
+          language: 'python',
+          code: '"""Prometheus metrics — track everything in production."""\nfrom prometheus_fastapi_instrumentator import Instrumentator\nfrom prometheus_client import Counter, Histogram, Gauge\nfrom fastapi import FastAPI, Request, Response\nimport time\n\n# === AUTOMATIC METRICS (prometheus-fastapi-instrumentator) ===\n\ndef setup_metrics(app: FastAPI):\n    """Set up automatic FastAPI metrics."""\n    Instrumentator(\n        should_group_status_codes=True,\n        should_ignore_untemplated=True,\n        should_respect_env_var=True,\n        should_instrument_requests_inprogress=True,\n        excluded_handlers=["/health", "/metrics"],  # dont track these\n        inprogress_name="fastapi_inprogress",\n        inprogress_labels=True,\n    ).add(\n        # Request latency histogram\n        latency_lowr_buckets=(0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5,\n                              0.75, 1.0, 2.5, 5.0, 7.5, 10.0, 30.0, 60.0),\n    ).instrument(app).expose(\n        app,\n        endpoint="/metrics",\n        include_in_schema=False,  # hide from Swagger docs\n    )\n\n# Automatic metrics include:\n# - http_requests_total (counter): total requests by method, path, status\n# - http_request_duration_seconds (histogram): latency distribution\n# - http_requests_inprogress (gauge): current in-flight requests\n# - http_responses_total (counter): responses by status code\n\n# === CUSTOM BUSINESS METRICS ===\n\n# Counter: only increases (request count, errors, users registered)\nUSERS_REGISTERED = Counter(\n    "blog_users_registered_total",\n    "Total users registered",\n    ["source"]  # labels: organic, referral, social\n)\n\nPOSTS_CREATED = Counter(\n    "blog_posts_created_total",\n    "Total posts created",\n    ["published"]  # True/False\n)\n\n# Histogram: distribution (latency, response size)\nDB_QUERY_DURATION = Histogram(\n    "blog_db_query_duration_seconds",\n    "Database query duration",\n    ["operation"],  # select, insert, update, delete\n    buckets=(0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5),\n)\n\n# Gauge: can go up or down (active users, queue size, memory)\nACTIVE_USERS = Gauge(\n    "blog_active_users",\n    "Currently active users (last 5 min)",\n)\n\nQUEUE_SIZE = Gauge(\n    "blog_task_queue_size",\n    "Pending Celery tasks",\n    ["queue"],  # default, high_priority, low_priority\n)\n\n# === USAGE IN ROUTES ===\n\nfrom fastapi import APIRouter, Depends\n\nrouter = APIRouter()\n\n@router.post("/register")\nasync def register(user: UserCreate, source: str = "organic"):\n    # ... create user ...\n\n    # Increment counter\n    USERS_REGISTERED.labels(source=source).inc()\n\n    return user\n\n@router.post("/posts")\nasync def create_post(post: PostCreate):\n    # ... create post ...\n\n    POSTS_CREATED.labels(published=str(post.published)).inc()\n\n    return post\n\n# === TRACK DATABASE QUERY TIME ===\n\nfrom sqlalchemy import event\nfrom blog.db.base import engine\n\n@event.listens_for(engine.sync_engine, "before_cursor_execute")\ndef before_query(conn, cursor, statement, parameters, context, executemany):\n    context._query_start = time.perf_counter()\n\n@event.listens_for(engine.sync_engine, "after_cursor_execute")\ndef after_query(conn, cursor, statement, parameters, context, executemany):\n    duration = time.perf_counter() - context._query_start\n\n    # Determine operation type\n    operation = statement.strip().split()[0].lower()  # select, insert, etc.\n\n    DB_QUERY_DURATION.labels(operation=operation).observe(duration)\n\n# === CUSTOM MIDDLEWARE FOR REQUEST TIMING ===\n\n@app.middleware("http")\nasync def metrics_middleware(request: Request, call_next):\n    start = time.perf_counter()\n\n    try:\n        response = await call_next(request)\n        status = response.status_code\n    except Exception:\n        status = 500\n        raise\n    finally:\n        duration = time.perf_counter() - start\n\n        # Record custom metrics\n        REQUEST_DURATION.labels(\n            method=request.method,\n            path=request.url.path,\n        ).observe(duration)\n\n    return response\n\n# === GRAFANA DASHBOARD QUERIES (PromQL) ===\n"""\n# Request rate (requests per second)\nrate(http_requests_total[5m])\n\n# Error rate (% of 5xx responses)\nsum(rate(http_requests_total{status=~"5.."}[5m])) /\nsum(rate(http_requests_total[5m]))\n\n# P99 latency (99th percentile)\nhistogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))\n\n# Average latency\nrate(http_request_duration_seconds_sum[5m]) /\nrate(http_request_duration_seconds_count[5m])\n\n# Users registered in last hour\nincrease(blog_users_registered_total[1h])\n\n# Database query P95\nhistogram_quantile(0.95, rate(blog_db_query_duration_seconds_bucket[5m]))\n"""\n\n# === ALERT RULES ===\n"""\n# Alert: High error rate\n- alert: HighErrorRate\n  expr: |\n    sum(rate(http_requests_total{status=~"5.."}[5m])) /\n    sum(rate(http_requests_total[5m])) > 0.05\n  for: 5m\n  labels:\n    severity: critical\n  annotations:\n    summary: "Error rate above 5%"\n\n# Alert: High latency\n- alert: HighLatency\n  expr: |\n    histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m])) > 2\n  for: 5m\n  labels:\n    severity: warning\n  annotations:\n    summary: "P99 latency above 2 seconds"\n"""\n',
+          explanation: 'prometheus-fastapi-instrumentator for automatic metrics. Custom counters/histograms/gauges for business logic. Scrape at /metrics. Grafana dashboards with PromQL. Alert on error rate, latency, queue size.'
+        },
+        {
+          filename: 'logging_sentry.py',
+          language: 'python',
+          code: '"""Structured logging and Sentry error tracking."""\nimport logging\nimport json\nimport sys\nimport uuid\nfrom datetime import datetime, timezone\nfrom fastapi import FastAPI, Request, Response\nfrom typing import Any, Optional\nimport sentry_sdk\nfrom sentry_sdk.integrations.fastapi import FastApiIntegration\nfrom sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration\n\n# === STRUCTURED JSON LOGGING ===\n\nclass JsonFormatter(logging.Formatter):\n    """JSON formatter for structured logging (ELK, Datadog)."""\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            "timestamp": datetime.now(timezone.utc).isoformat(),\n            "level": record.levelname,\n            "logger": record.name,\n            "message": record.getMessage(),\n            "module": record.module,\n            "function": record.funcName,\n            "line": record.lineno,\n        }\n\n        # Add exception info\n        if record.exc_info:\n            log_data["exception"] = self.formatException(record.exc_info)\n\n        # Add extra fields\n        for key, value in record.__dict__.items():\n            if key not in {\n                "args", "msg", "levelname", "levelno", "pathname", "filename",\n                "module", "exc_info", "exc_text", "funcName", "lineno",\n                "created", "msecs", "relativeCreated", "thread", "threadName",\n                "processName", "process", "name", "message", "taskName",\n            }:\n                log_data[key] = value\n\n        return json.dumps(log_data, default=str)\n\ndef setup_logging(level: str = "INFO"):\n    """Set up structured logging."""\n    handler = logging.StreamHandler(sys.stdout)\n    handler.setFormatter(JsonFormatter())\n\n    root_logger = logging.getLogger()\n    root_logger.setLevel(level)\n    root_logger.handlers = [handler]  # replace default handler\n\n    # Reduce noise from libraries\n    logging.getLogger("uvicorn.access").setLevel(logging.WARNING)\n    logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)\n\n# === REQUEST ID MIDDLEWARE ===\n\n@app.middleware("http")\nasync def request_id_middleware(request: Request, call_next):\n    """Add request ID to every request (for tracing logs)."""\n    request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))\n    request.state.request_id = request_id\n\n    # Add to logging context\n    logging_context = {\n        "request_id": request_id,\n        "method": request.method,\n        "path": request.url.path,\n        "ip": request.client.host if request.client else None,\n    }\n\n    start = time.perf_counter()\n\n    try:\n        response: Response = await call_next(request)\n        duration = time.perf_counter() - start\n\n        # Log request\n        logging.getLogger("blog.request").info(\n            f"{request.method} {request.url.path} -> {response.status_code}",\n            extra={\n                **logging_context,\n                "status_code": response.status_code,\n                "duration_ms": round(duration * 1000, 2),\n            },\n        )\n\n        # Add request ID to response\n        response.headers["X-Request-ID"] = request_id\n        return response\n\n    except Exception:\n        duration = time.perf_counter() - start\n        logging.getLogger("blog.request").exception(\n            f"Request failed: {request.method} {request.url.path}",\n            extra={\n                **logging_context,\n                "duration_ms": round(duration * 1000, 2),\n            },\n        )\n        raise\n\n# === USAGE IN ROUTES (with request_id automatically in logs) ===\n\n@router.post("/posts")\nasync def create_post(\n    post: PostCreate,\n    request: Request,  # inject to get request_id\n    db: AsyncSession = Depends(get_db),\n):\n    logger = logging.getLogger("blog.posts")\n\n    logger.info(\n        "Creating post",\n        extra={\n            "request_id": request.state.request_id,  # auto in logs\n            "user_id": current_user.id,\n            "post_title": post.title,\n        }\n    )\n\n    # ... create post ...\n\n    logger.info(\n        "Post created",\n        extra={\n            "request_id": request.state.request_id,\n            "post_id": post.id,\n        }\n    )\n\n    return post\n\n# Log output (JSON):\n# {"timestamp": "2024-01-15T10:30:00Z", "level": "INFO", "logger": "blog.posts",\n#  "message": "Creating post", "request_id": "abc-123", "user_id": 1, "post_title": "Hello"}\n\n# === SENTRY INTEGRATION ===\n\ndef setup_sentry(app: FastAPI):\n    """Set up Sentry error tracking."""\n    sentry_sdk.init(\n        dsn=settings.SENTRY_DSN,\n        environment=settings.ENVIRONMENT,\n        release=settings.VERSION,  # track which version has errors\n        traces_sample_rate=0.1,  # 10% of requests traced\n        profiles_sample_rate=0.1,  # 10% profiled\n        integrations=[\n            FastApiIntegration(),\n            SqlalchemyIntegration(),\n        ],\n        before_send=filter_sensitive_data,\n    )\n\ndef filter_sensitive_data(event: dict, hint: dict) -> Optional[dict]:\n    """Remove sensitive data before sending to Sentry."""\n    if "request" in event:\n        # Remove auth headers\n        headers = event["request"].get("headers", {})\n        headers.pop("authorization", None)\n        headers.pop("cookie", None)\n\n        # Remove password from body\n        if "data" in event["request"]:\n            try:\n                data = json.loads(event["request"]["data"])\n                data.pop("password", None)\n                data.pop("credit_card", None)\n                event["request"]["data"] = json.dumps(data)\n            except (json.JSONDecodeError, TypeError):\n                pass\n\n    return event\n\n# === AUTOMATIC ERROR CAPTURE ===\n# Sentry automatically captures:\n# - Unhandled exceptions (500 errors)\n# - HTTPException (if configured)\n# - Request context (URL, method, headers, body)\n# - User info (if set)\n\n# Set user context for Sentry\nfrom sentry_sdk import set_user\n\n@router.get("/me")\nasync def get_me(current_user: User = Depends(get_current_user)):\n    # Set user in Sentry (shows in error reports)\n    set_user({\n        "id": current_user.id,\n        "email": current_user.email,\n        "username": current_user.username,\n    })\n    return current_user\n\n# === MANUAL ERROR REPORTING ===\n\ntry:\n    risky_operation()\nexcept Exception as e:\n    # Capture to Sentry (does not re-raise)\n    sentry_sdk.capture_exception(e)\n\n    # Log it too\n    logger.exception("Operation failed", extra={"user_id": user_id})\n\n    # Re-raise or return error\n    raise HTTPException(500, "Internal error")\n\n# === PERFORMANCE MONITORING ===\n# Sentry automatically traces:\n# - HTTP requests (duration, status)\n# - Database queries (with SqlalchemyIntegration)\n# - External HTTP calls (httpx integration)\n\n# Add custom spans\nfrom sentry_sdk import start_span\n\n@router.get("/expensive")\nasync def expensive_operation():\n    with start_span(op="db.query", description="complex query"):\n        result = await complex_db_query()\n\n    with start_span(op="ml.inference", description="model prediction"):\n        prediction = model.predict(result)\n\n    return prediction\n\n# === SETUP IN LIFESPAN ===\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    # Set up logging\n    setup_logging(level="INFO" if settings.ENVIRONMENT == "production" else "DEBUG")\n\n    # Set up Sentry\n    if settings.SENTRY_DSN:\n        setup_sentry(app)\n\n    # Set up metrics\n    setup_metrics(app)\n\n    yield\n\n    # Shutdown\n    sentry_sdk.flush()  # send pending events',
+          explanation: 'Structured logging (JSON) for ELK/Datadog. Request ID middleware for tracing. Sentry for error tracking (auto-captures exceptions). Filter sensitive data. Set user context. Custom spans for performance. Prometheus for metrics.'
+        },
+      ],
+      lab: {
+        title: 'Add Production Observability',
+        objective: 'Set up metrics, logging, and error tracking',
+        estTime: '90 minutes',
+        difficulty: 'Advanced',
+        setup: [
+          'pip install prometheus-fastapi-instrumentator prometheus-client sentry-sdk',
+          'Sentry account (free tier)',
+        ],
+        steps: [
+          {
+            title: 'Step 1: Add Prometheus metrics',
+            instruction: 'Automatic and custom metrics',
+            code: '# src/blog/core/metrics.py\nfrom prometheus_fastapi_instrumentator import Instrumentator\nfrom prometheus_client import Counter, Histogram\n\nUSERS_REGISTERED = Counter(\n    "blog_users_registered_total",\n    "Total users registered",\n)\n\nDB_QUERY_DURATION = Histogram(\n    "blog_db_query_duration_seconds",\n    "DB query duration",\n    ["operation"],\n)\n\ndef setup_metrics(app):\n    Instrumentator().instrument(app).expose(app, endpoint="/metrics")\n\n# In main.py lifespan:\n# setup_metrics(app)\n\n# In routes:\n# USERS_REGISTERED.inc()',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 2: Set up structured logging',
+            instruction: 'JSON logging with request IDs',
+            code: '# src/blog/core/logging.py\nimport logging\nimport json\nfrom datetime import datetime, timezone\n\nclass JsonFormatter(logging.Formatter):\n    def format(self, record):\n        return json.dumps({\n            "timestamp": datetime.now(timezone.utc).isoformat(),\n            "level": record.levelname,\n            "message": record.getMessage(),\n            "logger": record.name,\n            **getattr(record, "extra_data", {}),\n        })\n\ndef setup_logging():\n    handler = logging.StreamHandler()\n    handler.setFormatter(JsonFormatter())\n    logging.getLogger().handlers = [handler]\n    logging.getLogger().setLevel(logging.INFO)\n\n# Request ID middleware:\n@app.middleware("http")\nasync def request_id(request: Request, call_next):\n    request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))\n    request.state.request_id = request_id\n    response = await call_next(request)\n    response.headers["X-Request-ID"] = request_id\n    return response',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 3: Add Sentry',
+            instruction: 'Error tracking and performance monitoring',
+            code: '# src/blog/core/sentry.py\nimport sentry_sdk\nfrom sentry_sdk.integrations.fastapi import FastApiIntegration\n\ndef setup_sentry():\n    if not settings.SENTRY_DSN:\n        return\n\n    sentry_sdk.init(\n        dsn=settings.SENTRY_DSN,\n        environment=settings.ENVIRONMENT,\n        release=settings.VERSION,\n        traces_sample_rate=0.1,\n        integrations=[FastApiIntegration()],\n        before_send=filter_sensitive,\n    )\n\ndef filter_sensitive(event, hint):\n    # Remove auth, passwords from events\n    return event\n\n# In lifespan:\n# setup_sentry()',
+            codeLanguage: 'python',
+          },
+          {
+            title: 'Step 4: Set up Grafana dashboard',
+            instruction: 'Visualize metrics',
+            code: '# docker-compose.yml — add Prometheus and Grafana\nservices:\n  prometheus:\n    image: prom/prometheus\n    ports: ["9090:9090"]\n    volumes:\n      - ./prometheus.yml:/etc/prometheus/prometheus.yml\n\n  grafana:\n    image: grafana/grafana\n    ports: ["3001:3000"]\n    environment:\n      GF_SECURITY_ADMIN_PASSWORD: admin\n    depends_on:\n      - prometheus\n\n# prometheus.yml\nscrape_configs:\n  - job_name: blog-api\n    scrape_interval: 5s\n    static_configs:\n      - targets: ["api:8000"]\n\n# Access Grafana at http://localhost:3001 (admin/admin)\n# Add Prometheus as data source\n# Create dashboard with queries:\n# - rate(http_requests_total[5m])\n# - histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))',
+            codeLanguage: 'yaml',
+          },
+          {
+            title: 'Step 5: Test the setup',
+            instruction: 'Generate traffic and check dashboards',
+            code: '# Generate traffic\nab -n 1000 -c 10 http://localhost:8000/api/v1/posts\n\n# Check metrics\ncurl http://localhost:8000/metrics | grep http_requests\n\n# View in Prometheus: http://localhost:9090\n# Query: rate(http_requests_total[5m])\n\n# View in Grafana: http://localhost:3001\n# See request rate, latency, error rate\n\n# Trigger an error (check Sentry)\ncurl http://localhost:8000/api/v1/posts/99999  # 404\n# Or trigger 500:\ncurl -X POST http://localhost:8000/api/v1/posts -d \'{}\'  # 422\n\n# Check Sentry dashboard for captured errors',
+            codeLanguage: 'bash',
+          },
+        ],
+        verification: 'Metrics at /metrics. Grafana shows dashboards. Errors appear in Sentry. Logs are JSON with request IDs.',
+      },
+      exercises: [
+        {
+          prompt: 'Add a custom metric that tracks the number of active users (gauge) and update it every 5 minutes.',
+          starterCode: 'from prometheus_client import Gauge\n\nACTIVE_USERS = Gauge(\n    "blog_active_users",\n    "Active users in last 5 minutes",\n)\n\n# your update function\n',
+          hint: 'Use a Celery beat task or background task to query DB and set gauge value.',
+          solution: 'from prometheus_client import Gauge\nfrom blog.tasks import celery_app\nfrom sqlalchemy import select, func\n\nACTIVE_USERS = Gauge(\n    "blog_active_users",\n    "Active users in last 5 minutes",\n)\n\n@celery_app.task\ndef update_active_users():\n    """Update active users gauge every 5 min."""\n    from blog.db.base import async_session\n    from blog.models.user import UserSession\n    from datetime import datetime, timedelta\n\n    async with async_session() as db:\n        cutoff = datetime.utcnow() - timedelta(minutes=5)\n        count = await db.scalar(\n            select(func.count(UserSession.user_id.distinct()))\n            .where(UserSession.last_activity > cutoff)\n        )\n        ACTIVE_USERS.set(count or 0)\n\n# In celery beat schedule:\ncelery_app.conf.beat_schedule["update-active-users"] = {\n    "task": "blog.tasks.update_active_users",\n    "schedule": 300.0,  # 5 minutes\n}',
+          solutionLanguage: 'python'
+        },
+      ],
+      quiz: [
+        {
+          question: 'What are the 3 pillars of observability?',
+          options: [
+            'Logs, metrics, traces',
+            'CPU, memory, disk',
+            'Frontend, backend, database',
+            'GET, POST, DELETE',
+          ],
+          correctIndex: 0,
+          explanation: 'Metrics (numbers over time — Prometheus), Logs (events — ELK/Datadog), Traces (request flow — OpenTelemetry). Together they give full visibility into production systems.'
+        },
+        {
+          question: 'Why use structured (JSON) logging?',
+          options: [
+            'Faster',
+            'Machine-parseable (ELK, Datadog can search/filter fields)',
+            'Required by FastAPI',
+            'Uses less storage',
+          ],
+          correctIndex: 1,
+          explanation: 'JSON logs are structured — tools can search by field (request_id, user_id, level). Plain text logs require regex parsing. JSON enables: "show me all ERROR logs for user 42 in the last hour".'
+        },
+        {
+          question: 'What does Sentry capture?',
+          options: [
+            'All HTTP requests',
+            'Unhandled exceptions (with stack trace, context, user info)',
+            'Database queries',
+            'Login attempts',
+          ],
+          correctIndex: 1,
+          explanation: 'Sentry captures unhandled exceptions and errors. It shows the exact stack trace, request context (URL, headers, body), user info, and release version. Use for error tracking, not general logging.'
+        },
+        {
+          question: 'What is a Prometheus histogram?',
+          options: [
+            'A chart type',
+            'Metric that tracks distribution (e.g., latency percentiles: P50, P95, P99)',
+            'A counter',
+            'A gauge',
+          ],
+          correctIndex: 1,
+          explanation: 'Histogram tracks distribution of values (request latency, response size). Enables percentile queries: "P99 latency = histogram_quantile(0.99, ...). Better than average for understanding tail latency.'
+        },
+      ],
+      keyTakeaways: [
+        '3 pillars: Metrics (Prometheus), Logs (structured JSON), Traces (OpenTelemetry)',
+        'prometheus-fastapi-instrumentator for automatic HTTP metrics',
+        'Custom metrics: Counter (increases), Histogram (distribution), Gauge (up/down)',
+        'Structured JSON logging — machine-parseable for ELK/Datadog',
+        'Request ID middleware — trace single request across logs',
+        'Sentry for error tracking — captures stack traces, context, user info',
+        'Filter sensitive data before sending to Sentry (passwords, tokens)',
+        'Grafana dashboards with PromQL queries (rate, histogram_quantile)',
+        'Alert on: error rate > 5%, P99 latency > 2s, queue size > 1000',
+        'Set Sentry release version — track which version introduced errors',
+      ],
+      resources: [
+        { title: 'Prometheus Documentation', url: 'https://prometheus.io/docs/', type: 'docs' },
+        { title: 'Grafana Documentation', url: 'https://grafana.com/docs/', type: 'docs' },
+        { title: 'Sentry Python SDK', url: 'https://docs.sentry.io/platforms/python/', type: 'docs' },
+        { title: 'prometheus-fastapi-instrumentator', url: 'https://github.com/trallnag/prometheus-fastapi-instrumentator', type: 'tool' },
+      ]
     },
   ]
 };
