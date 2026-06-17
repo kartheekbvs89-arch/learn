@@ -1,159 +1,139 @@
-// Core types for the learning platform
+// ============================================================
+// LearnStack — Industrial-Grade Types
+// ============================================================
 
+export type Phase = 'Foundation' | 'Intermediate' | 'Advanced' | 'Real-World';
+export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+
+// === CODE EXAMPLE ===
 export interface CodeExample {
-  filename?: string;
+  filename: string;
   language: string;
   code: string;
   explanation?: string;
+  approach: 'minimal' | 'real-world' | 'production';
 }
 
-export interface Exercise {
-  prompt: string;
-  starterCode?: string;
-  starterLanguage?: string;
+// === LAB STEP ===
+export interface LabStep {
+  step: number;
+  title: string;
+  instruction: string;
+  command?: string;
+  expectedOutput?: string;
+  verification?: string; // how to verify (file exists, output matches, port responds)
   hint?: string;
-  solution: string;
-  solutionLanguage?: string;
 }
 
+// === QUIZ QUESTION ===
 export interface QuizQuestion {
   question: string;
   options: string[];
   correctIndex: number;
   explanation: string;
+  isCodeOutput?: boolean;
 }
 
-export type ResourceType =
-  | 'docs'
-  | 'video'
-  | 'article'
-  | 'tool'
-  | 'interactive'
-  | 'cheatsheet'
-  | 'book';
-
+// === RESOURCE ===
 export interface Resource {
   title: string;
   url: string;
-  type: ResourceType;
+  type: 'docs' | 'article' | 'video' | 'tool' | 'book' | 'cheatsheet';
   isHiddenGem?: boolean;
-}
-
-export interface MiniProject {
-  title: string;
-  description: string;
-  requirements: string[];
-  estTime: string;
-  solutionCode: string;
-  solutionLanguage: string;
-}
-
-// New: Visualization block - diagrams using ASCII art or structured layouts
-export interface Visualization {
-  title: string;
-  type: 'flow' | 'architecture' | 'sequence' | 'tree' | 'comparison' | 'layers';
   description?: string;
-  // For ASCII/text diagrams
-  diagram?: string;
-  // For structured data (used in comparison and tree types)
-  nodes?: { label: string; detail?: string; children?: string[] }[];
-  // Legend explaining symbols
-  legend?: string[];
 }
 
-// New: Lab - hands-on guided exercise with setup + steps
-export interface Lab {
-  title: string;
-  objective: string;
-  estTime: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  setup: string[]; // Prerequisites, environment setup commands
-  steps: {
-    title: string;
-    instruction: string;
-    code?: string;
-    codeLanguage?: string;
-    expectedOutput?: string;
-    explanation?: string;
-  }[];
-  verification?: string; // How to verify it worked
-  cleanup?: string[]; // How to clean up
+// === COMMON ERROR ===
+export interface CommonError {
+  error: string;
+  fix: string;
+  rootCause: string;
 }
 
-// New: Progressive examples - small -> larger -> real-world
-export interface ProgressiveExample {
-  title: string;
-  description: string;
-  stages: {
-    name: string; // "Tiny", "Small", "Real-World"
-    description: string;
-    code: string;
-    language: string;
-    explanation: string;
-  }[];
-}
-
-// New: Setup block - environment setup instructions
-export interface Setup {
-  title: string;
-  os: 'linux' | 'macos' | 'windows' | 'all';
-  steps: {
-    description: string;
-    command?: string;
-    expectedOutput?: string;
-  }[];
-  verification?: string;
-  troubleshooting?: { problem: string; solution: string }[];
-}
-
+// === LESSON (full industrial-grade content) ===
 export interface Lesson {
-  id: string;
+  slug: string;
   title: string;
-  subtitle?: string;
+  subtitle: string;
   duration: number; // minutes
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  phase: 'Foundation' | 'Intermediate' | 'Advanced' | 'Real-World';
-  content: string[];
+  difficulty: Difficulty;
+  phase: Phase;
+  xp: number;
+  moduleSlug: string;
+
+  // 1. OBJECTIVE
+  objectives: string[];
+  realWorldContext: string;
+  prerequisites: string[];
+
+  // 2. CONCEPTS
+  conceptDiagram?: string; // ASCII art
+  conceptExplanation: string[];
+  whyItMatters: string;
+
+  // 3. CODE EXAMPLES (minimum 3)
   codeExamples: CodeExample[];
-  exercises?: Exercise[];
-  quiz?: QuizQuestion[];
-  keyTakeaways: string[];
+
+  // 4. CONFIG FILES (optional)
+  configFiles?: { filename: string; content: string; language: string; comment: string }[];
+
+  // 5. PROGRESSIVE LAB
+  lab: {
+    title: string;
+    starterFiles?: { path: string; content: string }[];
+    steps: LabStep[];
+  };
+
+  // 6. COMMON ERRORS
+  commonErrors: CommonError[];
+
+  // 7. QUIZ (5 questions)
+  quiz: QuizQuestion[];
+
+  // 8. RESOURCES
   resources: Resource[];
-  miniProject?: MiniProject;
-  // New content types
-  visualization?: Visualization;
-  setup?: Setup;
-  lab?: Lab;
-  progressiveExample?: ProgressiveExample;
+  whatToReadNext: string;
 }
 
+// === MODULE ===
 export interface Module {
-  id: string;
+  slug: string;
   title: string;
   icon: string;
   color: string;
   gradient: string;
   description: string;
-  level: 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
-  // Learning path - what you'll achieve by end of this module
-  learningPath: {
-    title: string;
-    description: string;
-    phases: {
-      name: 'Foundation' | 'Intermediate' | 'Advanced' | 'Real-World';
-      description: string;
-      outcomes: string[]; // what you'll be able to do after this phase
-    }[];
-  };
-  // Final real-world project that ties everything together
+  totalLessons: number;
+  estimatedHours: number;
   capstoneProject?: {
     title: string;
     description: string;
-    architecture?: string; // ASCII architecture diagram
+    architecture: string;
     features: string[];
     techStack: string[];
-    estTime: string;
-    difficulty: 'Intermediate' | 'Advanced';
+    rubric: { criterion: string; weight: number }[];
   };
-  lessons: Lesson[];
+}
+
+// === PROGRESS ===
+export interface LessonProgress {
+  lessonSlug: string;
+  completed: boolean;
+  quizPassed: boolean;
+  labCompleted: boolean;
+  xpEarned: number;
+  completedAt?: string;
+}
+
+export interface ModuleProgress {
+  moduleSlug: string;
+  lessons: Record<string, LessonProgress>;
+}
+
+export interface UserProgress {
+  modules: Record<string, ModuleProgress>;
+  totalXP: number;
+  streak: number;
+  lastActivityDate: string;
+  certificates: string[]; // module slugs
 }
