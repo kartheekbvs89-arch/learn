@@ -2,7 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  /* config options here */
+  // For GitHub Pages static export:
+  // output: "export",
+  // images: { unoptimized: true },
+  // basePath: "/learn",
+  // assetPrefix: "/learn/",
   typescript: {
     ignoreBuildErrors: true,
   },
