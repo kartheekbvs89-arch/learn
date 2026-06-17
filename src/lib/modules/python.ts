@@ -2,1327 +2,778 @@ import { Module } from '../types';
 
 export const pythonModule: Module = {
   id: 'python',
-  title: 'Python Mastery',
+  title: 'Python Mastery — Industrial Grade',
   icon: '🐍',
   color: '#3776AB',
   gradient: 'linear-gradient(135deg, #3776AB 0%, #FFD43B 100%)',
-  description: 'From zero to writing production Python applications. 20 lessons across 4 phases: Foundation → Intermediate → Advanced → Real-World. Build a complete CLI task manager by the end.',
+  description: 'Master Python the way Google engineers use it. 30 lessons across 4 phases — every fundamental drilled with multiple examples, real configurations, project setups, and trade-offs. By the end, you can build applications like z.ai.',
   level: 'All Levels',
   learningPath: {
-    title: 'Python Developer Path',
-    description: 'Master Python from syntax to production-grade applications with async, testing, and packaging.',
+    title: 'Python Engineer Path — Zero to Industrial',
+    description: 'This is not a tutorial. This is a structured path that takes you from never-written-Python to building production applications. Every concept is taught 3+ ways with real configurations and trade-offs. Skip nothing.',
     phases: [
       {
         name: 'Foundation',
-        description: 'Core syntax, data types, control flow, functions',
+        description: 'Master EVERY fundamental — strings, numbers, lists, dicts, sets, control flow, functions. No skipping.',
         outcomes: [
-          'Write basic Python scripts',
-          'Understand all built-in data types',
-          'Use functions, loops, conditionals',
-          'Read and write files',
+          'Install Python 3.12+ with pyenv, set up virtual environments like a pro',
+          'Know every string method, formatting option, and when to use each',
+          'Understand list vs tuple vs dict vs set at a memory and performance level',
+          'Write functions with proper type hints, *args, **kwargs, defaults',
+          'Read and write files with pathlib, handle JSON/CSV/YAML/TOML',
+          'Handle errors like a Python engineer, not like a beginner',
         ],
       },
       {
         name: 'Intermediate',
-        description: 'OOP, error handling, decorators, generators',
+        description: 'OOP, decorators, generators, context managers, type hints — the Python engineer toolkit.',
         outcomes: [
-          'Design classes with inheritance and polymorphism',
-          'Use magic methods and properties',
-          'Write decorators and context managers',
-          'Handle errors gracefully',
+          'Design classes with inheritance, composition, magic methods, properties',
+          'Write decorators (including parametrized and class-based)',
+          'Build generators and async generators for memory-efficient pipelines',
+          'Implement context managers (class-based and @contextmanager)',
+          'Add type hints everywhere and run mypy in CI',
+          'Master collections, functools, itertools — the standard library power tools',
         ],
       },
       {
         name: 'Advanced',
-        description: 'Async, metaclasses, type hints, performance',
+        description: 'Async, multiprocessing, metaclasses, performance — what senior engineers know.',
         outcomes: [
-          'Build async applications with asyncio',
-          'Add type hints and use mypy',
-          'Profile and optimize code',
-          'Use advanced patterns (descriptors, metaclasses)',
+          'Build async applications with asyncio, aiohttp, asyncpg',
+          'Use multiprocessing for CPU-bound work, threading for I/O',
+          'Understand GIL, memory model, garbage collection',
+          'Profile and optimize hot paths (cProfile, memory_profiler, py-spy)',
+          'Write metaclasses, descriptors, and use them sparingly',
+          'Apply design patterns (Factory, Strategy, Observer, Singleton) in Python',
         ],
       },
       {
         name: 'Real-World',
-        description: 'Testing, packaging, logging, deployment',
+        description: 'Build actual applications — CLIs, scrapers, API clients, databases, packaging.',
         outcomes: [
-          'Write tests with pytest',
-          'Package and publish to PyPI',
-          'Set up logging and configuration',
-          'Deploy Python apps to production',
+          'Build CLI apps with Click/Typer — subcommands, options, autocomplete',
+          'Scrape websites with requests + BeautifulSoup, handle JS with Playwright',
+          'Build API clients with httpx (sync + async), handle retries, auth',
+          'Integrate PostgreSQL with SQLAlchemy 2.0 async, write migrations',
+          'Package your code with pyproject.toml, publish to PyPI',
+          'Write tests with pytest, set up CI with GitHub Actions, deploy with Docker',
         ],
       },
     ],
   },
   capstoneProject: {
-    title: 'Production CLI Task Manager',
-    description: 'Build a complete CLI task manager with SQLite persistence, JSON export/import, rich CLI output, tests, and proper packaging for pip install.',
-    architecture: `┌─────────────────────────────────────────────┐
-│            User (terminal)                  │
-└──────────────┬──────────────────────────────┘
-               │ CLI commands
-               ▼
-┌─────────────────────────────────────────────┐
-│  Click CLI Layer (commands.py)              │
-│  • add • list • done • delete • export      │
-└──────────────┬──────────────────────────────┘
-               │ Service calls
-               ▼
-┌─────────────────────────────────────────────┐
-│  Service Layer (services.py)                │
-│  • Business logic                            │
-│  • Validation                                │
-│  • Coordinates DB + export                   │
-└──────┬───────────────────────────┬──────────┘
-       │                           │
-       ▼                           ▼
-┌──────────────┐         ┌──────────────────┐
-│ SQLite DB    │         │  Export/Import   │
-│ (SQLAlchemy) │         │  JSON / CSV      │
-└──────────────┘         └──────────────────┘`,
+    title: 'Production CLI Task Manager with Cloud Sync',
+    description: 'Build a real, publishable CLI app: SQLite + PostgreSQL sync, Click CLI, Rich output, full test suite, packaged for pip install, deployed via Docker.',
+    architecture: `┌──────────────────────────────────────────────────────────────┐
+│                    User Terminal                              │
+└────────────────────────┬─────────────────────────────────────┘
+                         │ task add/list/done/sync/export
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  Click CLI Layer (cli.py)                                    │
+│  • Subcommands: add, list, done, delete, sync, export, search│
+│  • Rich-formatted tables, colors, progress bars              │
+│  • Autocomplete support                                       │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  Service Layer (services.py)                                 │
+│  • Business logic, validation, domain exceptions             │
+│  • Coordinates local DB + remote sync + export               │
+└──────┬──────────────────────────────────────────┬───────────┘
+       │                                          │
+       ▼                                          ▼
+┌──────────────┐                       ┌────────────────────┐
+│ Local SQLite │◄────── sync ─────────►│ Remote PostgreSQL  │
+│ (SQLAlchemy) │       (httpx)         │ (async SQLAlchemy) │
+└──────────────┘                       └────────────────────┘
+       │                                          │
+       ▼                                          ▼
+┌──────────────┐                       ┌────────────────────┐
+│ JSON Export  │                       │ Audit log table    │
+│ CSV Export   │                       │ (every change)     │
+└──────────────┘                       └────────────────────┘
+
+Files:
+taskmanager/
+├── pyproject.toml         # Packaging, deps, CLI entry point
+├── README.md
+├── .env.example
+├── Dockerfile
+├── docker-compose.yml
+├── src/taskmanager/
+│   ├── __init__.py
+│   ├── cli.py             # Click commands
+│   ├── models.py          # SQLAlchemy models
+│   ├── database.py        # Engine, session, async engine
+│   ├── services.py        # Business logic
+│   ├── sync.py            # Remote sync via httpx
+│   ├── exporters.py       # JSON/CSV export
+│   ├── config.py          # pydantic-settings
+│   └── exceptions.py      # Domain exceptions
+├── tests/
+│   ├── conftest.py
+│   ├── test_services.py
+│   ├── test_cli.py
+│   └── test_sync.py
+└── .github/workflows/
+    └── ci.yml             # Lint, test, build, publish`,
     features: [
-      'Add, list, complete, delete tasks',
-      'Priority levels (low/medium/high)',
-      'Due dates and overdue detection',
-      'Tag-based filtering',
-      'Export to JSON/CSV',
+      'Add, list, complete, delete tasks with priorities and due dates',
+      'Tags with many-to-many relationship',
+      'Search by keyword, filter by status/priority/tag',
+      'Local SQLite for offline work',
+      'Sync to remote PostgreSQL (conflict resolution)',
+      'Export to JSON, CSV, Markdown',
       'Import from JSON',
-      'Colored terminal output (rich)',
-      'Search tasks by keyword',
+      'Rich-formatted terminal output (tables, colors, progress)',
+      'Shell autocomplete (bash, zsh, fish)',
+      'Full audit log of every change',
+      'Config via .env file or CLI flags',
+      'Docker distribution',
     ],
     techStack: [
       'Python 3.12+',
-      'Click (CLI framework)',
-      'SQLAlchemy 2.0 (ORM)',
-      'SQLite (database)',
+      'Click 8.x (CLI)',
+      'SQLAlchemy 2.0 async (ORM)',
+      'SQLite (local) + PostgreSQL (remote)',
+      'httpx (sync + async HTTP)',
       'Rich (terminal formatting)',
+      'pydantic-settings (config)',
       'pytest (testing)',
-      'pyproject.toml (packaging)',
+      'ruff + mypy (linting + types)',
+      'Docker (deployment)',
+      'GitHub Actions (CI/CD)',
     ],
-    estTime: '6-8 hours',
-    difficulty: 'Intermediate',
+    estTime: '15-20 hours',
+    difficulty: 'Advanced',
   },
   lessons: [
-    // ============ PHASE 1: FOUNDATION ============
+    // ============================================================
+    // PHASE 1: FOUNDATION — Master every fundamental
+    // ============================================================
     {
       id: 'py-01',
-      title: 'What is Python? Setup & First Program',
-      subtitle: 'Install Python, run your first script, understand the REPL',
-      duration: 30,
+      title: 'Installation, pyenv, Virtual Environments & Project Structure',
+      subtitle: 'Set up Python like a senior engineer — pyenv, venv, uv, pyproject.toml',
+      duration: 60,
       difficulty: 'Beginner',
       phase: 'Foundation',
       content: [
-        'Python is a high-level, interpreted, general-purpose programming language created by Guido van Rossum in 1991. Its design philosophy emphasizes code readability with significant indentation. Python is dynamically typed and garbage-collected, supporting multiple programming paradigms including structured, object-oriented, and functional programming.',
-        'Python is used everywhere: web development (Django, Flask, FastAPI), data science (NumPy, Pandas, scikit-learn), machine learning (PyTorch, TensorFlow), automation, scripting, scientific computing, and more. Its massive ecosystem and clean syntax make it the most popular programming language in the world as of 2024.',
-        'To install Python, download the latest version from python.org. On Linux/macOS, you can also use pyenv or your package manager. On Windows, the Microsoft Store version is recommended. Always use Python 3.10+ for modern features like match statements and improved error messages.',
-        'The Python REPL (Read-Eval-Print Loop) lets you execute Python interactively. Just type `python` in your terminal. For a better experience, install IPython with `pip install ipython`. For notebooks, install Jupyter with `pip install jupyter`.',
+        'Most beginners install Python once and use it for everything. Senior engineers install Python PER PROJECT, isolated, version-pinned, reproducible. This lesson teaches you the senior way.',
+        'Three tools dominate Python environment management in 2024: (1) pyenv — manages multiple Python versions on your machine, (2) venv (built-in) or uv (10x faster) — creates isolated environments per project, (3) pyproject.toml — the modern standard for project metadata, dependencies, and tool config.',
+        'Why not just use system Python? Three reasons: (1) Different projects need different Python versions — your OS might ship 3.10, your ML project needs 3.12. (2) Different projects need different package versions — project A needs Django 4, project B needs Django 5. (3) System Python is owned by root — installing packages there breaks OS tools that depend on it (ask anyone who broke macOS by sudo pip install).',
+        'The senior workflow: 1) Install pyenv, install Python 3.12, 2) Create project dir, 3) Create venv with `uv venv` (or `python -m venv .venv`), 4) Activate it, 5) Create pyproject.toml with dependencies, 6) Install with `uv pip install -e .` (editable), 7) Add .venv/ to .gitignore. Every command after this runs in the isolated env.',
       ],
+      setup: {
+        title: 'Set Up Python Like a Senior Engineer',
+        os: 'all',
+        steps: [
+          {
+            description: 'Install pyenv to manage multiple Python versions',
+            command: '# macOS\nbrew install pyenv\n\n# Linux (Ubuntu/Debian)\nsudo apt update\nsudo apt install -y make build-essential libssl-dev zlib1g-dev \\\n  libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \\\n  libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \\\n  libffi-dev liblzma-dev\ncurl https://pyenv.run | bash\n\n# Add to ~/.bashrc or ~/.zshrc:\nexport PATH="$HOME/.pyenv/bin:$PATH"\neval "$(pyenv init --path)"\neval "$(pyenv init -)"',
+            expectedOutput: '$ pyenv --version\npyenv 2.3.0',
+          },
+          {
+            description: 'Install Python 3.12 (does not affect system Python)',
+            command: 'pyenv install 3.12.0\npyenv install 3.11.6  # also install 3.11 for testing\npyenv global 3.12.0\npython --version  # Python 3.12.0',
+          },
+          {
+            description: 'Install uv — 10x faster pip alternative by Astral',
+            command: '# macOS / Linux\ncurl -LsSf https://astral.sh/uv/install.sh | sh\n\n# Windows\npowershell -c "irm https://astral.sh/uv/install.ps1 | iex"\n\n# Verify\nuv --version  # uv 0.4.0',
+          },
+          {
+            description: 'Create your first project with proper structure',
+            command: 'mkdir myproject && cd myproject\n\n# Set local Python version for this project\npyenv local 3.12.0  # creates .python-version file\n\n# Create virtual environment (uv is 10x faster than venv)\nuv venv\n# OR classic: python -m venv .venv\n\n# Activate\nsource .venv/bin/activate  # Linux/macOS\n# .venv\\Scripts\\activate    # Windows\n\n# Verify\nwhich python  # /path/to/myproject/.venv/bin/python\npython --version  # Python 3.12.0',
+          },
+          {
+            description: 'Create pyproject.toml — modern project config',
+            command: 'cat > pyproject.toml << \'EOF\'\n[build-system]\nrequires = ["hatchling"]\nbuild-backend = "hatchling.build"\n\n[project]\nname = "myproject"\nversion = "0.1.0"\ndescription = "My awesome project"\nreadme = "README.md"\nrequires-python = ">=3.12"\nlicense = {text = "MIT"}\nauthors = [{name = "You", email = "you@example.com"}]\ndependencies = [\n    "httpx>=0.27",\n    "rich>=13.0",\n]\n\n[project.optional-dependencies]\ndev = [\n    "pytest>=8.0",\n    "ruff>=0.5",\n    "mypy>=1.10",\n]\n\n[project.scripts]\nmyproject = "myproject.cli:main"\n\n[tool.ruff]\nline-length = 100\ntarget-version = "py312"\n\n[tool.pytest.ini_options]\ntestpaths = ["tests"]\naddopts = "-v --cov=myproject"\n\n[tool.mypy]\nstrict = true\nEOF\n\n# Install in editable mode (changes reflect immediately)\nuv pip install -e ".[dev]"',
+          },
+          {
+            description: 'Create .gitignore and project structure',
+            command: 'cat > .gitignore << \'EOF\'\n.venv/\n__pycache__/\n*.pyc\n.pytest_cache/\n.mypy_cache/\n.ruff_cache/\n*.egg-info/\ndist/\nbuild/\n.env\nEOF\n\nmkdir -p src/myproject tests\ntouch src/myproject/__init__.py tests/__init__.py\necho "# My Project" > README.md\n\necho \'def main():\n    print("Hello from myproject")\n\nif __name__ == "__main__":\n    main()\' > src/myproject/cli.py\n\n# Test it\nmyproject  # Hello from myproject',
+          },
+        ],
+        verification: 'Run `which python` — should show your .venv path, not system. Run `myproject` — should print "Hello from myproject". Run `pytest` — should run (even with no tests).',
+        troubleshooting: [
+          {
+            problem: 'pyenv: command not found after install',
+            solution: 'Add the three export lines to your ~/.bashrc (or ~/.zshrc on macOS), then `source ~/.bashrc`. Log out and back in if needed.',
+          },
+          {
+            problem: 'python --version shows old version after pyenv install',
+            solution: 'Run `pyenv global 3.12.0`. If that does not work, run `pyenv rehash`. Check `pyenv versions` to see installed.',
+          },
+          {
+            problem: 'pip install is slow',
+            solution: 'Switch to uv: `uv pip install <package>` is 10-100x faster. Or use `pip install --user pip && pip install uv`.',
+          },
+          {
+            problem: '"externally-managed-environment" error on macOS/Linux',
+            solution: 'NEVER use sudo with pip. Always create a venv first: `python -m venv .venv && source .venv/bin/activate`. Then pip install works.',
+          },
+          {
+            problem: 'Command not found after pip install -e .',
+            solution: 'Make sure your pyproject.toml has [project.scripts] with the entry point. Run `pip install -e .` again. Check `which <your-command>`.',
+          },
+        ],
+      },
+      visualization: {
+        title: 'The Senior Python Project Structure',
+        type: 'architecture',
+        diagram: `myproject/                    ← project root
+├── .python-version          ← pyenv: which Python to use
+├── .gitignore               ← what to exclude from git
+├── .env.example             ← template for env vars (commit this)
+├── .env                     ← actual env vars (NEVER commit!)
+├── pyproject.toml           ← project config (deps, tools, scripts)
+├── uv.lock                  ← lockfile (commit for reproducibility)
+├── README.md
+├── LICENSE
+├── src/                     ← src layout (prevents import bugs)
+│   └── myproject/
+│       ├── __init__.py
+│       ├── __main__.py      ← enables: python -m myproject
+│       ├── cli.py           ← entry point: myproject command
+│       ├── core.py
+│       └── utils.py
+├── tests/                   ← mirror src structure
+│   ├── __init__.py
+│   ├── conftest.py          ← shared fixtures
+│   ├── test_core.py
+│   └── test_cli.py
+├── .github/
+│   └── workflows/
+│       └── ci.yml           ← GitHub Actions
+└── .venv/                   ← virtual env (gitignored!)
+
+WHY src/ layout?
+- Forces you to install package before importing
+- Prevents accidental imports from cwd
+- Matches how users will use your package
+- Catches packaging bugs early`,
+        legend: [
+          '.python-version: pyenv uses this to pick Python version per project',
+          'pyproject.toml: single source of truth — deps, tool config, entry points',
+          'uv.lock: exact versions installed (like package-lock.json)',
+          '.env: secrets (DB URLs, API keys). NEVER commit.',
+          'src/ layout: prevents accidental imports from cwd during testing',
+        ],
+      },
       codeExamples: [
         {
-          filename: 'hello.py',
-          language: 'python',
-          code: '# Your first Python program\nprint("Hello, World!")\n\n# Variables - no type declaration needed\nname = "Alice"\nage = 30\nheight = 5.7\nis_student = True\n\n# f-strings for formatting (Python 3.6+)\nprint(f"My name is {name}, I am {age} years old")\n\n# Multiple assignment\nx, y, z = 1, 2, 3\n\n# Type checking\nprint(type(name))    # <class \'str\'>\nprint(type(age))     # <class \'int\'>\nprint(type(height))  # <class \'float\'>\n\n# Type conversion\nnum_str = "42"\nnum = int(num_str)\nprint(num + 8)  # 50',
-          explanation: 'Python uses dynamic typing - you do not declare variable types. f-strings (formatted string literals) are the modern way to embed expressions in strings.'
+          filename: 'pyproject.toml',
+          language: 'toml',
+          code: '# The modern Python project config — replaces setup.py, requirements.txt,\n# setup.cfg, and more. ONE file to rule them all.\n\n[build-system]\n# How to build the package. Hatchling is modern & fast.\nrequires = ["hatchling"]\nbuild-backend = "hatchling.build"\n# Alternatives: setuptools, flit, poetry-core, pdm-backend\n\n[project]\nname = "myproject"                    # pip install myproject\nversion = "0.1.0"                      # semver\ndescription = "A short description"\nreadme = "README.md"                   # included in PyPI page\nrequires-python = ">=3.12"             # set min Python version\nlicense = {text = "MIT"}               # or {file = "LICENSE"}\nauthors = [\n    {name = "Your Name", email = "you@example.com"}\n]\nkeywords = ["api", "cli", "tools"]     # PyPI search\nclassifiers = [                        # PyPI categories\n    "Development Status :: 4 - Beta",\n    "Programming Language :: Python :: 3",\n    "Programming Language :: Python :: 3.12",\n    "License :: OSI Approved :: MIT License",\n    "Operating System :: OS Independent",\n]\n\n# Runtime dependencies — pinned with lower bounds\ndependencies = [\n    "httpx>=0.27,<1.0",        # >= 0.27, < 1.0 (avoid breaking changes)\n    "rich>=13.7",              # >= 13.7 (no upper bound)\n    "pydantic>=2.6",\n    "click>=8.1",\n]\n\n# Optional dependencies — install with pip install myproject[dev]\n[project.optional-dependencies]\ndev = [\n    "pytest>=8.0",\n    "pytest-cov>=5.0",\n    "ruff>=0.5",\n    "mypy>=1.10",\n    "pre-commit>=3.7",\n]\ndocs = [\n    "mkdocs>=1.6",\n    "mkdocs-material>=9.5",\n]\n\n# CLI entry points — creates `myproject` command after install\n[project.scripts]\nmyproject = "myproject.cli:main"\nmyproject-admin = "myproject.admin:main"\n\n# GUI entry points (if needed)\n[project.gui-scripts]\nmyproject-gui = "myproject.gui:main"\n\n# URLs shown on PyPI page\n[project.urls]\nHomepage = "https://github.com/you/myproject"\nDocumentation = "https://myproject.readthedocs.io"\nRepository = "https://github.com/you/myproject"\nIssues = "https://github.com/you/myproject/issues"\n\n# Tell hatchling where the code is (src layout)\n[tool.hatch.build.targets.wheel]\npackages = ["src/myproject"]\n\n# === Tool configs in the same file ===\n\n[tool.ruff]\nline-length = 100\ntarget-version = "py312"\n\n[tool.ruff.lint]\nselect = [\n    "E",    # pycodestyle errors\n    "W",    # pycodestyle warnings\n    "F",    # pyflakes\n    "I",    # isort\n    "B",    # bugbear\n    "C4",   # comprehensions\n    "UP",   # pyupgrade\n    "RUF",  # ruff-specific\n]\nignore = ["E501"]  # line too long (handled by formatter)\n\n[tool.ruff.format]\nquote-style = "double"\nindent-style = "space"\n\n[tool.pytest.ini_options]\ntestpaths = ["tests"]\naddopts = "-v --cov=myproject --cov-report=term-missing --cov-report=html"\nmarkers = [\n    "slow: marks tests as slow (deselect with -m \'not slow\')",\n    "integration: marks tests as integration tests",\n]\n\n[tool.mypy]\nstrict = true\nwarn_return_any = true\nwarn_unused_configs = true\ndisallow_untyped_defs = true\n\n[tool.coverage.run]\nsource = ["src"]\nomit = ["tests/*"]\n\n[tool.coverage.report]\nexclude_lines = [\n    "pragma: no cover",\n    "if __name__ == .__main__.:",\n    "if TYPE_CHECKING:",\n    "raise NotImplementedError",\n]',
+          explanation: 'pyproject.toml is the modern standard (PEP 517/518/621). It replaces setup.py, requirements.txt, setup.cfg, mypy.ini, .ruff.toml, pytest.ini, .coveragerc — all in one file. Master this.',
         },
         {
-          filename: 'cli.py',
-          language: 'python',
-          code: '# Get user input from command line\nname = input("What is your name? ")\nprint(f"Welcome, {name}!")\n\n# Command-line arguments\nimport sys\nprint(f"Script name: {sys.argv[0]}")\nprint(f"All args: {sys.argv}")\n\n# Run: python cli.py arg1 arg2',
-          explanation: 'sys.argv[0] is the script name, sys.argv[1:] are the actual arguments passed.'
+          filename: 'multiple_pythons.sh',
+          language: 'bash',
+          code: '# Senior engineers test their code on multiple Python versions\n# pyenv makes this trivial\n\n# Install multiple versions\npyenv install 3.10.13 3.11.6 3.12.0 3.13.0\n\n# Use specific version in a project\ncd ~/projects/legacy-app\npyenv local 3.10.13  # creates .python-version\ncd ~/projects/new-app\npyenv local 3.13.0\n\n# Each project automatically uses the right Python\npython --version  # changes based on which dir you are in!\n\n# Test on ALL versions with tox or nox\n# tox.ini:\n# [tox]\n# envlist = py310, py311, py312, py313\n#\n# [testenv]\n# deps = pytest\n# commands = pytest\n\n# Or with nox (noxfile.py):\n# import nox\n# @nox.session(python=["3.10", "3.11", "3.12", "3.13"])\n# def tests(session):\n#     session.install("pytest", ".")\n#     session.run("pytest")',
+          explanation: 'pyenv lets you install and switch between multiple Python versions. Each project can pin its own version via .python-version file. Test on all supported versions with tox/nox in CI.'
         },
       ],
       exercises: [
         {
-          prompt: 'Write a Python script that asks the user for their name and age, then prints how old they will be in 10 years.',
-          starterCode: '# Your code here\n',
-          hint: 'Use input() to get values, int() to convert strings to numbers, and f-strings to format output.',
-          solution: 'name = input("Enter your name: ")\nage = int(input("Enter your age: "))\nprint(f"Hi {name}! In 10 years you will be {age + 10} years old.")',
-          solutionLanguage: 'python'
+          prompt: 'Set up a new Python project called "weather-cli" with: pyenv local 3.12, uv venv, pyproject.toml (with httpx + rich deps), src/weather_cli/ structure, and a CLI entry point that prints "Weather CLI ready".',
+          starterCode: '# Your shell commands\n',
+          hint: 'Follow the setup steps above. The CLI entry point needs [project.scripts] and a function in src/weather_cli/cli.py.',
+          solution: 'mkdir weather-cli && cd weather-cli\npyenv local 3.12.0\nuv venv\nsource .venv/bin/activate\n\nmkdir -p src/weather_cli tests\ntouch src/weather_cli/__init__.py tests/__init__.py\n\ncat > pyproject.toml << \'EOF\'\n[build-system]\nrequires = ["hatchling"]\nbuild-backend = "hatchling.build"\n\n[project]\nname = "weather-cli"\nversion = "0.1.0"\nrequires-python = ">=3.12"\ndependencies = ["httpx>=0.27", "rich>=13.7"]\n\n[project.scripts]\nweather = "weather_cli.cli:main"\n\n[tool.hatch.build.targets.wheel]\npackages = ["src/weather_cli"]\nEOF\n\ncat > src/weather_cli/cli.py << \'EOF\'\ndef main():\n    print("Weather CLI ready")\n\nif __name__ == "__main__":\n    main()\nEOF\n\nuv pip install -e ".[dev]"\nweather  # Weather CLI ready',
+          solutionLanguage: 'bash'
         },
       ],
       quiz: [
         {
-          question: 'Who created Python?',
-          options: ['Linus Torvalds', 'Guido van Rossum', 'Brendan Eich', 'James Gosling'],
+          question: 'Why use a virtual environment per project?',
+          options: [
+            'It is faster',
+            'Isolate dependencies — different projects can use different package versions without conflict',
+            'Required by Python',
+            'Uses less memory',
+          ],
           correctIndex: 1,
-          explanation: 'Guido van Rossum created Python in 1991.'
+          explanation: 'Without venv, all packages install to system Python. Project A needs Django 4, Project B needs Django 5 — conflict. venv isolates each project.'
         },
         {
-          question: 'What does the REPL stand for?',
-          options: ['Read-Eval-Print Loop', 'Run-Execute-Print Language', 'Rapid Eval Print Loop', 'Read-Evaluate-Process Loop'],
-          correctIndex: 0,
-          explanation: 'REPL = Read-Eval-Print Loop, an interactive programming environment.'
+          question: 'What does `pyenv local 3.12.0` do?',
+          options: [
+            'Installs Python 3.12.0',
+            'Sets Python 3.12.0 as the version for THIS directory (creates .python-version file)',
+            'Sets Python 3.12.0 globally',
+            'Uninstalls other versions',
+          ],
+          correctIndex: 1,
+          explanation: '`pyenv local X` creates a .python-version file. Whenever you cd into this dir, pyenv automatically uses that version. Different projects can use different versions.'
+        },
+        {
+          question: 'What is the src/ layout and why use it?',
+          options: [
+            'It is required by Python',
+            'Forces you to install the package before importing, catching packaging bugs early',
+            'Makes code faster',
+            'It is just a convention, no real benefit',
+          ],
+          correctIndex: 1,
+          explanation: 'Without src/ layout, you can accidentally import from cwd (which works in dev but breaks for users). src/ layout forces proper install, catching packaging bugs immediately.'
+        },
+        {
+          question: 'What is the modern replacement for setup.py + requirements.txt + setup.cfg?',
+          options: ['Pipfile', 'pyproject.toml', 'poetry.lock', 'environment.yml'],
+          correctIndex: 1,
+          explanation: 'pyproject.toml is the PEP 517/518/621 standard. One file replaces setup.py, requirements.txt, setup.cfg, mypy.ini, pytest.ini, .coveragerc.'
         },
       ],
       keyTakeaways: [
-        'Python is dynamically typed - no need to declare variable types',
-        'Use f-strings (f"...") for string formatting',
-        'input() returns a string - convert with int(), float() when needed',
-        'sys.argv contains command-line arguments',
-        'Always use Python 3.10+ for modern features'
+        'Use pyenv to manage multiple Python versions — never rely on system Python',
+        'Create a venv per project: `uv venv` (10x faster than `python -m venv`)',
+        'pyproject.toml is the modern standard — deps, tool config, entry points in ONE file',
+        'Use src/ layout to catch packaging bugs early',
+        'NEVER use `sudo pip install` — always venv first',
+        'Pin versions in pyproject.toml with lower bounds: `httpx>=0.27,<1.0`',
+        'Install in editable mode: `uv pip install -e .` — changes reflect immediately',
       ],
       resources: [
-        { title: 'Official Python Docs', url: 'https://docs.python.org/3/', type: 'docs' },
-        { title: 'Python for Beginners - freeCodeCamp (4 hr)', url: 'https://www.youtube.com/watch?v=rfscVS0vtbw', type: 'video' },
-        { title: 'Automate the Boring Stuff (free book)', url: 'https://automatetheboringstuff.com/', type: 'book', isHiddenGem: true },
-        { title: 'Python Tutor - visualize execution', url: 'https://pythontutor.com/', type: 'interactive', isHiddenGem: true },
+        { title: 'pyenv Documentation', url: 'https://github.com/pyenv/pyenv', type: 'docs' },
+        { title: 'uv — Astral (10x faster pip)', url: 'https://docs.astral.sh/uv/', type: 'tool', isHiddenGem: true },
+        { title: 'pyproject.toml Guide', url: 'https://packaging.python.org/en/latest/guides/writing-pyproject-toml/', type: 'docs' },
+        { title: 'Hatch (build backend)', url: 'https://hatch.pypa.io/', type: 'docs' },
+        { title: 'Real Python — pyenv Tutorial', url: 'https://realpython.com/intro-to-pyenv/', type: 'article' },
       ],
-      setup: {
-        title: 'Install Python 3.12+',
-        os: 'all',
-        steps: [
-          {
-            description: 'Download from python.org (Windows/macOS) or use package manager',
-            command: '# Linux (Ubuntu/Debian)\nsudo apt update && sudo apt install python3.12 python3.12-venv\n\n# macOS with Homebrew\nbrew install python@3.12\n\n# Windows: download installer from python.org\n# OR use winget:\nwinget install Python.Python.3.12',
-            expectedOutput: '$ python3 --version\nPython 3.12.0',
-          },
-          {
-            description: 'Verify installation',
-            command: 'python3 --version\npython3 -c "print(\'Python works!\')"',
-            expectedOutput: 'Python 3.12.0\nPython works!',
-          },
-          {
-            description: 'Install pip (if not included) and upgrade',
-            command: 'python3 -m ensurepip --upgrade\npython3 -m pip install --upgrade pip',
-          },
-          {
-            description: 'Create your first virtual environment',
-            command: 'python3 -m venv .venv\nsource .venv/bin/activate  # Linux/macOS\n# OR: .venv\\Scripts\\activate  # Windows\npip install ipython  # better REPL',
-          },
-        ],
-        verification: 'Run `python3 -c "import sys; print(sys.version)"` - should show 3.10+.',
-        troubleshooting: [
-          {
-            problem: 'python command not found on Linux',
-            solution: 'Use python3 instead, or create an alias: alias python=python3',
-          },
-          {
-            problem: 'pip not found',
-            solution: 'Run python3 -m ensurepip --upgrade, then use python3 -m pip install <package>',
-          },
-          {
-            problem: 'Permission denied installing packages',
-            solution: 'Never use sudo with pip. Always use a virtual environment: python3 -m venv .venv && source .venv/bin/activate',
-          },
-        ],
-      },
       miniProject: {
-        title: 'Personal Greeting Card Generator',
-        description: 'Build a CLI script that asks for name, age, and favorite color, then prints a decorative greeting card.',
+        title: 'Set Up Your Python Development Environment',
+        description: 'Properly install pyenv, Python 3.12, uv, and create your first project with the senior-engineer structure. This is the foundation for EVERYTHING else.',
         requirements: [
-          'Use input() for 3 prompts',
-          'Validate age is a number between 1-120',
-          'Print a decorative card using print() and ASCII art',
-          'Use f-strings throughout',
+          'Install pyenv and Python 3.12.0',
+          'Install uv (faster pip)',
+          'Create a project called "playground" with src/ layout',
+          'Configure pyproject.toml with ruff, pytest, mypy',
+          'Add a CLI entry point that prints "Ready!"',
+          'Verify: which python shows .venv, mycommand prints Ready!',
         ],
-        estTime: '30 minutes',
-        solutionCode: 'name = input("Name: ")\nwhile True:\n    try:\n        age = int(input("Age (1-120): "))\n        if 1 <= age <= 120:\n            break\n        print("Age must be 1-120")\n    except ValueError:\n        print("Please enter a number")\ncolor = input("Favorite color: ")\n\nborder = "=" * 40\nprint(border)\nprint(f"  Hello, {name}!")\nprint(f"  You are {age} years young.")\nprint(f"  Your favorite color is {color}.")\nprint(border)',
-        solutionLanguage: 'python'
+        estTime: '30-45 minutes',
+        solutionCode: '# See the setup steps in this lesson.\n# Key verification:\n# 1. pyenv --version works\n# 2. python --version shows 3.12.0\n# 3. uv --version works\n# 4. Created project has: pyproject.toml, src/playground/, tests/\n# 5. pip install -e . works without errors\n# 6. Running the CLI command prints "Ready!"',
+        solutionLanguage: 'bash'
       }
     },
 
     {
       id: 'py-02',
-      title: 'Data Types, Variables & Operators',
-      subtitle: 'Numbers, strings, booleans, lists, tuples, dicts, sets',
-      duration: 45,
+      title: 'Strings Mastery — Every Method, Formatting, Regex',
+      subtitle: 'Strings are 80% of real Python code. Master every method, f-strings, and regex.',
+      duration: 75,
       difficulty: 'Beginner',
       phase: 'Foundation',
       content: [
-        'Python has several built-in data types. The fundamental ones are: int (integers), float (decimal numbers), str (strings), bool (True/False), list (ordered, mutable), tuple (ordered, immutable), dict (key-value pairs), and set (unordered, unique elements).',
-        'Understanding when to use each type is crucial. Lists are great for ordered collections you will modify. Tuples are perfect for fixed records (like coordinates). Dicts map keys to values - ideal for lookups. Sets are best when you need uniqueness.',
-        'Python operators include arithmetic (+, -, *, /, //, %, **), comparison (==, !=, <, >, <=, >=), logical (and, or, not), and special operators like `in`, `is`, and bitwise operators.',
-        'One unique Python feature: chained comparisons. You can write `if 0 < x < 100` directly - Python translates it to `0 < x and x < 100` but evaluates x only once.',
+        'Strings are immutable sequences of Unicode characters. In real-world Python, you spend more time manipulating strings than anything else: parsing logs, formatting output, cleaning user input, building SQL queries, processing JSON, working with file paths. Master strings and you are 60% of the way to being a Python engineer.',
+        'Python has FOUR ways to format strings (senior engineers know all four and when to use each): (1) %-formatting (legacy, avoid), (2) str.format() (legacy, avoid), (3) f-strings (modern, default choice, Python 3.6+), (4) string Template (for user-supplied templates, safe).',
+        'The str class has 40+ methods. The most important: split, join, strip, replace, find, startswith, endswith, upper, lower, title, capitalize, isdigit, isalpha, isalnum, isnumeric, zfill, center, ljust, rjust, partition, removeprefix, removesuffix. Know them all.',
+        'Regular expressions (re module) are essential for complex string matching: emails, phone numbers, log parsing. Use re.search, re.match, re.findall, re.sub, re.split. Compile patterns with re.compile for performance. ALWAYS use raw strings (r"...") for regex.',
       ],
       visualization: {
-        title: 'Python Data Types Hierarchy',
+        title: 'String Methods by Category',
         type: 'tree',
-        description: 'Built-in types organized by category',
-        diagram: `Python Data Types
+        diagram: `String Methods (40+ total)
 │
-├── Numbers
-│   ├── int        (42, -7, 0)
-│   ├── float      (3.14, -0.5)
-│   ├── complex    (2+3j)
-│   └── bool       (True, False) ← subclass of int!
+├── SEARCHING
+│   ├── .find(sub)          → index or -1
+│   ├── .rfind(sub)         → last index or -1
+│   ├── .index(sub)         → index or ValueError
+│   ├── .count(sub)         → number of occurrences
+│   ├── .startswith(prefix) → bool
+│   └── .endswith(suffix)   → bool
 │
-├── Sequences
-│   ├── str        "hello" (immutable)
-│   ├── list       [1,2,3] (mutable)
-│   ├── tuple      (1,2,3) (immutable)
-│   └── range      range(10)
+├── TRANSFORMING
+│   ├── .upper() / .lower() / .title()
+│   ├── .capitalize() / .swapcase()
+│   ├── .strip() / .lstrip() / .rstrip()
+│   ├── .replace(old, new, count)
+│   ├── .removeprefix(p) / .removesuffix(s)  ← Python 3.9+
+│   ├── .zfill(width)       → pad with zeros
+│   ├── .center(w) / .ljust(w) / .rjust(w)
+│   └── .expandtabs(tabsize)
 │
-├──Mappings
-│   └── dict       {"key": "value"} (mutable, ordered 3.7+)
+├── SPLITTING & JOINING
+│   ├── .split(sep, maxsplit)      → list
+│   ├── .rsplit(sep, maxsplit)     → from right
+│   ├── .splitlines(keepends)      → by \\n
+│   ├── .partition(sep)            → (before, sep, after)
+│   ├── .rpartition(sep)           → from right
+│   └── sep.join(iterable)         → string
 │
-├── Sets
-│   ├── set        {1,2,3} (mutable, unique)
-│   └── frozenset  frozenset({1,2,3}) (immutable)
+├── TESTING (return bool)
+│   ├── .isdigit() / .isalpha() / .isalnum()
+│   ├── .isnumeric() / .isdecimal()
+│   ├── .isupper() / .islower() / .istitle()
+│   ├── .isspace() / .isprintable()
+│   └── .isidentifier() / .isascii()
 │
-└── None
-    └── NoneType   None (singleton)`,
+├── FORMATTING (4 ways — use f-strings!)
+│   ├── f"{var}"            ← MODERN, FAST, READABLE
+│   ├── str.format()        ← legacy
+│   ├── "..." % (vars,)     ← legacy (C-style)
+│   └── Template("...")     ← for user input (safe)
+│
+└── ENCODING
+    ├── .encode("utf-8")    → bytes
+    ├── .encode("utf-8", errors="ignore")
+    └── bytes.decode("utf-8") → str`,
         legend: [
-          'Mutable: can be modified after creation (list, dict, set)',
-          'Immutable: cannot be modified (str, tuple, int, float, bool)',
-          'Ordered: maintains insertion order (list, tuple, dict)',
-          'Hashable: can be dict key (immutable types)',
+          'Strings are IMMUTABLE — every method returns a NEW string',
+          'Use f-strings for 95% of formatting (fastest, most readable)',
+          'Use Template for user-supplied templates (safe from injection)',
+          'For complex matching, use regex (re module)',
+        ],
+      },
+      progressiveExample: {
+        title: 'Building a Log Parser — From Naive to Production',
+        description: 'See how a simple string operation evolves into a production log parser',
+        stages: [
+          {
+            name: 'Tiny',
+            description: 'Split a log line by spaces',
+            code: 'log_line = "2024-01-15 10:30:45 INFO User logged in"\nparts = log_line.split(" ")\nprint(parts)\n# [\'2024-01-15\', \'10:30:45\', \'INFO\', \'User\', \'logged\', \'in\']\n\n# Problem: message has spaces, gets split too!',
+            language: 'python',
+            explanation: 'Naive approach fails — message words get split. Real logs have variable structure.',
+          },
+          {
+            name: 'Small',
+            description: 'Use split with maxsplit',
+            code: 'log_line = "2024-01-15 10:30:45 INFO User logged in from 192.168.1.1"\n# Split into 4 parts max: date, time, level, rest\nparts = log_line.split(" ", 3)\nprint(parts)\n# [\'2024-01-15\', \'10:30:45\', \'INFO\', \'User logged in from 192.168.1.1\']\n\ndate, time, level, message = parts\nprint(f"Level: {level}, Message: {message}")',
+            language: 'python',
+            explanation: 'maxsplit=3 limits splits — message stays intact. Better, but still fragile (what if date has different format?).',
+          },
+          {
+            name: 'Real-World',
+            description: 'Use regex for robust parsing, dataclass for structure, error handling',
+            code: 'import re\nfrom datetime import datetime\nfrom dataclasses import dataclass\nfrom typing import Literal\n\nLogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]\n\n@dataclass(frozen=True)\nclass LogEntry:\n    timestamp: datetime\n    level: LogLevel\n    message: str\n    source: str | None = None\n\n    def __str__(self) -> str:\n        return f"[{self.timestamp:%Y-%m-%d %H:%M:%S}] {self.level:8s} {self.message}"\n\n# Compiled regex — faster than re.compile per call\nLOG_PATTERN = re.compile(\n    r\'^(?P<timestamp>\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2})\\s*\'\n    r\'(?P<level>DEBUG|INFO|WARNING|ERROR|CRITICAL)\\s*\'\n    r\'(?:\\[(?P<source>[^\\]]+)\\]\\s*)?\'  # optional [source]\n    r\'(?P<message>.*)$\'\n)\n\nclass LogParseError(ValueError):\n    """Raised when a log line cannot be parsed."""\n\ndef parse_log(line: str) -> LogEntry:\n    """Parse a log line into a LogEntry.\n\n    Args:\n        line: Raw log line.\n\n    Returns:\n        LogEntry with parsed fields.\n\n    Raises:\n        LogParseError: If the line does not match expected format.\n    """\n    line = line.strip()\n    if not line:\n        raise LogParseError("Empty log line")\n\n    match = LOG_PATTERN.match(line)\n    if not match:\n        raise LogParseError(f"Invalid log format: {line!r}")\n\n    try:\n        timestamp = datetime.strptime(\n            match.group("timestamp"),\n            "%Y-%m-%d %H:%M:%S"\n        )\n    except ValueError as e:\n        raise LogParseError(f"Invalid timestamp: {e}") from e\n\n    return LogEntry(\n        timestamp=timestamp,\n        level=match.group("level"),  # type: ignore\n        message=match.group("message"),\n        source=match.group("source"),\n    )\n\n# Usage\nlines = [\n    "2024-01-15 10:30:45 INFO User logged in",\n    "2024-01-15 10:31:02 ERROR [auth] Failed login for user=admin",\n    "2024-01-15 10:31:15 WARNING [db] Connection pool 80% full",\n]\n\nfor line in lines:\n    try:\n        entry = parse_log(line)\n        print(entry)\n    except LogParseError as e:\n        print(f"SKIP: {e}")\n\n# Output:\n# [2024-01-15 10:30:45] INFO     User logged in\n# [2024-01-15 10:31:02] ERROR    Failed login for user=admin\n# [2024-01-15 10:31:15 WARNING  Connection pool 80% full',
+            language: 'python',
+            explanation: 'Production parser: compiled regex with named groups, dataclass for structure, proper error handling, type hints, docstrings. This is what senior engineers write.',
+          },
         ],
       },
       codeExamples: [
         {
-          filename: 'data_types.py',
+          filename: 'string_formatting.py',
           language: 'python',
-          code: '# Numbers\na = 10           # int\nb = 3.14         # float\nc = 2 + 3j        # complex\nd = 10 / 3        # 3.333 (true division)\ne = 10 // 3       # 3 (floor division)\nf = 10 % 3        # 1 (modulo)\ng = 2 ** 10       # 1024 (exponent)\n\n# Strings - immutable\ns = "Hello"\nprint(s[0])       # H\nprint(s[-1])      # o (negative indexing)\nprint(s[1:4])     # ell (slicing)\nprint(s * 3)      # HelloHelloHello\nprint(len(s))     # 5\n\n# Lists - ordered, mutable\nnums = [1, 2, 3, 4, 5]\nnums.append(6)\nnums.insert(0, 0)\nnums.pop()         # removes 6\nnums.remove(3)     # removes first 3\nprint(nums[::2])   # step slicing\n\n# Tuples - ordered, immutable\npoint = (10, 20)\nx, y = point       # unpacking\n\n# Dicts - key-value, ordered (3.7+)\nuser = {\n    "name": "Alice",\n    "age": 30,\n    "skills": ["Python", "ML"]\n}\nprint(user["name"])\nuser["email"] = "alice@example.com"\nprint(user.keys())\nprint(user.items())\n\n# Sets - unordered, unique\ncolors = {"red", "green", "blue"}\ncolors.add("red")    # no duplicate added\n\n# Set operations\na_set = {1, 2, 3}\nb_set = {3, 4, 5}\nprint(a_set & b_set)  # intersection\nprint(a_set | b_set)  # union\nprint(a_set - b_set)  # difference',
-          explanation: 'Python has rich built-in types. Lists and dicts are most common. Sets are perfect for membership testing and deduplication.'
+          code: '# === 4 WAYS TO FORMAT STRINGS ===\n\n# 1. f-strings (MODERN — use this 95% of the time)\nname = "Alice"\nage = 30\nprint(f"Hello, {name}! You are {age} years old.")\n\n# Expressions in f-strings\nprint(f"2 + 2 = {2 + 2}")\nprint(f"Name upper: {name.upper()}")\nprint(f"Length: {len(name)}")\n\n# Format specs\npi = 3.14159265\nprint(f"Pi: {pi:.2f}")           # 2 decimals: 3.14\nprint(f"Pi: {pi:>10.4f}")        # right-aligned, 10 wide, 4 decimals\nprint(f"Pi: {pi:<10.4f}")        # left-aligned\nprint(f"Pi: {pi:^10.4f}")        # centered\nprint(f"Pi: {pi:_^11}")          # centered with _ padding\n\n# Number formatting\nn = 1234567\nprint(f"Thousands: {n:,}")       # 1,234,567\nprint(f"Binary: {n:b}")          # 100101101011010000111\nprint(f"Hex: {n:x}")             # 12d687\nprint(f"Octal: {n:o}")           # 4553207\nprint(f"Scientific: {n:e}")      # 1.234567e+06\nprint(f"Percent: {0.85:.1%}")    # 85.0%\n\n# Date formatting\nfrom datetime import datetime\nnow = datetime.now()\nprint(f"Today: {now:%Y-%m-%d %H:%M:%S}")\nprint(f"Date: {now:%B %d, %Y}")  # January 15, 2024\n\n# Debug mode (Python 3.8+) — shows variable name + value\nx = 42\nprint(f"{x = }")           # x = 42\nprint(f"{x * 2 = }")       # x * 2 = 84\n\n# Multi-line f-strings\nuser = {"name": "Bob", "age": 25}\nmessage = f"""\nUser Profile:\n  Name: {user[\'name\']}\n  Age:  {user[\'age\']}\n  ID:   {hash(user[\'name\']) % 10000:04d}\n"""\nprint(message)\n\n# 2. str.format() — legacy, but useful for templates\n# Use when the template is stored separately from values\ntemplate = "Hello, {name}! You are {age} years old."\nprint(template.format(name="Alice", age=30))\n\n# 3. %-formatting — C-style, AVOID (only for logging module historically)\nprint("Hello, %s! You are %d years old." % (name, age))\n\n# 4. string.Template — for USER-SUPPLIED templates (safe from injection)\nfrom string import Template\n# Safe: user cannot inject Python expressions\nt = Template("Hello, $name! You earned $amount.")\nprint(t.safe_substitute(name="Alice", amount="$100"))\n# Use case: email templates, config files where users provide the template',
+          explanation: 'f-strings are the modern default — fastest, most readable, support expressions and format specs. Use Template for user-supplied templates (safe from injection). Avoid % and .format() unless maintaining legacy code.'
+        },
+        {
+          filename: 'string_methods.py',
+          language: 'python',
+          code: '# === EVERY IMPORTANT STRING METHOD ===\n\ns = "  Hello, World!  "\n\n# --- SEARCHING ---\nprint(s.find("World"))       # 10 (index, -1 if not found)\nprint(s.rfind("l"))          # 12 (last occurrence)\nprint(s.index("World"))      # 10 (like find but raises ValueError)\nprint(s.count("l"))          # 3\nprint(s.startswith("  Hel")) # True\nprint(s.endswith("!  "))     # True\n\n# --- TRANSFORMING ---\nprint(s.strip())             # "Hello, World!" (both ends)\nprint(s.lstrip())            # "Hello, World!  "\nprint(s.rstrip())            # "  Hello, World!"\nprint(s.lower())             # "  hello, world!  "\nprint(s.upper())             # "  HELLO, WORLD!  "\nprint(s.title())             # "  Hello, World!  "\nprint(s.capitalize())        # "  hello, world!  "\nprint(s.swapcase())          # "  hELLO, wORLD!  "\nprint(s.replace("World", "Python"))  # "  Hello, Python!  "\n\n# removeprefix/removesuffix (Python 3.9+)\nfilename = "report_2024.pdf"\nprint(filename.removesuffix(".pdf"))   # "report_2024"\nprint(filename.removeprefix("report_"))  # "2024.pdf"\n\n# Padding\nnum = "42"\nprint(num.zfill(5))          # "00042" (pad with zeros)\nprint(num.center(6, "-"))    # "--42--"\nprint(num.ljust(6, "-"))     # "42----"\nprint(num.rjust(6, "-"))     # "----42"\n\n# --- SPLITTING & JOINING ---\ncsv = "Alice,30,NYC,Engineer"\nprint(csv.split(","))                # [\'Alice\', \'30\', \'NYC\', \'Engineer\']\nprint(csv.split(",", 2))             # [\'Alice\', \'30\', \'NYC,Engineer\'] (maxsplit)\nprint(csv.rsplit(",", 1))            # [\'Alice,30,NYC\', \'Engineer\'] (from right)\n\nlog = "2024-01-15 INFO User logged in\\n2024-01-15 ERROR Disk full"\nprint(log.splitlines())      # [\'...INFO...\', \'...ERROR...\']\nprint(log.splitlines(keepends=True))  # keeps \\n\n\n# partition — split into 3 parts (before, sep, after)\nemail = "alice@example.com"\nprint(email.partition("@"))  # (\'alice\', \'@\', \'example.com\')\nprint(email.rpartition("@")) # same, but from right\n\n# join — the OPPOSITE of split\nparts = ["Alice", "30", "NYC"]\nprint(",".join(parts))       # "Alice,30,NYC"\nprint(" | ".join(parts))     # "Alice | 30 | NYC"\nprint("/".join(["home", "user", "docs"]))  # "home/user/docs"\n\n# --- TESTING (return bool) ---\nprint("123".isdigit())       # True\nprint("abc".isalpha())       # True\nprint("abc123".isalnum())    # True\nprint("  ".isspace())        # True\nprint("Hello".istitle())     # True\nprint("HELLO".isupper())     # True\nprint("hello".islower())     # True\n\n# isnumeric vs isdigit vs isdecimal (subtle!)\nprint("²".isdigit())         # True (superscript)\nprint("²".isnumeric())       # True\nprint("²".isdecimal())       # False (!)\n\n# --- REAL-WORLD COMBO ---\ndef slugify(text: str) -> str:\n    """Convert text to URL-safe slug: \'Hello World!\' -> \'hello-world\'."""\n    return (\n        text.lower()\n        .strip()\n        .replace(" ", "-")\n        .replace("_", "-")\n        # remove non-alphanumeric (except -)\n        .encode("ascii", "ignore")\n        .decode()\n    )\n\n# Wait, that does not remove special chars properly. Better:\nimport re\ndef slugify_proper(text: str) -> str:\n    """Production slugify: \'Hello, World!\' -> \'hello-world\'."""\n    # Lowercase, replace any non-alphanumeric with -\n    slug = re.sub(r\'[^a-z0-9]+\', \'-\', text.lower())\n    # Remove leading/trailing -\n    return slug.strip(\'-\')\n\nprint(slugify_proper("Hello, World!"))  # "hello-world"\nprint(slugify_proper("  My Blog Post #1  "))  # "my-blog-post-1"',
+          explanation: 'Master split/join (most used), strip/replace (cleaning), startswith/endswith (validation), and is* methods (type checking). These cover 90% of string manipulation needs.'
+        },
+        {
+          filename: 'regex.py',
+          language: 'python',
+          code: 'import re\n\n# === REGEX ESSENTIALS ===\n\n# Always use RAW STRINGS (r"...") for regex!\n# Otherwise \\b is backspace, \\d is just d, etc.\n\n# Basic patterns\n# .     any char except newline\n# \\d    digit [0-9]\n# \\D    non-digit\n# \\w    word char [a-zA-Z0-9_]\n# \\W    non-word char\n# \\s    whitespace\n# \\S    non-whitespace\n# ^     start of string\n# $     end of string\n# \\b    word boundary\n\n# Quantifiers\n# *     0 or more\n# +     1 or more\n# ?     0 or 1\n# {n}   exactly n\n# {n,m} between n and m\n# {n,}  n or more\n\n# Groups\n# (abc)   capture group\n# (?:abc) non-capturing group\n# (?P<name>abc) named group\n# [abc]   character class\n# [^abc]  negated class\n# a|b     alternation\n\n# re.search — find first match anywhere\nmatch = re.search(r\'\\d+\', "Order #12345 confirmed")\nif match:\n    print(match.group())  # "12345"\n\n# re.match — match from START of string\nmatch = re.match(r\'Hello\', "Hello World")\nprint(match.group())  # "Hello"\n\n# re.fullmatch — entire string must match\nvalid = bool(re.fullmatch(r\'\\d{3}-\\d{4}\', "555-1234"))  # True\n\n# re.findall — all matches as list\nemails = re.findall(r\'[\\w.+-]+@[\\w-]+\\.[\\w.]+\', text)\n\n# re.finditer — iterator of match objects (memory efficient)\nfor m in re.finditer(r\'\\d+\', "a1 b22 c333"):\n    print(m.group(), m.start(), m.end())\n\n# re.sub — replace matches\nclean = re.sub(r\'<[^>]+>\', \'\', "<p>Hello</p>")  # "Hello" (strip HTML tags)\ncensored = re.sub(r\'\\b\\d{4}\\b\', \'****\', "Card: 1234 5678")  # "Card: **** ****"\n\n# re.split — split by pattern\nparts = re.split(r\'[,;\\s]+\', "a, b; c d")  # [\'a\', \'b\', \'c\', \'d\']\n\n# === COMPILED PATTERNS (faster for repeated use) ===\n# Compile ONCE, use MANY times\nEMAIL_RE = re.compile(r\'^[\\w.+-]+@[\\w-]+\\.[\\w.]+$\')\n\ndef is_valid_email(email: str) -> bool:\n    return bool(EMAIL_RE.match(email))\n\n# === NAMED GROUPS — much more readable ===\nLOG_RE = re.compile(\n    r\'(?P<timestamp>\\S+)\\s+\'\n    r\'(?P<level>DEBUG|INFO|WARNING|ERROR)\\s+\'\n    r\'(?P<message>.*)\'\n)\n\nmatch = LOG_RE.match("2024-01-15 INFO User logged in")\nif match:\n    print(match.group("timestamp"))  # "2024-01-15"\n    print(match.group("level"))      # "INFO"\n    print(match.group("message"))    # "User logged in"\n    # Or get all as dict:\n    print(match.groupdict())\n    # {\'timestamp\': \'2024-01-15\', \'level\': \'INFO\', \'message\': \'User logged in\'}\n\n# === FLAGS ===\nre.IGNORECASE  # case insensitive\nre.MULTILINE   # ^ and $ match line boundaries\nre.DOTALL      # . matches newline too\nre.VERBOSE     # allow whitespace and comments in pattern\n\n# VERBOSE example — readable complex regex\nPHONE_RE = re.compile(r"""\n    ^                   # start of string\n    (?:\\+1[-.\\s]?)?    # optional country code\n    \\(?                 # optional opening paren\n    (\\d{3})             # area code\n    \\)?                 # optional closing paren\n    [-.\\s]?             # separator\n    (\\d{3})             # first 3 digits\n    [-.\\s]?             # separator\n    (\\d{4})             # last 4 digits\n    $                   # end of string\n""", re.VERBOSE)\n\nmatch = PHONE_RE.match("(555) 123-4567")\nif match:\n    area, first, last = match.groups()\n    print(f"({area}) {first}-{last}")\n\n# === COMMON PATTERNS ===\n# Email\nEMAIL = r\'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\'\n\n# URL\nURL = r\'https?://[\\w.-]+(?:/[\\w._-]*)*\'\n\n# IP address\nIP = r\'\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b\'\n\n# Phone (US)\nPHONE = r\'\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}\'\n\n# Date (YYYY-MM-DD)\nDATE = r\'\\d{4}-\\d{2}-\\d{2}\'\n\n# Strong password (8+, upper, lower, digit, special)\nPASSWORD = r\'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\'\n\n# === WARNING: do not use regex for HTML/JSON parsing! ===\n# Use BeautifulSoup for HTML, json module for JSON\n# Regex on HTML is famously broken',
+          explanation: 'Regex is powerful but easy to misuse. Compile patterns for performance. Use named groups for readability. Use VERBOSE flag for complex patterns. NEVER use regex for HTML/JSON parsing.'
         },
       ],
       exercises: [
         {
-          prompt: 'Create a dictionary representing a book (title, author, year, pages). Then add a "genre" key. Print all key-value pairs.',
-          starterCode: 'book = {\n    # your fields here\n}\n# your code here\n',
-          hint: 'Use book["genre"] = "value" to add. Iterate with .items().',
-          solution: 'book = {\n    "title": "Clean Code",\n    "author": "Robert Martin",\n    "year": 2008,\n    "pages": 464\n}\nbook["genre"] = "Programming"\n\nfor key, value in book.items():\n    print(f"{key}: {value}")',
+          prompt: 'Write a function parse_phone(phone: str) -> dict that parses US phone numbers in any format (555-123-4567, (555) 123-4567, 5551234567, +1-555-123-4567) and returns {"area": "555", "first": "123", "last": "4567"}. Raise ValueError if invalid.',
+          starterCode: 'import re\n\nPHONE_RE = re.compile(...)\n\ndef parse_phone(phone: str) -> dict:\n    # your code\n    pass\n',
+          hint: 'Use re.compile with VERBOSE flag. Match optional country code, area code, separator, 3 digits, separator, 4 digits. Use named groups.',
+          solution: 'import re\n\nPHONE_RE = re.compile(r"""\n    ^\n    (?:\\+1[-.\\s]?)?    # optional country code\n    \\(?(?P<area>\\d{3})\\)?  # area code (parens optional)\n    [-.\\s]?            # separator\n    (?P<first>\\d{3})   # first 3 digits\n    [-.\\s]?            # separator\n    (?P<last>\\d{4})    # last 4 digits\n    $\n""", re.VERBOSE)\n\ndef parse_phone(phone: str) -> dict:\n    match = PHONE_RE.match(phone.strip())\n    if not match:\n        raise ValueError(f"Invalid phone number: {phone!r}")\n    return match.groupdict()\n\n# Test\nfor p in ["555-123-4567", "(555) 123-4567", "5551234567", "+1-555-123-4567"]:\n    print(parse_phone(p))\n# All return {\'area\': \'555\', \'first\': \'123\', \'last\': \'4567\'}',
+          solutionLanguage: 'python'
+        },
+        {
+          prompt: 'Write slugify(text: str) -> str that converts "Hello, World! This is #1!" to "hello-world-this-is-1". Strip special chars, lowercase, replace spaces with hyphens.',
+          starterCode: 'import re\n\ndef slugify(text: str) -> str:\n    # your code\n    pass\n',
+          hint: 'Use re.sub to replace non-alphanumeric with hyphens, then strip leading/trailing hyphens.',
+          solution: 'import re\n\ndef slugify(text: str) -> str:\n    # Replace any run of non-alphanumeric chars with single hyphen\n    slug = re.sub(r\'[^a-zA-Z0-9]+\', \'-\', text.lower())\n    # Strip leading/trailing hyphens\n    return slug.strip(\'-\')\n\nprint(slugify("Hello, World! This is #1!"))  # "hello-world-this-is-1"\nprint(slugify("  My   Cool   Post  "))       # "my-cool-post"\nprint(slugify("Café & Müller"))              # "caf-m-ller"',
           solutionLanguage: 'python'
         },
       ],
       quiz: [
         {
-          question: 'What is the difference between / and //?',
-          options: ['No difference', '/ is true division, // is floor division', '// is true division, / is floor', '/ and // both do floor division'],
+          question: 'Why use raw strings (r"...") for regex patterns?',
+          options: [
+            'Faster',
+            'So \\b, \\d, \\w are treated as regex escapes, not Python string escapes',
+            'Required by Python',
+            'For memory efficiency',
+          ],
           correctIndex: 1,
-          explanation: '7 / 2 = 3.5 (float), 7 // 2 = 3 (int, floor).'
+          explanation: 'Without r prefix, \\b is backspace, \\d is just d. With r prefix, \\b is word boundary, \\d is digit. ALWAYS use raw strings for regex.'
         },
         {
-          question: 'Which data type is immutable?',
-          options: ['list', 'dict', 'tuple', 'set'],
-          correctIndex: 2,
-          explanation: 'Tuples are immutable - once created, they cannot be modified.'
+          question: 'What is the difference between re.search and re.match?',
+          options: [
+            'No difference',
+            'search finds match anywhere, match only matches at the START of string',
+            'match is faster',
+            'search is case-insensitive',
+          ],
+          correctIndex: 1,
+          explanation: 're.match only checks at the start. re.search scans the entire string. For "must match entire string" use re.fullmatch.'
+        },
+        {
+          question: 'Why compile regex patterns with re.compile?',
+          options: [
+            'Required by Python',
+            'Faster when used repeatedly — compile once, use many times',
+            'For readability only',
+            'To enable named groups',
+          ],
+          correctIndex: 1,
+          explanation: 're.compile caches the parsed pattern. For patterns used in loops or frequently-called functions, compile once at module level.'
+        },
+        {
+          question: 'Which string method splits "a,b,c" into ["a", "b", "c"]?',
+          options: ['"a,b,c".split(",")', '"a,b,c".partition(",")', '"a,b,c".join(",")', '"a,b,c".break(",")'],
+          correctIndex: 0,
+          explanation: 'split(sep) returns a list. partition returns a 3-tuple (before, sep, after). join is the OPPOSITE of split.'
         },
       ],
       keyTakeaways: [
-        'Python has rich built-in types: int, float, str, list, tuple, dict, set',
-        'Lists are mutable, tuples are immutable',
-        'Dicts preserve insertion order (Python 3.7+)',
-        'Sets are unordered and unique - great for membership/dedup',
-        'Walrus operator := assigns within expressions',
-        'and/or return values (not just bool) due to short-circuit'
+        'Use f-strings for 95% of formatting — fastest, most readable, support expressions',
+        'Use string.Template for user-supplied templates (safe from injection)',
+        'split/join are the most-used methods — master them',
+        'strip/lstrip/rstrip remove whitespace; replace substitutes text',
+        'is* methods (isdigit, isalpha, isalnum) for validation',
+        'Always use raw strings (r"...") for regex patterns',
+        'Compile regex with re.compile for repeated use',
+        'Use named groups (?P<name>...) for readability',
+        'NEVER use regex to parse HTML/JSON — use BeautifulSoup/json module',
       ],
       resources: [
-        { title: 'Python Data Structures', url: 'https://docs.python.org/3/tutorial/datastructures.html', type: 'docs' },
-        { title: 'Python Operators Cheat Sheet', url: 'https://overapi.com/python', type: 'cheatsheet' },
+        { title: 'Python String Methods', url: 'https://docs.python.org/3/library/stdtypes.html#string-methods', type: 'docs' },
+        { title: 're module Documentation', url: 'https://docs.python.org/3/library/re.html', type: 'docs' },
+        { title: 'regex101.com — Test Regex Online', url: 'https://regex101.com/', type: 'interactive', isHiddenGem: true },
+        { title: 'f-string Format Spec', url: 'https://docs.python.org/3/library/string.html#format-specification-mini-language', type: 'docs' },
+        { title: 'Real Python — Regex Tutorial', url: 'https://realpython.com/regex-python/', type: 'article' },
       ]
     },
 
     {
       id: 'py-03',
-      title: 'Control Flow: if, for, while, match-case',
-      subtitle: 'Conditionals, loops, comprehensions, pattern matching',
-      duration: 50,
+      title: 'Lists, Tuples, Dicts, Sets — When to Use Each, Performance',
+      subtitle: 'Deep dive into every collection type — memory, performance, use cases',
+      duration: 80,
       difficulty: 'Beginner',
       phase: 'Foundation',
       content: [
-        'Control flow statements direct the order of execution. Python uses indentation (typically 4 spaces) to define blocks instead of braces. The standard constructs are: if/elif/else, for loops, while loops, try/except, and the newer match-case (Python 3.10+).',
-        'For loops in Python iterate over iterables - lists, tuples, strings, dicts, files, generators. Use range() for numeric iteration. The enumerate() function gives you index + value pairs. The zip() function lets you iterate over multiple iterables in parallel.',
-        'List comprehensions are a Pythonic way to create lists. They are often faster than equivalent for loops. Syntax: [expression for item in iterable if condition]. You can also have dict comprehensions and set comprehensions.',
-        'The match-case statement (Python 3.10+) brings structural pattern matching - much more powerful than switch-case in other languages.',
+        'Python has 4 main collection types: list (ordered, mutable), tuple (ordered, immutable), dict (key-value, ordered 3.7+), set (unordered, unique). Choosing the right one is the difference between code that runs in 10ms and 10s.',
+        'Performance matters: list membership test `x in list` is O(n) — for 1M items, that is 1M comparisons. Set membership `x in set` is O(1) — same speed for 1 or 1M items. Use sets for membership tests, dicts for lookups by key, lists for ordered sequences, tuples for fixed records.',
+        'Memory matters too: a list of 1M ints uses ~40MB. A tuple of 1M ints uses ~32MB (less overhead). An array.array of 1M ints uses ~8MB. A numpy array uses ~8MB but with vectorized ops. For large numerical data, use numpy/array — not lists.',
+        'Common senior-engineer patterns: defaultdict (no KeyError), Counter (counting), deque (fast queue), namedtuple (self-documenting tuples), dataclass (modern namedtuple). The collections module is a treasure trove.',
       ],
       visualization: {
-        title: 'Loop Execution Flow',
-        type: 'flow',
-        diagram: `         ┌─────────────────┐
-         │   Start Loop    │
-         └────────┬────────┘
-                  │
-                  ▼
-         ┌─────────────────┐
-         │  Get next item  │◄────────┐
-         │  (or check cond)│         │
-         └────────┬────────┘         │
-                  │                  │
-                  ▼                  │
-              ┌────────┐             │
-              │ Items  │── No ───────┘
-              │ left?  │
-              └────┬───┘
-                   │ Yes
-                   ▼
-         ┌─────────────────┐
-         │ Execute block   │
-         │ (break? continue?)│
-         └────────┬────────┘
-                  │
-                  ▼
-              ┌────────┐
-              │ break? │── Yes ──► Exit Loop
-              └────┬───┘
-                   │ No
-                   ▼
-              ┌─────────────┐
-              │ continue?   │── Yes ──► Skip rest, next iter
-              └────┬────────┘
-                   │ No
-                   ▼
-              (back to top)`,
-        legend: [
-          'break: exit the loop immediately',
-          'continue: skip to next iteration',
-          'else clause: runs if loop completes WITHOUT break',
-        ],
-      },
-      codeExamples: [
-        {
-          filename: 'control_flow.py',
-          language: 'python',
-          code: '# if / elif / else\nscore = 85\nif score >= 90:\n    grade = "A"\nelif score >= 80:\n    grade = "B"\nelif score >= 70:\n    grade = "C"\nelse:\n    grade = "F"\nprint(f"Grade: {grade}")\n\n# Ternary expression\nstatus = "pass" if score >= 60 else "fail"\n\n# For loop over iterable\nfruits = ["apple", "banana", "cherry"]\nfor fruit in fruits:\n    print(fruit)\n\n# enumerate - get index + value\nfor i, fruit in enumerate(fruits):\n    print(f"{i}: {fruit}")\n\n# zip - iterate in parallel\nnames = ["Alice", "Bob", "Carol"]\nages = [25, 30, 35]\nfor name, age in zip(names, ages):\n    print(f"{name} is {age}")\n\n# range\nfor i in range(5):       # 0,1,2,3,4\n    print(i)\nfor i in range(2, 10, 2):  # 2,4,6,8\n    print(i)\n\n# while loop with else (!)\ncount = 0\nwhile count < 3:\n    print(count)\n    count += 1\nelse:\n    print("Loop completed normally")  # runs if no break\n\n# break / continue\nfor n in range(10):\n    if n == 3:\n        continue  # skip 3\n    if n == 7:\n        break     # stop at 7\n    print(n)',
-          explanation: 'Python loops support else clauses - the else block runs if the loop completes without hitting a break.'
-        },
-        {
-          filename: 'comprehensions.py',
-          language: 'python',
-          code: '# List comprehension - fast and Pythonic\nnums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n\n# Squares of all numbers\nsquares = [x ** 2 for x in nums]\n# [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]\n\n# Even numbers only\nevens = [x for x in nums if x % 2 == 0]\n# [2, 4, 6, 8, 10]\n\n# With transformation\nlabels = ["even" if x % 2 == 0 else "odd" for x in nums]\n\n# Nested comprehension - flatten 2D list\nmatrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\nflat = [x for row in matrix for x in row]\n# [1, 2, 3, 4, 5, 6, 7, 8, 9]\n\n# Dict comprehension\nsquares_dict = {x: x**2 for x in range(1, 6)}\n# {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}\n\n# Set comprehension\nunique_lengths = {len(w) for w in ["a", "ab", "abc", "ab"]}\n# {1, 2, 3}\n\n# Generator expression - lazy evaluation\n# Use () instead of []\ngen = (x**2 for x in range(1000000))\nprint(next(gen))  # 0\nprint(next(gen))  # 1\n# Does not create a list of 1M elements in memory',
-          explanation: 'Comprehensions are concise and fast. Generator expressions (with parens) are lazy - they produce values one at a time, saving memory.'
-        },
-      ],
-      exercises: [
-        {
-          prompt: 'Use a list comprehension to create a list of cubes of odd numbers from 1 to 20.',
-          starterCode: 'cubes = \n',
-          hint: 'Combine for, if, and the ** operator.',
-          solution: 'cubes = [x**3 for x in range(1, 21) if x % 2 == 1]\nprint(cubes)\n# [1, 27, 125, 343, 729, 1331, 2197, 3375, 4913, 6859]',
-          solutionLanguage: 'python'
-        },
-      ],
-      quiz: [
-        {
-          question: 'What does range(2, 10, 2) produce?',
-          options: ['[2, 4, 6, 8, 10]', '[2, 4, 6, 8]', '[2, 4, 6]', '[10, 8, 6, 4]'],
-          correctIndex: 1,
-          explanation: 'range(start, stop, step) excludes stop. So 2,4,6,8.'
-        },
-        {
-          question: 'When does the else clause of a for loop execute?',
-          options: ['Never', 'Always', 'Only if no break occurred', 'Only if break occurred'],
-          correctIndex: 2,
-          explanation: 'The else clause runs if the loop completes without hitting break.'
-        },
-      ],
-      keyTakeaways: [
-        'Python uses indentation, not braces, for blocks',
-        'enumerate() gives index + value, zip() iterates in parallel',
-        'List/dict/set comprehensions are Pythonic and fast',
-        'Generator expressions are lazy and memory-efficient',
-        'match-case (3.10+) is powerful pattern matching',
-        'Loops support else clause - runs if no break'
-      ],
-      resources: [
-        { title: 'Python Control Flow Tutorial', url: 'https://docs.python.org/3/tutorial/controlflow.html', type: 'docs' },
-      ]
-    },
-
-    {
-      id: 'py-04',
-      title: 'Functions, *args, **kwargs & Decorators',
-      subtitle: 'Define functions, use closures, build decorators',
-      duration: 60,
-      difficulty: 'Beginner',
-      phase: 'Foundation',
-      content: [
-        'Functions in Python are first-class objects - they can be passed as arguments, returned from other functions, and assigned to variables. Define them with the `def` keyword. Use type hints for clarity.',
-        'Python supports default arguments, keyword arguments, *args (variable positional), and **kwargs (variable keyword). Understanding argument unpacking is essential.',
-        'Closures are functions that capture variables from their enclosing scope. They are the foundation of decorators. A decorator is a function that takes another function and extends its behavior without modifying it.',
-        'Python has built-in decorators like @staticmethod, @classmethod, @property, @functools.lru_cache, @dataclass.',
-      ],
-      progressiveExample: {
-        title: 'Building a Logging System Progressively',
-        description: 'See how a simple logging function evolves into a production-grade system',
-        stages: [
-          {
-            name: 'Tiny',
-            description: 'A simple print statement',
-            code: 'def log(message):\n    print(message)\n\nlog("User logged in")  # User logged in',
-            language: 'python',
-            explanation: 'Start with the simplest possible thing - just print the message.',
-          },
-          {
-            name: 'Small',
-            description: 'Add log levels and timestamps',
-            code: 'from datetime import datetime\n\ndef log(message, level="INFO"):\n    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")\n    print(f"[{timestamp}] {level}: {message}")\n\nlog("User logged in")\nlog("Database error", level="ERROR")\n# [2024-01-15 10:30:45] INFO: User logged in\n# [2024-01-15 10:30:45] ERROR: Database error',
-            language: 'python',
-            explanation: 'Add timestamp and log levels. Now logs are structured and filterable.',
-          },
-          {
-            name: 'Real-World',
-            description: 'Full logging system with handlers, formatting, and file output',
-            code: 'import logging\nimport sys\nfrom logging.handlers import RotatingFileHandler\nfrom pathlib import Path\n\ndef setup_logger(name: str, log_file: str = "app.log", level=logging.INFO):\n    """Configure a production-ready logger."""\n    logger = logging.getLogger(name)\n    logger.setLevel(level)\n    logger.handlers.clear()  # avoid duplicate handlers\n\n    # Format\n    fmt = logging.Formatter(\n        "%(asctime)s | %(name)s | %(levelname)-8s | %(message)s",\n        datefmt="%Y-%m-%d %H:%M:%S",\n    )\n\n    # Console handler (INFO+)\n    console = logging.StreamHandler(sys.stdout)\n    console.setLevel(logging.INFO)\n    console.setFormatter(fmt)\n    logger.addHandler(console)\n\n    # File handler with rotation (10MB, keep 5 backups)\n    Path(log_file).parent.mkdir(parents=True, exist_ok=True)\n    file_handler = RotatingFileHandler(\n        log_file, maxBytes=10_000_000, backupCount=5\n    )\n    file_handler.setLevel(logging.DEBUG)\n    file_handler.setFormatter(fmt)\n    logger.addHandler(file_handler)\n\n    return logger\n\n# Usage\nlogger = setup_logger("myapp", "logs/app.log")\nlogger.info("Application started")\nlogger.warning("Disk space low")\nlogger.error("Failed to connect to database", exc_info=True)\nlogger.debug("This only goes to file, not console")',
-            language: 'python',
-            explanation: 'Production logger with: multiple handlers (console + file), log rotation (prevents huge files), different levels per handler (debug to file, info to console), structured format. This is what real applications use.',
-          },
-        ],
-      },
-      codeExamples: [
-        {
-          filename: 'functions.py',
-          language: 'python',
-          code: '# Basic function with type hints\ndef greet(name: str, greeting: str = "Hello") -> str:\n    """Return a greeting string."""\n    return f"{greeting}, {name}!"\n\nprint(greet("Alice"))          # Hello, Alice!\nprint(greet("Bob", greeting="Hi"))  # keyword argument\n\n# *args - variable positional arguments (tuple)\ndef sum_all(*args):\n    return sum(args)\nprint(sum_all(1, 2, 3, 4, 5))  # 15\n\n# **kwargs - variable keyword arguments (dict)\ndef show_config(**kwargs):\n    for key, value in kwargs.items():\n        print(f"{key} = {value}")\n\nshow_config(host="localhost", port=8000, debug=True)\n\n# Both *args and **kwargs\ndef log_call(*args, **kwargs):\n    print(f"args: {args}")\n    print(f"kwargs: {kwargs}")\n\n# Argument unpacking\nnums = [1, 2, 3]\nprint(sum_all(*nums))  # unpack list\n\nconfig = {"host": "0.0.0.0", "port": 8080}\nshow_config(**config)  # unpack dict\n\n# Multiple return values (returns tuple)\ndef min_max(numbers):\n    return min(numbers), max(numbers)\n\nlow, high = min_max([3, 1, 4, 1, 5, 9, 2, 6])\nprint(f"min={low}, max={high}")\n\n# Lambda - anonymous function\nsquare = lambda x: x ** 2\nprint(square(5))  # 25\n\n# Common use: sort by key\nusers = [{"name": "Bob", "age": 25}, {"name": "Alice", "age": 30}]\nusers.sort(key=lambda u: u["age"])',
-          explanation: 'Use *args for variable positional args, **kwargs for keyword args. The * and ** operators also unpack iterables/dicts when calling functions.'
-        },
-        {
-          filename: 'decorators.py',
-          language: 'python',
-          code: 'import time\nimport functools\n\n# Basic decorator\ndef timing(func):\n    @functools.wraps(func)  # preserves function metadata\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f"{func.__name__} took {elapsed:.4f}s")\n        return result\n    return wrapper\n\n@timing\ndef slow_function():\n    time.sleep(1)\n    return "done"\n\nslow_function()  # slow_function took 1.0010s\n\n# Decorator with arguments\ndef retry(max_attempts=3, delay=1):\n    def decorator(func):\n        @functools.wraps(func)\n        def wrapper(*args, **kwargs):\n            for attempt in range(max_attempts):\n                try:\n                    return func(*args, **kwargs)\n                except Exception as e:\n                    if attempt == max_attempts - 1:\n                        raise\n                    print(f"Attempt {attempt+1} failed: {e}, retrying...")\n                    time.sleep(delay)\n        return wrapper\n    return decorator\n\n@retry(max_attempts=3, delay=2)\ndef fetch_data():\n    pass\n\n# functools.lru_cache - built-in memoization\nfrom functools import lru_cache\n\n@lru_cache(maxsize=128)\ndef fib(n):\n    if n < 2:\n        return n\n    return fib(n-1) + fib(n-2)\n\nprint(fib(100))  # instant thanks to caching',
-          explanation: 'Decorators wrap functions to extend behavior. @functools.wraps preserves metadata. @lru_cache is a built-in memoization decorator.'
-        },
-      ],
-      exercises: [
-        {
-          prompt: 'Write a decorator @cache that memoizes function results.',
-          starterCode: 'def cache(func):\n    # your code\n    pass\n',
-          hint: 'Store results in a dict keyed by args.',
-          solution: 'import functools\n\ndef cache(func):\n    stored = {}\n    @functools.wraps(func)\n    def wrapper(*args):\n        if args not in stored:\n            stored[args] = func(*args)\n        return stored[args]\n    return wrapper\n\n@cache\ndef fib(n):\n    if n < 2:\n        return n\n    return fib(n-1) + fib(n-2)\n\nprint(fib(50))  # 12586269025 - instant',
-          solutionLanguage: 'python'
-        },
-      ],
-      quiz: [
-        {
-          question: 'What does *args collect arguments as?',
-          options: ['list', 'tuple', 'dict', 'set'],
-          correctIndex: 1,
-          explanation: '*args collects positional arguments into a tuple.'
-        },
-        {
-          question: 'Why use @functools.wraps in a decorator?',
-          options: ['To speed up the function', 'To preserve function metadata like __name__', 'To cache results', 'No reason'],
-          correctIndex: 1,
-          explanation: '@functools.wraps copies __name__, __doc__, etc. from the original function so introspection still works.'
-        },
-      ],
-      keyTakeaways: [
-        'Functions are first-class objects - pass them as arguments, return them',
-        '*args collects positional args (tuple), **kwargs collects keyword args (dict)',
-        'Use *list and **dict to unpack when calling functions',
-        'Closures capture variables from enclosing scope',
-        'Decorators wrap functions to extend behavior - use @functools.wraps',
-        '@lru_cache is built-in memoization',
-      ],
-      resources: [
-        { title: 'Python Functions Tutorial', url: 'https://docs.python.org/3/tutorial/controlflow.html#defining-functions', type: 'docs' },
-        { title: 'Real Python - Decorators Guide', url: 'https://realpython.com/primer-on-python-decorators/', type: 'article' },
-      ]
-    },
-
-    {
-      id: 'py-05',
-      title: 'File I/O & Working with Paths',
-      subtitle: 'Read/write files, pathlib, JSON, CSV',
-      duration: 50,
-      difficulty: 'Beginner',
-      phase: 'Foundation',
-      content: [
-        'File I/O in Python is straightforward with the built-in open() function. Always use `with open(...) as f:` to ensure files are closed, even if an exception occurs.',
-        'The pathlib module (Python 3.4+) is the modern way to work with paths. It is object-oriented, cross-platform, and replaces os.path. Use Path() to create paths, / operator to join.',
-        'Python has built-in support for JSON (json module), CSV (csv module), and many other formats.',
-        'For large files, process them line-by-line instead of loading entirely into memory.',
-      ],
-      codeExamples: [
-        {
-          filename: 'pathlib_demo.py',
-          language: 'python',
-          code: 'from pathlib import Path\n\n# Create paths (use / operator - cross-platform)\np = Path.cwd()  # current working directory\nhome = Path.home()  # user home directory\ndocs = home / "Documents" / "notes.txt"  # / operator joins paths\n\n# Path parts\nprint(docs.name)        # notes.txt\nprint(docs.stem)        # notes (without extension)\nprint(docs.suffix)      # .txt\nprint(docs.parent)      # ~/Documents\n\n# Existence and type\nprint(docs.exists())     # True/False\nprint(docs.is_file())    # True if file\nprint(docs.is_dir())     # True if directory\n\n# Easy file I/O\nPath("output.txt").write_text("Hello!", encoding="utf-8")\ntext = Path("output.txt").read_text(encoding="utf-8")\n\n# Create directories\nPath("new_dir/sub").mkdir(parents=True, exist_ok=True)\n\n# Glob patterns\nfor py_file in Path(".").rglob("*.py"):  # recursive\n    print(py_file)',
-          explanation: 'pathlib is the modern, object-oriented way to handle paths. Use / to join, .read_text()/.write_text() for simple I/O.'
-        },
-      ],
-      exercises: [
-        {
-          prompt: 'Write a function that reads a JSON file of users, filters users over 18, and writes them to a new JSON file.',
-          starterCode: 'import json\nfrom pathlib import Path\n\ndef filter_adults(input_path, output_path):\n    # your code\n    pass\n',
-          hint: 'Use json.load(), list comprehension, then json.dump().',
-          solution: 'import json\nfrom pathlib import Path\n\ndef filter_adults(input_path, output_path):\n    data = json.loads(Path(input_path).read_text())\n    adults = [u for u in data if u.get("age", 0) >= 18]\n    Path(output_path).write_text(json.dumps(adults, indent=2))\n    return len(adults)',
-          solutionLanguage: 'python'
-        },
-      ],
-      quiz: [
-        {
-          question: 'Why use `with open(...)` instead of just open()?',
-          options: ['It is faster', 'It auto-closes the file', 'It caches reads', 'No difference'],
-          correctIndex: 1,
-          explanation: 'The with statement ensures the file is closed even if an exception occurs.'
-        },
-      ],
-      keyTakeaways: [
-        'Always use `with open(...)` for automatic file closing',
-        'pathlib is the modern way to handle paths - use / to join',
-        'For large files, iterate line-by-line instead of .read()',
-        'json.dumps/load for strings, json.dump/load for files',
-        'csv.DictReader/DictWriter work with header-based CSVs',
-      ],
-      resources: [
-        { title: 'pathlib Documentation', url: 'https://docs.python.org/3/library/pathlib.html', type: 'docs' },
-      ]
-    },
-
-    // ============ PHASE 2: INTERMEDIATE ============
-    {
-      id: 'py-06',
-      title: 'Object-Oriented Programming Deep Dive',
-      subtitle: 'Classes, inheritance, magic methods, properties, dataclasses',
-      duration: 75,
-      difficulty: 'Intermediate',
-      phase: 'Intermediate',
-      content: [
-        'Python is multi-paradigm but deeply supports OOP. Classes are defined with the `class` keyword. The __init__ method is the constructor. All instance methods take `self` as the first parameter.',
-        'Magic methods (dunder methods) let your classes integrate with Python syntax: __str__, __repr__, __len__, __eq__, __lt__, __add__, __getitem__, __iter__, __enter__, __call__.',
-        'The @property decorator turns methods into read-only attributes. Use @x.setter to allow assignment.',
-        'Use @dataclass (Python 3.7+) to auto-generate __init__, __repr__, and __eq__ for data containers.',
-      ],
-      visualization: {
-        title: 'OOP Concepts in Python',
-        type: 'tree',
-        diagram: `OOP in Python
-│
-├── Classes & Objects
-│   ├── __init__ (constructor)
-│   ├── self (instance reference)
-│   ├── Class attributes (shared)
-│   └── Instance attributes (per-object)
-│
-├── Inheritance
-│   ├── Single (class Child(Parent))
-│   ├── Multiple (class C(A, B))
-│   ├── MRO (Method Resolution Order)
-│   └── super() (call parent methods)
-│
-├── Polymorphism
-│   ├── Method overriding
-│   ├── Duck typing
-│   └── ABC (@abstractmethod)
-│
-├── Encapsulation
-│   ├── _protected (convention)
-│   ├── __private (name mangling)
-│   └── @property (controlled access)
-│
-└── Magic Methods
-    ├── __str__ / __repr__ (string repr)
-    ├── __eq__ / __lt__ (comparisons)
-    ├── __len__ / __getitem__ (container)
-    ├── __iter__ / __next__ (iteration)
-    ├── __enter__ / __exit__ (context mgr)
-    └── __add__ / __mul__ (operators)`,
-      },
-      codeExamples: [
-        {
-          filename: 'oop_basics.py',
-          language: 'python',
-          code: 'class Dog:\n    # Class attribute - shared by all instances\n    species = "Canis familiaris"\n\n    def __init__(self, name: str, age: int):\n        self.name = name\n        self.age = age\n        self._tricks = []  # "protected" by convention\n\n    def bark(self) -> str:\n        return f"{self.name} says Woof!"\n\n    # __str__ - human readable (print, str())\n    def __str__(self):\n        return f"Dog(name={self.name!r}, age={self.age})"\n\n    # __repr__ - developer representation\n    def __repr__(self):\n        return f"Dog({self.name!r}, {self.age})"\n\n    # __eq__ for equality comparison\n    def __eq__(self, other):\n        if not isinstance(other, Dog):\n            return NotImplemented\n        return self.name == other.name and self.age == other.age\n\nrex = Dog("Rex", 5)\nprint(rex.bark())  # Rex says Woof!\nprint(rex)         # Dog(name=\'Rex\', age=5)\n\n# Inheritance\nclass Puppy(Dog):\n    def __init__(self, name, age=0):\n        super().__init__(name, age)\n\n    def bark(self):  # override\n        return f"{self.name} says Yip!"\n\npup = Puppy("Buddy", 1)\nprint(pup.bark())   # Buddy says Yip!\nprint(isinstance(pup, Dog))  # True',
-          explanation: 'Use __init__ for construction, __str__ for users, __repr__ for developers. Use super() to call parent methods.'
-        },
-        {
-          filename: 'dataclasses.py',
-          language: 'python',
-          code: 'from dataclasses import dataclass, field\nfrom typing import List\n\n# Auto-generates __init__, __repr__, __eq__\n@dataclass\nclass User:\n    name: str\n    age: int\n    email: str = ""  # default\n    tags: List[str] = field(default_factory=list)\n\nuser1 = User("Alice", 30)\nuser2 = User("Alice", 30)\nprint(user1)            # User(name=\'Alice\', age=30, email=\'\', tags=[])\nprint(user1 == user2)   # True\n\n# Frozen dataclass - immutable\n@dataclass(frozen=True)\nclass Point:\n    x: float\n    y: float\n\np = Point(1.0, 2.0)\n# p.x = 5  # FrozenInstanceError!\n\n# Slots for memory efficiency\n@dataclass(slots=True)\nclass Pixel:\n    r: int\n    g: int\n    b: int',
-          explanation: '@dataclass auto-generates boilerplate. Use field(default_factory=list) for mutable defaults. frozen=True makes it immutable.'
-        },
-      ],
-      exercises: [
-        {
-          prompt: 'Create a BankAccount class with deposit, withdraw, and balance (with overdraft protection). Use @property for balance (read-only).',
-          starterCode: 'class BankAccount:\n    def __init__(self, owner, initial_balance=0):\n        pass\n',
-          hint: 'Store balance in self._balance. Use @property without @x.setter.',
-          solution: 'class BankAccount:\n    def __init__(self, owner, initial_balance=0):\n        self.owner = owner\n        self._balance = initial_balance\n\n    @property\n    def balance(self):\n        return self._balance\n\n    def deposit(self, amount):\n        if amount <= 0:\n            raise ValueError("Amount must be positive")\n        self._balance += amount\n        return self._balance\n\n    def withdraw(self, amount):\n        if amount > self._balance:\n            raise ValueError("Insufficient funds")\n        self._balance -= amount\n        return self._balance\n\n    def __str__(self):\n        return f"BankAccount({self.owner}, balance={self._balance:.2f})"\n\nacct = BankAccount("Alice", 100)\nacct.deposit(50)\nprint(acct.balance)  # 150',
-          solutionLanguage: 'python'
-        },
-      ],
-      quiz: [
-        {
-          question: 'What does @property do?',
-          options: ['Makes attribute private', 'Turns a method into a getter', 'Caches method results', 'Creates a class method'],
-          correctIndex: 1,
-          explanation: '@property turns a method into a getter - you access it as obj.name not obj.name().'
-        },
-        {
-          question: 'What does super() do?',
-          options: ['Returns the parent class instance', 'Calls the parent class method', 'Creates a new instance', 'Skips inheritance'],
-          correctIndex: 1,
-          explanation: 'super() returns a proxy that lets you call parent class methods.'
-        },
-      ],
-      keyTakeaways: [
-        'Classes use __init__ for construction, self for instance reference',
-        'Magic methods (__str__, __repr__, __len__, etc.) enable built-in behavior',
-        '@property creates managed attributes - no need for getX/setX',
-        '@dataclass auto-generates __init__, __repr__, __eq__',
-        'Use super() to call parent methods, isinstance() for type checks',
-      ],
-      resources: [
-        { title: 'Python Classes Tutorial', url: 'https://docs.python.org/3/tutorial/classes.html', type: 'docs' },
-        { title: 'Dataclasses Documentation', url: 'https://docs.python.org/3/library/dataclasses.html', type: 'docs' },
-      ],
-      miniProject: {
-        title: 'Build a Library Management System',
-        description: 'Build an OOP system with Book, Member, and Library classes.',
-        requirements: [
-          'Book class with title, author, isbn, is_borrowed',
-          'Member class with name, member_id, borrowed_books (max 5)',
-          'Library class with add_book, register_member, borrow_book, return_book',
-          'Use @property where appropriate',
-          'Use @dataclass for Book',
-        ],
-        estTime: '1-2 hours',
-        solutionCode: 'from dataclasses import dataclass\nfrom typing import List\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    isbn: str\n    is_borrowed: bool = False\n\nclass Member:\n    BORROW_LIMIT = 5\n\n    def __init__(self, name: str, member_id: str):\n        self.name = name\n        self.member_id = member_id\n        self._borrowed: List[Book] = []\n\n    @property\n    def borrowed_count(self):\n        return len(self._borrowed)\n\n    def can_borrow(self) -> bool:\n        return self.borrowed_count < self.BORROW_LIMIT\n\n    def borrow(self, book: Book) -> bool:\n        if not self.can_borrow() or book.is_borrowed:\n            return False\n        book.is_borrowed = True\n        self._borrowed.append(book)\n        return True\n\nclass Library:\n    def __init__(self, name: str):\n        self.name = name\n        self._books = []\n        self._members = {}\n\n    def add_book(self, book: Book):\n        self._books.append(book)\n\n    def register_member(self, member: Member):\n        self._members[member.member_id] = member\n\n    def borrow_book(self, isbn: str, member_id: str) -> bool:\n        book = next((b for b in self._books if b.isbn == isbn), None)\n        member = self._members.get(member_id)\n        if not book or not member:\n            return False\n        return member.borrow(book)',
-        solutionLanguage: 'python'
-      }
-    },
-
-    {
-      id: 'py-07',
-      title: 'Error Handling & Exceptions',
-      subtitle: 'try/except, custom exceptions, context managers',
-      duration: 45,
-      difficulty: 'Intermediate',
-      phase: 'Intermediate',
-      content: [
-        'Python uses exceptions for error handling. The try/except/else/finally construct catches and handles errors. Python encourages "EAFP" (Easier to Ask Forgiveness than Permission).',
-        'Built-in exceptions form a hierarchy: BaseException > Exception > (ValueError, TypeError, RuntimeError, ...). Always catch specific exceptions, not bare `except:`.',
-        'You can raise exceptions with `raise ValueError("message")`. To chain exceptions, use `raise NewError from original`. Custom exceptions should inherit from Exception.',
-        'Context managers (the `with` statement) ensure resources are cleaned up. Implement __enter__ and __exit__ on a class, or use @contextlib.contextmanager on a generator function.',
-      ],
-      codeExamples: [
-        {
-          filename: 'exceptions.py',
-          language: 'python',
-          code: '# Basic try/except/else/finally\ntry:\n    x = int(input("Enter number: "))\n    result = 10 / x\nexcept ValueError:\n    print("Not a valid number!")\nexcept ZeroDivisionError:\n    print("Cannot divide by zero!")\nexcept Exception as e:\n    print(f"Unexpected error: {e}")\nelse:\n    # Runs only if no exception\n    print(f"Result: {result}")\nfinally:\n    # Always runs (cleanup)\n    print("Done")\n\n# Custom exceptions\nclass ValidationError(Exception):\n    """Raised when input validation fails."""\n    pass\n\nclass InsufficientFunds(Exception):\n    def __init__(self, balance, amount):\n        self.balance = balance\n        self.amount = amount\n        super().__init__(\n            f"Need \\$\\{amount}, have \\$\\{balance}"\n        )\n\ndef withdraw(balance, amount):\n    if amount > balance:\n        raise InsufficientFunds(balance, amount)\n    return balance - amount\n\ntry:\n    withdraw(50, 100)\nexcept InsufficientFunds as e:\n    print(e)            # message\n    print(e.balance)    # 50\n    print(e.amount)     # 100',
-          explanation: 'Use specific exception types. Create custom exceptions inheriting from Exception. Use else for code that runs only if no exception, finally for cleanup.'
-        },
-        {
-          filename: 'context_managers.py',
-          language: 'python',
-          code: 'import contextlib\nimport time\n\n# Class-based context manager\nclass Timer:\n    def __init__(self, name=""):\n        self.name = name\n\n    def __enter__(self):\n        self.start = time.perf_counter()\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        elapsed = time.perf_counter() - self.start\n        print(f"{self.name} took {elapsed:.4f}s")\n        return False  # True to suppress exceptions\n\nwith Timer("sleep"):\n    time.sleep(0.5)\n\n# Generator-based context manager (cleaner!)\n@contextlib.contextmanager\ndef open_db(connection_string):\n    print(f"Connecting to {connection_string}")\n    conn = {"connected": True}\n    try:\n        yield conn\n    finally:\n        conn["connected"] = False\n        print("Connection closed")\n\nwith open_db("postgres://localhost") as db:\n    print(f"Using: {db}")',
-          explanation: 'Context managers ensure cleanup. Use __enter__/__exit__ for classes, or @contextlib.contextmanager with a generator for simpler cases.'
-        },
-      ],
-      exercises: [
-        {
-          prompt: 'Write a custom exception `InvalidAgeError`. Write a function `validate_age(age)` that raises it if age < 0 or > 150.',
-          starterCode: 'class InvalidAgeError(Exception):\n    pass\n\ndef validate_age(age):\n    pass\n',
-          hint: 'Raise InvalidAgeError with a descriptive message inside an if check.',
-          solution: 'class InvalidAgeError(Exception):\n    pass\n\ndef validate_age(age):\n    if not isinstance(age, (int, float)):\n        raise InvalidAgeError(f"Age must be a number")\n    if age < 0 or age > 150:\n        raise InvalidAgeError(f"Age must be 0-150, got {age}")\n    return True\n\ntry:\n    validate_age(-5)\nexcept InvalidAgeError as e:\n    print(e)',
-          solutionLanguage: 'python'
-        },
-      ],
-      quiz: [
-        {
-          question: 'When does the `else` clause of try/except run?',
-          options: ['Always', 'Only if no exception occurred', 'Only if exception occurred', 'Never'],
-          correctIndex: 1,
-          explanation: 'The else block runs only if no exception was raised in try.'
-        },
-      ],
-      keyTakeaways: [
-        'Use try/except/else/finally - else runs if no exception, finally always runs',
-        'Catch specific exceptions, not bare except:',
-        'Custom exceptions inherit from Exception',
-        'Use `raise from` to chain exceptions with cause',
-        'Context managers (with statement) ensure cleanup',
-      ],
-      resources: [
-        { title: 'Python Errors and Exceptions', url: 'https://docs.python.org/3/tutorial/errors.html', type: 'docs' },
-      ]
-    },
-
-    {
-      id: 'py-08',
-      title: 'Iterators, Generators & itertools',
-      subtitle: 'Lazy evaluation, yield, infinite sequences',
-      duration: 55,
-      difficulty: 'Intermediate',
-      phase: 'Intermediate',
-      content: [
-        'Iterators are objects that implement __iter__() and __next__(). Any object that can be looped over is iterable (lists, dicts, files, generators).',
-        'Generators are the easiest way to create iterators. Use the `yield` keyword instead of `return` - the function pauses at yield, resumes when next() is called. Generators are lazy - they produce values one at a time, saving memory.',
-        'The itertools module provides powerful iterator combinators: chain, cycle, islice, groupby, product, permutations, combinations, accumulate, takewhile/dropwhile.',
-        'Use generators when: working with large/infinite sequences, streaming data, building pipelines.',
-      ],
-      progressiveExample: {
-        title: 'Processing a Large Log File',
-        description: 'Process a 10GB log file efficiently - from naive to optimized',
-        stages: [
-          {
-            name: 'Tiny',
-            description: 'Naive: load entire file into memory',
-            code: '# BAD - loads entire 10GB file into RAM\nwith open("huge.log") as f:\n    lines = f.readlines()  # 10GB in memory!\n\nerrors = [line for line in lines if "ERROR" in line]\nprint(f"Found {len(errors)} errors")',
-            language: 'python',
-            explanation: 'This crashes with MemoryError on large files. Reads everything at once.',
-          },
-          {
-            name: 'Small',
-            description: 'Better: iterate line by line',
-            code: '# BETTER - one line at a time, but builds error list\nerrors = []\nwith open("huge.log") as f:\n    for line in f:\n        if "ERROR" in line:\n            errors.append(line)\n\nprint(f"Found {len(errors)} errors")',
-            language: 'python',
-            explanation: 'Reads one line at a time, but the errors list could still be huge if many errors.',
-          },
-          {
-            name: 'Real-World',
-            description: 'Best: generator pipeline, only counts, no list built',
-            code: 'from pathlib import Path\nfrom typing import Iterator\nimport time\n\ndef read_lines(path: Path) -> Iterator[str]:\n    """Lazily yield lines from a file."""\n    with open(path) as f:\n        yield from f\n\ndef filter_errors(lines: Iterator[str]) -> Iterator[str]:\n    """Yield only lines containing ERROR."""\n    for line in lines:\n        if "ERROR" in line:\n            yield line\n\ndef parse_log(line: str) -> dict:\n    """Parse a log line into a dict."""\n    parts = line.split(" | ")\n    if len(parts) >= 4:\n        return {\n            "timestamp": parts[0],\n            "level": parts[2],\n            "message": " | ".join(parts[3:]),\n        }\n    return {}\n\ndef count_errors(log_path: str) -> int:\n    """Count errors in a log file - constant memory!"""\n    path = Path(log_path)\n    lines = read_lines(path)              # lazy\n    error_lines = filter_errors(lines)    # lazy\n    return sum(1 for _ in error_lines)    # count without storing\n\n# Process 10GB file with only KB of memory\nstart = time.perf_counter()\ncount = count_errors("huge.log")\nelapsed = time.perf_counter() - start\nprint(f"Found {count} errors in {elapsed:.1f}s")\n\n# Can even process infinite streams!\ndef tail(path: Path) -> Iterator[str]:\n    """Like `tail -f` - yields new lines as they arrive."""\n    with open(path) as f:\n        f.seek(0, 2)  # jump to end\n        while True:\n            line = f.readline()\n            if not line:\n                time.sleep(0.1)\n                continue\n            yield line',
-            language: 'python',
-            explanation: 'Generator pipeline: each stage transforms lazily. Memory stays constant regardless of file size. Can even handle infinite streams (like tail -f).',
-          },
-        ],
-      },
-      codeExamples: [
-        {
-          filename: 'generators.py',
-          language: 'python',
-          code: '# Generator function - uses yield\ndef count_up_to(n):\n    i = 1\n    while i <= n:\n        yield i  # pauses here, resumes on next()\n        i += 1\n\nfor x in count_up_to(5):\n    print(x)  # 1, 2, 3, 4, 5\n\n# Infinite generator - lazy, never exhausts memory\ndef natural_numbers():\n    n = 1\n    while True:\n        yield n\n        n += 1\n\n# Fibonacci - infinite but lazy\ndef fibonacci():\n    a, b = 0, 1\n    while True:\n        yield a\n        a, b = b, a + b\n\n# Get first 10 fibs with itertools.islice\nimport itertools\nfibs = list(itertools.islice(fibonacci(), 10))\nprint(fibs)  # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]\n\n# yield from - delegate to sub-iterator\ndef flatten(nested):\n    for item in nested:\n        if isinstance(item, list):\n            yield from flatten(item)\n        else:\n            yield item\n\nprint(list(flatten([1, [2, [3, 4], 5], 6])))\n# [1, 2, 3, 4, 5, 6]',
-          explanation: 'Generators use yield to pause execution. They are lazy and memory-efficient. yield from delegates to sub-generators.'
-        },
-      ],
-      exercises: [
-        {
-          prompt: 'Write a generator that yields prime numbers infinitely.',
-          starterCode: 'def primes():\n    pass\n',
-          hint: 'Yield 2, then iterate odd numbers. Check divisibility only by previously yielded primes.',
-          solution: 'import itertools\n\ndef primes():\n    yield 2\n    found = [2]\n    n = 3\n    while True:\n        is_prime = True\n        for p in found:\n            if p * p > n:\n                break\n            if n % p == 0:\n                is_prime = False\n                break\n        if is_prime:\n            found.append(n)\n            yield n\n        n += 2\n\nfirst_20 = list(itertools.islice(primes(), 20))\nprint(first_20)',
-          solutionLanguage: 'python'
-        },
-      ],
-      quiz: [
-        {
-          question: 'What does yield do?',
-          options: ['Returns a value and ends the function', 'Returns a value but pauses the function', 'Returns multiple values as a list', 'Same as return'],
-          correctIndex: 1,
-          explanation: 'yield produces a value but pauses the function. It resumes from there on the next call.'
-        },
-      ],
-      keyTakeaways: [
-        'Iterators implement __iter__ and __next__',
-        'Generators use yield - they are lazy and memory-efficient',
-        'yield from delegates to a sub-generator',
-        'itertools has powerful combinatorics: product, permutations, combinations',
-        'Generators are perfect for pipelines and infinite sequences',
-      ],
-      resources: [
-        { title: 'itertools Documentation', url: 'https://docs.python.org/3/library/itertools.html', type: 'docs' },
-      ]
-    },
-
-    // ============ PHASE 3: ADVANCED ============
-    {
-      id: 'py-09',
-      title: 'Async/Await & Concurrent Programming',
-      subtitle: 'asyncio, async/await, asyncio.gather, Tasks',
-      duration: 70,
-      difficulty: 'Advanced',
-      phase: 'Advanced',
-      content: [
-        'Async programming lets you handle many I/O operations concurrently without threads. Python uses async/await syntax (Python 3.5+). An async function (coroutine) is defined with `async def` and must be awaited.',
-        'Use async when your code is I/O-bound: network requests, file I/O, database calls. For CPU-bound work, use multiprocessing.',
-        'Common asyncio patterns: asyncio.gather(*coros) runs coroutines concurrently. asyncio.create_task() schedules a coroutine. asyncio.wait_for() adds a timeout. asyncio.Queue for producer-consumer.',
-        'Async libraries: aiohttp (HTTP), httpx (modern HTTP), asyncpg (PostgreSQL), motor (MongoDB), websockets.',
-      ],
-      visualization: {
-        title: 'Sync vs Async Execution',
+        title: 'Collection Types — Performance Comparison',
         type: 'comparison',
-        diagram: `SYNC (sequential) - Total time: 3s
+        diagram: `┌────────────┬──────────┬──────────┬──────────┬──────────┐
+│ Operation  │ list     │ tuple    │ dict     │ set      │
+├────────────┼──────────┼──────────┼──────────┼──────────┤
+│ Add        │ O(1) amrt│ N/A      │ O(1)     │ O(1)     │
+│ Append     │ O(1) amrt│ N/A      │ N/A      │ add O(1) │
+│ Insert(0)  │ O(n) ←BAD│ N/A      │ N/A      │ N/A      │
+│ Remove     │ O(n)     │ N/A      │ O(1)     │ O(1)     │
+│ Search     │ O(n)     │ O(n)     │ O(1)     │ O(1) ←KEY│
+│ Index[i]   │ O(1)     │ O(1)     │ O(1)     │ N/A      │
+│ Iterate    │ O(n)     │ O(n)     │ O(n)     │ O(n)     │
+│ Sort       │ O(n logn)│ N/A      │ N/A      │ N/A      │
+│ Memory     │ High     │ Lower    │ High     │ High     │
+│ Mutable    │ YES      │ NO       │ YES      │ YES      │
+│ Ordered    │ YES      │ YES      │ YES(3.7+)│ NO       │
+│ Hashable   │ NO       │ YES      │ NO       │ NO       │
+└────────────┴──────────┴──────────┴──────────┴──────────┘
 
-  Request 1 ████ (1s)
-  Request 2          ████ (1s)
-  Request 3                  ████ (1s)
-  ──────────────────────────────────────► time
-            Total: 3s
-
-
-ASYNC (concurrent) - Total time: 1s
-
-  Request 1 ████ (1s)
-  Request 2 ████ (1s)         ← all run concurrently
-  Request 3 ████ (1s)
-  ──────────────────────────────────────► time
-            Total: 1s (max of all)
-
-
-WHILE waiting for I/O on Request 1,
-the event loop starts Request 2 and 3.
-No threads needed - just cooperative multitasking!`,
+GOLDEN RULES:
+• Need ordered + mutable?     → list
+• Need ordered + immutable?   → tuple (or namedtuple, dataclass)
+• Need key → value lookup?    → dict (or defaultdict)
+• Need unique items + fast membership? → set
+• Need fast queue (push/pop both ends)? → deque (collections)
+• Need to count items?        → Counter (collections)
+• Need numeric data?          → numpy array or array.array`,
         legend: [
-          'Sync: requests run one after another, total = sum',
-          'Async: requests run concurrently, total = max',
-          'Works for I/O-bound tasks (network, disk, DB)',
-          'For CPU-bound tasks, use multiprocessing instead',
+          'O(1) amortized = usually fast, occasionally slow (resize)',
+          'Sets and dicts use hash tables — O(1) lookup is their superpower',
+          'Tuples are hashable (can be dict keys), lists are not',
+          'For large numerical data, numpy is 10-100x faster than lists',
+        ],
+      },
+      progressiveExample: {
+        title: 'Building a Cache — From Slow to Fast',
+        description: 'See how choosing the right data structure makes code 10,000x faster',
+        stages: [
+          {
+            name: 'Tiny',
+            description: 'Naive cache with list — O(n) lookup',
+            code: '# BAD: Using list for cache lookup\nclass SlowCache:\n    def __init__(self):\n        self._keys = []\n        self._values = []\n\n    def get(self, key):\n        if key in self._keys:  # O(n) — scans entire list!\n            idx = self._keys.index(key)  # O(n) again\n            return self._values[idx]\n        return None\n\n    def set(self, key, value):\n        if key not in self._keys:  # O(n)\n            self._keys.append(key)\n            self._values.append(value)\n        else:\n            idx = self._keys.index(key)  # O(n)\n            self._values[idx] = value\n\n# For 1M items, each get() takes ~100ms. Unusable.',
+            language: 'python',
+            explanation: 'List membership test is O(n). For 1M items, every lookup scans 1M entries. Terrible performance.',
+          },
+          {
+            name: 'Small',
+            description: 'Use dict — O(1) lookup',
+            code: '# GOOD: Using dict for cache lookup\nclass FastCache:\n    def __init__(self):\n        self._store = {}  # dict = hash table = O(1)\n\n    def get(self, key):\n        return self._store.get(key)  # O(1)!\n\n    def set(self, key, value):\n        self._store[key] = value  # O(1)!\n\n# For 1M items, each get() takes ~0.0001ms. 1000x faster.',
+            language: 'python',
+            explanation: 'Dict lookup is O(1) thanks to hash table. Same data, 1000x faster. This is the #1 optimization in Python.',
+          },
+          {
+            name: 'Real-World',
+            description: 'LRU cache with OrderedDict, TTL support, size limits',
+            code: 'from collections import OrderedDict\nfrom time import time, monotonic\nfrom typing import Any, Callable\nimport threading\n\nclass LRUCache:\n    """Production LRU cache with TTL, thread-safe, size-limited."""\n\n    def __init__(self, maxsize: int = 1000, ttl: float | None = None):\n        self._maxsize = maxsize\n        self._ttl = ttl\n        self._cache: OrderedDict = OrderedDict()\n        self._timestamps: dict = {}\n        self._lock = threading.RLock()\n\n    def get(self, key: Any) -> Any | None:\n        with self._lock:\n            if key not in self._cache:\n                return None\n\n            # Check TTL\n            if self._ttl is not None:\n                age = monotonic() - self._timestamps[key]\n                if age > self._ttl:\n                    del self._cache[key]\n                    del self._timestamps[key]\n                    return None\n\n            # Move to end (most recently used)\n            self._cache.move_to_end(key)\n            return self._cache[key]\n\n    def set(self, key: Any, value: Any) -> None:\n        with self._lock:\n            if key in self._cache:\n                # Update existing — move to end\n                self._cache.move_to_end(key)\n            else:\n                # New key — evict LRU if at capacity\n                if len(self._cache) >= self._maxsize:\n                    evicted_key = next(iter(self._cache))  # first = oldest\n                    del self._cache[evicted_key]\n                    del self._timestamps[evicted_key]\n\n            self._cache[key] = value\n            self._timestamps[key] = monotonic()\n\n    def clear(self) -> None:\n        with self._lock:\n            self._cache.clear()\n            self._timestamps.clear()\n\n    def __len__(self) -> int:\n        with self._lock:\n            return len(self._cache)\n\n    def __contains__(self, key: Any) -> bool:\n        return self.get(key) is not None\n\n# Usage\ncache = LRUCache(maxsize=1000, ttl=300)  # 5-min TTL\n\n# As a decorator\ndef cached(maxsize: int = 128, ttl: float | None = None):\n    """Decorator that caches function results."""\n    def decorator(func: Callable) -> Callable:\n        cache = LRUCache(maxsize=maxsize, ttl=ttl)\n\n        def wrapper(*args, **kwargs):\n            key = (args, tuple(sorted(kwargs.items())))\n            result = cache.get(key)\n            if result is None:\n                result = func(*args, **kwargs)\n                cache.set(key, result)\n            return result\n\n        wrapper.cache_clear = cache.clear\n        wrapper.cache_info = lambda: {"size": len(cache)}\n        return wrapper\n\n    return decorator\n\n@cached(maxsize=1000, ttl=60)\ndef expensive_api_call(user_id: int) -> dict:\n    # Simulate slow API\n    import time\n    time.sleep(0.5)\n    return {"user_id": user_id, "name": f"User{user_id}"}\n\n# First call: 500ms\nresult = expensive_api_call(42)\n# Second call: 0.0001ms (cached)\nresult = expensive_api_call(42)',
+            language: 'python',
+            explanation: 'Production cache: OrderedDict for LRU eviction, TTL for expiry, thread-safe with RLock, can be used as decorator. This is essentially what functools.lru_cache does internally.',
+          },
         ],
       },
       codeExamples: [
         {
-          filename: 'async_basics.py',
+          filename: 'lists_deep.py',
           language: 'python',
-          code: 'import asyncio\nimport time\n\n# Define a coroutine with `async def`\nasync def greet(name):\n    print(f"Hello {name}")\n    await asyncio.sleep(1)  # non-blocking sleep\n    print(f"Bye {name}")\n    return f"done-{name}"\n\n# Run a coroutine\nasync def main():\n    result = await greet("Alice")\n    print(result)\n\nasyncio.run(main())\n\n# Sequential vs concurrent\nasync def fetch(url):\n    await asyncio.sleep(1)\n    return f"data from {url}"\n\nasync def concurrent():\n    start = time.time()\n    results = await asyncio.gather(\n        fetch("api/a"),\n        fetch("api/b"),\n        fetch("api/c"),\n    )\n    print(f"Concurrent: {time.time()-start:.2f}s")  # ~1s\n    print(results)\n\nasyncio.run(concurrent())',
-          explanation: 'async def creates a coroutine. await pauses execution. asyncio.gather runs multiple coroutines concurrently - total time = max individual time, not sum.'
+          code: '# === LISTS — ordered, mutable, allows duplicates ===\n\n# Creating lists\nnums = [1, 2, 3, 4, 5]\nempty = []\nfrom_list = list("hello")  # [\'h\', \'e\', \'l\', \'l\', \'o\']\nfrom_range = list(range(5))  # [0, 1, 2, 3, 4]\n\n# Adding elements\nnums.append(6)              # [1,2,3,4,5,6] — O(1)\nnums.insert(0, 0)           # [0,1,2,3,4,5,6] — O(n) (slow at start!)\nnums.extend([7, 8, 9])     # [0,1,2,3,4,5,6,7,8,9] — O(k)\n\n# Removing elements\nnums.remove(0)              # remove by value — O(n)\npopped = nums.pop()         # remove last — O(1)\nfirst = nums.pop(0)         # remove first — O(n) (BAD!)\ndel nums[0]                 # same as pop(0) — O(n)\nnums.clear()                # remove all\n\n# Slicing (creates NEW list)\nnums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]\nprint(nums[2:5])      # [2, 3, 4] (start:stop, exclusive)\nprint(nums[:5])       # [0,1,2,3,4]\nprint(nums[5:])       # [5,6,7,8,9]\nprint(nums[-3:])      # [7,8,9] (last 3)\nprint(nums[::2])      # [0,2,4,6,8] (every 2nd)\nprint(nums[::-1])     # [9,8,7,6,5,4,3,2,1,0] (reversed!)\nprint(nums[1:7:2])    # [1,3,5] (start:stop:step)\n\n# Slice assignment (replace section)\nnums[1:3] = [10, 20, 30]  # mutates in place\n\n# Sorting\nnums = [3, 1, 4, 1, 5, 9, 2, 6]\nnums.sort()                # in-place sort (mutates)\nprint(nums)  # [1, 1, 2, 3, 4, 5, 6, 9]\nnums.sort(reverse=True)    # descending\n\n# sorted() returns NEW list (does not mutate)\noriginal = [3, 1, 4, 1, 5]\nsorted_list = sorted(original)  # [1, 1, 3, 4, 5]\n\n# Sort by key function\nusers = [{"name": "Bob", "age": 25}, {"name": "Alice", "age": 30}]\nusers.sort(key=lambda u: u["age"])         # by age\nusers.sort(key=lambda u: u["name"])        # by name\nusers.sort(key=lambda u: (u["age"], u["name"]))  # by multiple\n\n# Sort with itemgetter (faster than lambda)\nfrom operator import itemgetter\nusers.sort(key=itemgetter("age"))\n\n# Searching\nprint(3 in nums)           # True — O(n), slow for big lists\nprint(nums.count(1))       # 2 — count occurrences\nprint(nums.index(4))       # 1 — first index of 4 (raises if not found)\n\n# Copying\na = [1, 2, 3]\nb = a                      # NOT a copy — same object!\nb.append(4)\nprint(a)  # [1, 2, 3, 4] (a was modified too!)\n\nc = a.copy()               # shallow copy\nimport copy\nd = copy.deepcopy(a)       # deep copy (for nested lists)\n\n# Common patterns\n# Filter\nevens = [x for x in nums if x % 2 == 0]\n# Map\nsquares = [x**2 for x in nums]\n# Reduce\nfrom functools import reduce\ntotal = reduce(lambda a, b: a + b, nums, 0)\n# Or just:\ntotal = sum(nums)  # built-in, faster',
+          explanation: 'Lists are the workhorse. Master slicing (start:stop:step), sort with key, and remember append/pop() are O(1) but insert(0)/pop(0) are O(n). Use deque for fast queue operations.'
         },
         {
-          filename: 'async_patterns.py',
+          filename: 'dicts_deep.py',
           language: 'python',
-          code: 'import asyncio\n\n# Semaphore - limit concurrency\nasync def limited_fetch(url, sem):\n    async with sem:  # acquire / release\n        print(f"Fetching {url}")\n        await asyncio.sleep(1)\n        return f"data-{url}"\n\nasync def many_concurrent():\n    sem = asyncio.Semaphore(3)  # max 3 at a time\n    urls = [f"url{i}" for i in range(10)]\n    tasks = [limited_fetch(u, sem) for u in urls]\n    return await asyncio.gather(*tasks)\n\n# Timeout with wait_for\nasync def slow():\n    await asyncio.sleep(10)\n    return "finally"\n\nasync def with_timeout():\n    try:\n        result = await asyncio.wait_for(slow(), timeout=2)\n    except asyncio.TimeoutError:\n        print("Timed out!")\n\n# Producer-consumer with Queue\nasync def producer(queue):\n    for i in range(5):\n        await asyncio.sleep(0.1)\n        await queue.put(f"item-{i}")\n    await queue.put(None)  # sentinel\n\nasync def consumer(queue):\n    while True:\n        item = await queue.get()\n        if item is None:\n            break\n        print(f"Processed {item}")\n        queue.task_done()\n\nasync def pipeline():\n    queue = asyncio.Queue()\n    await asyncio.gather(producer(queue), consumer(queue))\n\nasyncio.run(pipeline())',
-          explanation: 'Use Semaphores to limit concurrency. asyncio.Queue for async producer-consumer. handle CancelledError in long-running tasks.'
+          code: '# === DICTS — key-value, O(1) lookup, ordered (3.7+) ===\n\n# Creating\nuser = {"name": "Alice", "age": 30}\nempty = {}\nfrom_pairs = dict([("a", 1), ("b", 2)])\nfrom_kwargs = dict(name="Alice", age=30)\n\n# Dict comprehension (common!)\nsquares = {x: x**2 for x in range(5)}  # {0:0, 1:1, 2:4, 3:9, 4:16}\ninverted = {v: k for k, v in squares.items()}  # swap keys/values\n\n# Accessing\nprint(user["name"])         # Alice — raises KeyError if missing!\nprint(user.get("email"))    # None (safe, no error)\nprint(user.get("email", "N/A"))  # "N/A" (default)\n\n# Adding/updating\nuser["email"] = "a@x.com"   # add new key\nuser["age"] = 31            # update existing\nuser.update({"city": "NYC", "age": 32})  # bulk update\n\n# Removing\npopped = user.pop("email")  # remove and return (raises if missing)\npopped = user.pop("email", None)  # safe\nuser.popitem()              # remove last (3.7+)\ndel user["age"]             # remove by key\nuser.clear()                # remove all\n\n# Iterating\nfor key in user:            # iterates keys\n    print(key)\nfor key, value in user.items():  # both\n    print(f"{key}: {value}")\nfor value in user.values():\n    print(value)\n\n# Checking\nprint("name" in user)       # True — O(1)!\n\n# Merging (Python 3.9+)\nmerged = {"a": 1} | {"b": 2}  # {\'a\': 1, \'b\': 2}\n\n# === SPECIAL DICT TYPES (collections module) ===\nfrom collections import defaultdict, Counter, OrderedDict\n\n# defaultdict — no KeyError, auto-creates default\nword_count = defaultdict(int)  # default = 0\nfor word in "the cat sat on the mat".split():\n    word_count[word] += 1  # no KeyError even if first time\nprint(dict(word_count))  # {\'the\': 2, \'cat\': 1, \'sat\': 1, \'on\': 1, \'mat\': 1}\n\n# Group items with defaultdict\ngroups = defaultdict(list)\npeople = [("Engineer", "Alice"), ("Engineer", "Bob"), ("Sales", "Carol")]\nfor dept, name in people:\n    groups[dept].append(name)\nprint(dict(groups))  # {\'Engineer\': [\'Alice\', \'Bob\'], \'Sales\': [\'Carol\']}\n\n# Counter — counting made easy\ncounter = Counter("abracadabra")\nprint(counter)  # Counter({\'a\': 5, \'b\': 2, \'r\': 2, \'c\': 1, \'d\': 1})\nprint(counter.most_common(3))  # [(\'a\', 5), (\'b\', 2), (\'r\', 2)]\nprint(counter.most_common(1))  # [(\'a\', 5)]\n\n# Counter operations\nc1 = Counter(a=3, b=1)\nc2 = Counter(a=1, b=2)\nprint(c1 + c2)  # Counter({\'a\': 4, \'b\': 3})\nprint(c1 - c2)  # Counter({\'a\': 2}) (only positive)\n\n# OrderedDict — still useful for LRU caches\nod = OrderedDict()\nod["a"] = 1\nod["b"] = 2\nod["c"] = 3\nod.move_to_end("a")  # move to most recent\nod.popitem(last=False)  # remove least recent\n\n# === REAL-WORLD PATTERNS ===\n\n# Pattern 1: Group and aggregate\norders = [\n    {"customer": "Alice", "amount": 100},\n    {"customer": "Bob", "amount": 50},\n    {"customer": "Alice", "amount": 200},\n]\ntotal_by_customer = defaultdict(float)\nfor order in orders:\n    total_by_customer[order["customer"]] += order["amount"]\n# {\'Alice\': 300.0, \'Bob\': 50.0}\n\n# Pattern 2: Indexing for fast lookup\nusers = [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]\nusers_by_id = {u["id"]: u for u in users}\n# Now O(1) lookup by id: users_by_id[1]["name"]\n\n# Pattern 3: Frequency analysis\ndef most_frequent(items: list) -> any:\n    """Return most common item."""\n    return Counter(items).most_common(1)[0][0]\n\nprint(most_frequent([1, 2, 2, 3, 3, 3]))  # 3',
+          explanation: 'Dicts are Python\'s hash table — O(1) for everything. Use defaultdict to avoid KeyError, Counter for counting, OrderedDict for LRU caches. Dict comprehension is the most common way to transform dicts.'
         },
-      ],
-      exercises: [
         {
-          prompt: 'Write an async function that fetches 5 URLs concurrently and returns total size.',
-          starterCode: 'import asyncio\nimport aiohttp\n\nasync def total_size(urls):\n    pass\n',
-          hint: 'Use aiohttp.ClientSession and asyncio.gather.',
-          solution: 'import asyncio\nimport aiohttp\n\nasync def fetch_size(session, url):\n    async with session.get(url) as resp:\n        text = await resp.text()\n        return len(text)\n\nasync def total_size(urls):\n    async with aiohttp.ClientSession() as session:\n        tasks = [fetch_size(session, url) for url in urls]\n        sizes = await asyncio.gather(*tasks)\n        return sum(sizes)',
-          solutionLanguage: 'python'
-        },
-      ],
-      quiz: [
-        {
-          question: 'When should you use async/await?',
-          options: ['For CPU-bound work', 'For I/O-bound work', 'Always', 'Never'],
-          correctIndex: 1,
-          explanation: 'Async is for I/O-bound tasks. For CPU-bound, use multiprocessing.'
-        },
-      ],
-      keyTakeaways: [
-        'Use async/await for I/O-bound work, multiprocessing for CPU-bound',
-        'asyncio.gather runs coroutines concurrently - total time = max, not sum',
-        'asyncio.create_task schedules a coroutine to run',
-        'Semaphore limits concurrency, Queue for producer-consumer',
-        'Use aiohttp/httpx for async HTTP requests',
-      ],
-      resources: [
-        { title: 'asyncio Documentation', url: 'https://docs.python.org/3/library/asyncio.html', type: 'docs' },
-        { title: 'Real Python - Async IO', url: 'https://realpython.com/async-io-python/', type: 'article' },
-      ]
-    },
-
-    {
-      id: 'py-10',
-      title: 'Type Hints & Static Analysis',
-      subtitle: 'Type annotations, mypy, pydantic-style validation',
-      duration: 50,
-      difficulty: 'Advanced',
-      phase: 'Advanced',
-      content: [
-        'Type hints (PEP 484) let you annotate types without affecting runtime. They are checked by static analyzers like mypy, pyright, pytype. IDEs use them for autocompletion and error detection.',
-        'Basic types: int, str, float, bool, bytes. Complex types: list[int], dict[str, int], tuple[int, str], set[str]. Optional[X] = X | None. Use typing module for Callable, Iterable, Iterator, Any, TypeVar.',
-        'Generic types and TypeVar let you write reusable typed functions and classes. Use @overload for functions with multiple signatures. Use Literal for specific string/int values.',
-        'Configure mypy in pyproject.toml: strict = true, disallow_untyped_defs = true. Run with `mypy src/`. It catches bugs before runtime - especially valuable for large codebases.',
-      ],
-      codeExamples: [
-        {
-          filename: 'type_hints.py',
+          filename: 'sets_tuples.py',
           language: 'python',
-          code: 'from typing import Optional, Union, List, Dict, Callable, TypeVar, Generic, overload, Literal\nfrom pathlib import Path\nfrom datetime import datetime\n\n# Basic annotations\ndef greet(name: str, times: int = 1) -> str:\n    return (f"Hello, {name}! " * times).strip()\n\n# Complex types (Python 3.9+: use lowercase list/dict/tuple)\ndef process(items: list[int]) -> dict[str, list[int]]:\n    return {"evens": [x for x in items if x % 2 == 0],\n            "odds": [x for x in items if x % 2 == 1]}\n\n# Optional = X | None (Python 3.10+)\ndef find_user(user_id: int) -> dict | None:\n    if user_id == 1:\n        return {"id": 1, "name": "Alice"}\n    return None\n\n# Callable - functions as arguments\ndef apply(func: Callable[[int, int], int], a: int, b: int) -> int:\n    return func(a, b)\n\nprint(apply(lambda x, y: x + y, 5, 3))  # 8\n\n# TypeVar - generic functions\nT = TypeVar("T")\n\ndef first(items: list[T]) -> T:\n    return items[0]\n\nprint(first([1, 2, 3]))        # T = int\nprint(first(["a", "b", "c"]))  # T = str\n\n# Generic class\nclass Stack(Generic[T]):\n    def __init__(self) -> None:\n        self._items: list[T] = []\n\n    def push(self, item: T) -> None:\n        self._items.append(item)\n\n    def pop(self) -> T:\n        return self._items.pop()\n\nstack: Stack[int] = Stack()\nstack.push(1)\n# stack.push("x")  # mypy error!\n\n# Literal types\ndef set_mode(mode: Literal["train", "eval", "test"]) -> None:\n    print(f"Mode: {mode}")\n\nset_mode("train")  # OK\n# set_mode("debug")  # mypy error!\n\n# @overload - multiple signatures\n@overload\ndef parse(value: int) -> int: ...\n@overload\ndef parse(value: str) -> str: ...\ndef parse(value):\n    return value\n\n# TypedDict - dict with specific keys\nclass UserDict(TypedDict):\n    name: str\n    age: int\n    email: str\n\nuser: UserDict = {"name": "Alice", "age": 30, "email": "a@x.com"}',
-          explanation: 'Type hints document intent and enable static analysis. Use TypeVar for generics, Literal for specific values, TypedDict for structured dicts.'
+          code: '# === SETS — unordered, unique, O(1) membership ===\n\n# Creating\ncolors = {"red", "green", "blue"}\nempty = set()  # NOT {} (that\'s a dict!)\nfrom_list = set([1, 2, 2, 3, 3])  # {1, 2, 3} (dedup!)\n\n# Adding/removing\ncolors.add("yellow")\ncolors.discard("red")  # no error if missing\ncolors.remove("green")  # raises KeyError if missing\ncolors.pop()           # remove arbitrary element\ncolors.clear()\n\n# Membership (O(1) — this is the superpower!)\nif "red" in colors:  # FAST even for 1M items\n    print("Found")\n\n# Set operations (math!)\na = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\n\nprint(a & b)          # {3, 4} intersection\nprint(a | b)          # {1,2,3,4,5,6} union\nprint(a - b)          # {1, 2} difference\nprint(a ^ b)          # {1, 2, 5, 6} symmetric difference\nprint(a <= b)         # False (is a subset of b?)\nprint(a.isdisjoint(b)) # False (no common elements?)\n\n# Frozen set (immutable, hashable — can be dict key)\nfs = frozenset([1, 2, 3])\n# fs.add(4)  # error!\nmy_dict = {fs: "value"}  # works as key\n\n# REAL-WORLD USE CASES\n\n# 1. Deduplication\nemails = ["a@x.com", "b@x.com", "a@x.com", "c@x.com"]\nunique_emails = list(set(emails))  # order lost!\nunique_ordered = list(dict.fromkeys(emails))  # preserves order\n\n# 2. Fast membership testing (1000x faster than list!)\nvalid_users = {"alice", "bob", "carol"}  # set\n# vs ["alice", "bob", "carol"]  # list\nif username in valid_users:  # O(1) vs O(n)\n    allow_access()\n\n# 3. Finding common/different items\nactive_users = {"alice", "bob", "carol"}\npaid_users = {"bob", "carol", "dan"}\n\nboth = active_users & paid_users           # {\'bob\', \'carol\'}\nfree_users = active_users - paid_users     # {\'alice\'}\nchurned = paid_users - active_users        # {\'dan\'}\nall_users = active_users | paid_users      # {\'alice\', \'bob\', \'carol\', \'dan\'}\n\n# 4. Set comprehension\nunique_first_letters = {word[0] for word in ["apple", "banana", "apricot"]}\n# {\'a\', \'b\'}\n\n# === TUPLES — ordered, IMMUTABLE, hashable ===\n\n# Creating\npoint = (3, 4)\nsingle = (42,)  # SINGLE element needs comma!\nempty = ()\n\n# Without parens (auto-packing)\npoint = 3, 4\nx, y = point  # unpacking\n\n# Multiple return values (returns tuple)\ndef min_max(items):\n    return min(items), max(items)\n\nlow, high = min_max([3, 1, 4, 1, 5])\n\n# Swap variables (no temp!)\na, b = b, a\n\n# Tuple methods (only 2!)\nprint(point.count(3))  # 1\nprint(point.index(4))  # 1\n\n# Tuples as dict keys (lists cannot!)\ngrid = {(0, 0): "A", (0, 1): "B", (1, 0): "C"}\nprint(grid[(0, 1)])  # "B"\n\n# Named tuples (self-documenting)\nfrom collections import namedtuple\n\n# Old way\nPoint = namedtuple("Point", ["x", "y"])\np = Point(3, 4)\nprint(p.x, p.y)  # 3 4 (access by name!)\nprint(p[0], p[1])  # 3 4 (still indexable)\n\n# Modern way: dataclass (more flexible)\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Point:\n    x: float\n    y: float\n\n    def distance_to(self, other: "Point") -> float:\n        return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2) ** 0.5\n\np1 = Point(0, 0)\np2 = Point(3, 4)\nprint(p1.distance_to(p2))  # 5.0',
+          explanation: 'Sets give O(1) membership testing — use them whenever you check `if x in collection` frequently. Tuples are immutable and hashable — use for fixed records, dict keys, multiple return values. Prefer dataclass over namedtuple for new code.'
         },
-      ],
-      exercises: [
-        {
-          prompt: 'Add type hints to a function that takes a list of strings and returns a dict mapping each string to its length.',
-          starterCode: 'def word_lengths(words):\n    return {w: len(w) for w in words}\n',
-          hint: 'Use list[str] for input, dict[str, int] for output.',
-          solution: 'def word_lengths(words: list[str]) -> dict[str, int]:\n    return {w: len(w) for w in words}\n\nresult = word_lengths(["hello", "world"])\nprint(result)  # {\'hello\': 5, \'world\': 5}',
-          solutionLanguage: 'python'
-        },
-      ],
-      quiz: [
-        {
-          question: 'Do type hints affect runtime behavior?',
-          options: ['Yes, they validate at runtime', 'No, they are only for static analysis', 'Yes, they slow down code', 'Only with from __future__ import annotations'],
-          correctIndex: 1,
-          explanation: 'Type hints are NOT enforced at runtime. They are hints for static analyzers (mypy, pyright) and IDEs.'
-        },
-      ],
-      keyTakeaways: [
-        'Type hints document intent and enable IDE autocompletion',
-        'Use list[int], dict[str, int] (Python 3.9+ lowercase)',
-        'Optional[X] = X | None (Python 3.10+)',
-        'TypeVar for generics, Literal for specific values, TypedDict for structured dicts',
-        'Run mypy in CI to catch type errors before runtime',
-      ],
-      resources: [
-        { title: 'Python Type Hints (PEP 484)', url: 'https://peps.python.org/pep-0484/', type: 'article' },
-        { title: 'mypy Documentation', url: 'https://mypy.readthedocs.io/', type: 'docs' },
-      ]
-    },
-
-    {
-      id: 'py-11',
-      title: 'Performance Profiling & Optimization',
-      subtitle: 'cProfile, timeit, memory profiling, optimization strategies',
-      duration: 55,
-      difficulty: 'Advanced',
-      phase: 'Advanced',
-      content: [
-        'Premature optimization is the root of all evil. Always PROFILE first to find the actual bottleneck, then optimize. Python has great profiling tools: cProfile, timeit, memory_profiler, py-spy.',
-        'Common optimization strategies: 1) Use built-in functions (C-implemented, fast), 2) Use comprehensions instead of loops, 3) Use generators for large data, 4) Use sets for membership tests, 5) Cache with @lru_cache, 6) Use numpy for numerical work, 7) Use multiprocessing for CPU-bound, async for I/O-bound.',
-        'cProfile shows where time is spent. Run with `python -m cProfile -s cumulative script.py`. Look for hot spots. Use snakeviz to visualize profile output.',
-        'Memory profiling: use memory_profiler to see memory usage line by line. Use tracemalloc to track allocations. For large data, prefer generators, arrays, and numpy over lists.',
       ],
       lab: {
-        title: 'Profile and Optimize a Slow Function',
-        objective: 'Profile a function, find the bottleneck, and optimize it 100x',
-        estTime: '45 minutes',
+        title: 'Build a Production-Grade Cache',
+        objective: 'Build an LRU cache with TTL, thread safety, and metrics',
+        estTime: '60-90 minutes',
         difficulty: 'Intermediate',
         setup: [
-          'Install profiling tools: pip install memory_profiler snakeviz',
-          'Create a file called slow.py',
+          'Python 3.12+ installed',
+          'Create file: cache.py',
+          'No external dependencies needed',
         ],
         steps: [
           {
-            title: 'Write a slow function',
-            instruction: 'Create a function that finds duplicate numbers in a list using nested loops (O(n²))',
-            code: 'def find_duplicates_slow(numbers):\n    duplicates = []\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if numbers[i] == numbers[j] and numbers[i] not in duplicates:\n                duplicates.append(numbers[i])\n    return duplicates\n\nimport random\nnums = [random.randint(0, 100) for _ in range(5000)]',
+            title: 'Step 1: Basic dict cache',
+            instruction: 'Start with the simplest possible cache using a dict',
+            code: 'class SimpleCache:\n    def __init__(self):\n        self._store = {}\n\n    def get(self, key):\n        return self._store.get(key)\n\n    def set(self, key, value):\n        self._store[key] = value\n\n# Test\ncache = SimpleCache()\ncache.set("user:1", {"name": "Alice"})\nprint(cache.get("user:1"))  # {\'name\': \'Alice\'}\nprint(cache.get("user:2"))  # None',
             codeLanguage: 'python',
+            explanation: 'Plain dict works, but grows forever — no size limit, no expiry.',
           },
           {
-            title: 'Profile it with cProfile',
-            instruction: 'Run with cProfile to see where time is spent',
-            code: 'python -m cProfile -s cumulative -c "\nfrom slow import find_duplicates_slow, nums\nfind_duplicates_slow(nums)\n" 2>&1 | head -20',
-            codeLanguage: 'bash',
-            expectedOutput: '   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.850    0.850    0.850    0.850 slow.py:1(find_duplicates_slow)\n     2500    0.001    0.000    0.001    0.000 {method \'append\' of \'list\' objects}',
-            explanation: 'The function takes 0.85s. The nested loops are the bottleneck (O(n²)).',
-          },
-          {
-            title: 'Optimize with a set',
-            instruction: 'Use a set for O(1) membership testing instead of list (O(n))',
-            code: 'def find_duplicates_fast(numbers):\n    seen = set()\n    duplicates = set()\n    for n in numbers:\n        if n in seen:\n            duplicates.add(n)\n        else:\n            seen.add(n)\n    return list(duplicates)',
+            title: 'Step 2: Add LRU eviction with OrderedDict',
+            instruction: 'Use OrderedDict to track access order and evict least recently used',
+            code: 'from collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, maxsize=100):\n        self._maxsize = maxsize\n        self._cache = OrderedDict()\n\n    def get(self, key):\n        if key not in self._cache:\n            return None\n        # Move to end (most recently used)\n        self._cache.move_to_end(key)\n        return self._cache[key]\n\n    def set(self, key, value):\n        if key in self._cache:\n            self._cache.move_to_end(key)\n        elif len(self._cache) >= self._maxsize:\n            # Evict least recently used (first item)\n            self._cache.popitem(last=False)\n        self._cache[key] = value\n\ncache = LRUCache(maxsize=3)\ncache.set("a", 1)\ncache.set("b", 2)\ncache.set("c", 3)\ncache.get("a")  # makes "a" most recent\ncache.set("d", 4)  # evicts "b" (least recent)\nprint(cache.get("b"))  # None (evicted)',
             codeLanguage: 'python',
-            explanation: 'Now O(n) instead of O(n²). Set lookup is O(1).',
+            explanation: 'OrderedDict.move_to_end() and popitem(last=False) make LRU trivial. This is the core pattern.',
           },
           {
-            title: 'Verify the optimization',
-            instruction: 'Time both functions with timeit',
-            code: 'python -c "\nimport timeit\nfrom slow import find_duplicates_slow, find_duplicates_fast, nums\n\nt_slow = timeit.timeit(lambda: find_duplicates_slow(nums), number=3)\nt_fast = timeit.timeit(lambda: find_duplicates_fast(nums), number=3)\nprint(f\'Slow: {t_slow:.3f}s\')\nprint(f\'Fast: {t_fast:.3f}s\')\nprint(f\'Speedup: {t_slow/t_fast:.0f}x\')\n"',
-            codeLanguage: 'bash',
-            expectedOutput: 'Slow: 2.550s\nFast: 0.003s\nSpeedup: 850x',
-            explanation: '850x speedup just by using a set instead of a list for membership testing!',
+            title: 'Step 3: Add TTL (time-to-live)',
+            instruction: 'Items should expire after a configurable time',
+            code: 'from time import monotonic\n\nclass LRUCache:\n    def __init__(self, maxsize=100, ttl=None):\n        self._maxsize = maxsize\n        self._ttl = ttl\n        self._cache = OrderedDict()\n        self._timestamps = {}  # key -> creation time\n\n    def _is_expired(self, key):\n        if self._ttl is None:\n            return False\n        age = monotonic() - self._timestamps[key]\n        return age > self._ttl\n\n    def get(self, key):\n        if key not in self._cache:\n            return None\n        if self._is_expired(key):\n            del self._cache[key]\n            del self._timestamps[key]\n            return None\n        self._cache.move_to_end(key)\n        return self._cache[key]\n\n    def set(self, key, value):\n        if key in self._cache:\n            self._cache.move_to_end(key)\n        elif len(self._cache) >= self._maxsize:\n            evicted = self._cache.popitem(last=False)[0]\n            del self._timestamps[evicted]\n        self._cache[key] = value\n        self._timestamps[key] = monotonic()\n\ncache = LRUCache(maxsize=100, ttl=1)  # 1 second TTL\ncache.set("temp", "value")\nprint(cache.get("temp"))  # "value"\nimport time\ntime.sleep(1.1)\nprint(cache.get("temp"))  # None (expired)',
+            codeLanguage: 'python',
+            explanation: 'Use monotonic() (not time()) for elapsed time — it is monotonic (never goes backward). Check expiry on get().',
+          },
+          {
+            title: 'Step 4: Add thread safety',
+            instruction: 'Make it thread-safe with a lock',
+            code: 'import threading\n\nclass LRUCache:\n    def __init__(self, maxsize=100, ttl=None):\n        self._maxsize = maxsize\n        self._ttl = ttl\n        self._cache = OrderedDict()\n        self._timestamps = {}\n        self._lock = threading.RLock()  # reentrant (nested locking)\n        self._hits = 0\n        self._misses = 0\n\n    def get(self, key):\n        with self._lock:\n            if key not in self._cache:\n                self._misses += 1\n                return None\n            if self._is_expired(key):\n                del self._cache[key]\n                del self._timestamps[key]\n                self._misses += 1\n                return None\n            self._cache.move_to_end(key)\n            self._hits += 1\n            return self._cache[key]\n\n    def set(self, key, value):\n        with self._lock:\n            if key in self._cache:\n                self._cache.move_to_end(key)\n            elif len(self._cache) >= self._maxsize:\n                evicted = self._cache.popitem(last=False)[0]\n                del self._timestamps[evicted]\n            self._cache[key] = value\n            self._timestamps[key] = monotonic()\n\n    def stats(self):\n        with self._lock:\n            total = self._hits + self._misses\n            hit_rate = self._hits / total if total else 0\n            return {\n                "size": len(self._cache),\n                "maxsize": self._maxsize,\n                "hits": self._hits,\n                "misses": self._misses,\n                "hit_rate": f"{hit_rate:.1%}",\n            }\n\n    def _is_expired(self, key):\n        if self._ttl is None:\n            return False\n        return monotonic() - self._timestamps[key] > self._ttl\n\n# Test with threads\nfrom concurrent.futures import ThreadPoolExecutor\n\ncache = LRUCache(maxsize=1000, ttl=60)\n\ndef worker(n):\n    cache.set(f"key{n}", n)\n    return cache.get(f"key{n}")\n\nwith ThreadPoolExecutor(max_workers=10) as pool:\n    results = list(pool.map(worker, range(1000)))\n\nprint(cache.stats())\n# {\'size\': 1000, \'hits\': 1000, \'misses\': 0, \'hit_rate\': \'100.0%\'}',
+            codeLanguage: 'python',
+            explanation: 'RLock (reentrant) allows the same thread to acquire the lock multiple times. Stats let you monitor cache effectiveness.',
+          },
+          {
+            title: 'Step 5: Use as a decorator',
+            instruction: 'Make it usable as @cached decorator on functions',
+            code: 'from functools import wraps\n\ndef cached(maxsize=128, ttl=None):\n    """Decorator that caches function results."""\n    def decorator(func):\n        cache = LRUCache(maxsize=maxsize, ttl=ttl)\n\n        @wraps(func)\n        def wrapper(*args, **kwargs):\n            # Create cache key from args\n            key = (args, tuple(sorted(kwargs.items())))\n            result = cache.get(key)\n            if result is None:\n                result = func(*args, **kwargs)\n                cache.set(key, result)\n            return result\n\n        # Expose cache methods\n        wrapper.cache = cache\n        wrapper.cache_clear = cache.clear if hasattr(cache, \'clear\') else lambda: None\n        wrapper.cache_stats = cache.stats\n        return wrapper\n\n    return decorator\n\n# Usage\n@cached(maxsize=100, ttl=30)\ndef fetch_user(user_id):\n    import time\n    time.sleep(0.5)  # simulate slow API\n    return {"id": user_id, "name": f"User{user_id}"}\n\n# First call: ~500ms\nprint(fetch_user(1))\n# Second call: ~0ms (cached)\nprint(fetch_user(1))\nprint(fetch_user.cache_stats())\n# {\'size\': 1, \'hits\': 1, \'misses\': 1, \'hit_rate\': \'50.0%\'}',
+            codeLanguage: 'python',
+            explanation: '@wraps preserves function metadata. Cache key from args + sorted kwargs. Expose stats for monitoring.',
           },
         ],
-        verification: 'Run the final timing - should see at least 100x speedup.',
-        cleanup: 'rm slow.py',
+        verification: 'All 5 steps work. Stats show hits/misses. Threadsafe with ThreadPoolExecutor. Decorator caches function calls.',
       },
-      codeExamples: [
-        {
-          filename: 'profiling.py',
-          language: 'python',
-          code: '# Time a small code snippet\nimport timeit\n\n# Time list vs set membership\nt_list = timeit.timeit("x in data",\n    setup="data = list(range(10000)); x = 9999",\n    number=1000)\nt_set = timeit.timeit("x in data",\n    setup="data = set(range(10000)); x = 9999",\n    number=1000)\n\nprint(f"List: {t_list:.3f}s")  # ~2.5s\nprint(f"Set:  {t_set:.3f}s")   # ~0.0001s\nprint(f"Set is {t_list/t_set:.0f}x faster for membership")\n\n# cProfile - find bottlenecks\nimport cProfile\n\ndef slow_function():\n    total = 0\n    for i in range(1000000):\n        total += i\n    return total\n\ncProfile.run("slow_function()", sort="cumulative")\n# Output shows:\n# ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n#     1    0.045    0.045    0.045    0.045 slow_function()\n\n# @lru_cache for memoization\nfrom functools import lru_cache\nimport time\n\n@lru_cache(maxsize=None)\ndef expensive(n):\n    time.sleep(0.1)\n    return n * 2\n\nstart = time.time()\nprint(expensive(5))  # 0.1s\nprint(expensive(5))  # 0.0001s (cached!)\nprint(f"{time.time()-start:.3f}s total")',
-          explanation: 'timeit for micro-benchmarks. cProfile for finding bottlenecks. @lru_cache for memoization. Always profile before optimizing.'
-        },
-      ],
-      keyTakeaways: [
-        'Always profile before optimizing - find the actual bottleneck',
-        'Use cProfile and timeit for timing',
-        'Use sets for O(1) membership (vs O(n) for lists)',
-        'Use @lru_cache for memoization of pure functions',
-        'Prefer built-in functions (C-implemented, fast)',
-        'Use generators for large data, numpy for numerical work',
-      ],
-      resources: [
-        { title: 'cProfile Documentation', url: 'https://docs.python.org/3/library/profile.html', type: 'docs' },
-        { title: 'py-spy - sampling profiler', url: 'https://github.com/benfred/py-spy', type: 'tool', isHiddenGem: true },
-      ]
-    },
-
-    // ============ PHASE 4: REAL-WORLD ============
-    {
-      id: 'py-12',
-      title: 'Testing with pytest',
-      subtitle: 'Write tests, fixtures, parametrize, mocking',
-      duration: 50,
-      difficulty: 'Intermediate',
-      phase: 'Real-World',
-      content: [
-        'pytest is the most popular Python testing framework. Simpler than unittest, more powerful. Discover tests automatically (test_*.py files, test_* functions). Use plain assert statements.',
-        'Fixtures are setup functions reused across tests. Use @pytest.fixture. Scope: function (default), class, module, session. Use yield for setup/teardown.',
-        'Use @pytest.mark.parametrize to run one test with multiple inputs. Use pytest.mark.skip / .xfail for known issues.',
-        'Mocking: use unittest.mock.patch to replace dependencies (DB, APIs) with mocks. Use respx for mocking HTTPX/requests.',
-      ],
-      codeExamples: [
-        {
-          filename: 'test_basics.py',
-          language: 'python',
-          code: '# test_math.py - simple tests\nimport pytest\n\ndef add(a, b):\n    return a + b\n\ndef test_add():\n    assert add(2, 3) == 5\n    assert add(-1, 1) == 0\n    assert add(0, 0) == 0\n\n# Test that expects an exception\ndef test_divide_by_zero():\n    with pytest.raises(ZeroDivisionError):\n        1 / 0\n\n# Parameterized - run same test with multiple inputs\n@pytest.mark.parametrize("a, b, expected", [\n    (1, 2, 3),\n    (-1, 1, 0),\n    (0, 0, 0),\n    (100, 200, 300),\n])\ndef test_add_parametrized(a, b, expected):\n    assert add(a, b) == expected\n\n# Skip and xfail\n@pytest.mark.skip(reason="Not implemented yet")\ndef test_future_feature():\n    pass\n\n# Run: pytest -v\n# Run with coverage: pytest --cov=src --cov-report=html',
-          explanation: 'pytest uses plain assert. Use pytest.raises for exceptions. @parametrize for data-driven tests.'
-        },
-        {
-          filename: 'fixtures_mocking.py',
-          language: 'python',
-          code: 'import pytest\nfrom unittest.mock import Mock, patch\n\n# Fixtures - reusable setup\n@pytest.fixture\ndef sample_user():\n    return {"id": 1, "name": "Alice", "email": "alice@example.com"}\n\ndef test_user_name(sample_user):  # fixture injected by name\n    assert sample_user["name"] == "Alice"\n\n# Fixture with setup/teardown\n@pytest.fixture\ndef db_session():\n    session = create_session()  # setup\n    yield session  # test runs here\n    session.close()  # teardown\n\n# Session-scoped fixture (runs once per session)\n@pytest.fixture(scope="session")\ndef app():\n    app = create_app()\n    app.config["TESTING"] = True\n    yield app\n    app.cleanup()\n\n# Factory fixture - create multiple instances\n@pytest.fixture\ndef make_user():\n    def _make(name="Test", email=None):\n        return {"name": name, "email": email or f"{name.lower()}@test.com"}\n    return _make\n\ndef test_factory(make_user):\n    u1 = make_user("Alice")\n    assert u1["email"] == "alice@test.com"\n\n# Mocking - replace dependencies\n@patch("myapp.services.requests.get")\ndef test_fetch_user(mock_get, sample_user):\n    mock_get.return_value.json.return_value = sample_user\n    mock_get.return_value.status_code = 200\n\n    result = fetch_user(1)\n\n    assert result["name"] == "Alice"\n    mock_get.assert_called_once_with("https://api/users/1")',
-          explanation: 'Fixtures: reusable setup with yield for teardown. Factory fixtures create multiple instances. patch() replaces dependencies.'
-        },
-      ],
       exercises: [
         {
-          prompt: 'Write a parametrized test for is_palindrome(s) testing 5 cases.',
-          starterCode: 'def is_palindrome(s):\n    return s == s[::-1]\n\n@pytest.mark.parametrize("input,expected", [\n    # your test cases\n])\ndef test_is_palindrome(input, expected):\n    assert is_palindrome(input) == expected\n',
-          hint: 'Mix true (radar, level) and false (hello) cases.',
-          solution: 'def is_palindrome(s):\n    return s == s[::-1]\n\n@pytest.mark.parametrize("input,expected", [\n    ("radar", True),\n    ("level", True),\n    ("racecar", True),\n    ("hello", False),\n    ("world", False),\n])\ndef test_is_palindrome(input, expected):\n    assert is_palindrome(input) == expected',
+          prompt: 'Given a list of 1M user IDs, write a function that returns the 10 most common IDs. Then write a function that returns IDs that appear more than 5 times. Use the right collection types.',
+          starterCode: 'from collections import Counter\nfrom typing import List\n\ndef top_10(user_ids: List[int]) -> List[int]:\n    # your code\n    pass\n\ndef frequent_5plus(user_ids: List[int]) -> List[int]:\n    # your code\n    pass\n',
+          hint: 'Counter.most_common(10) for top 10. Iterate Counter items for frequency threshold.',
+          solution: 'from collections import Counter\nfrom typing import List\n\ndef top_10(user_ids: List[int]) -> List[int]:\n    """Return 10 most common user IDs."""\n    counter = Counter(user_ids)\n    return [uid for uid, _ in counter.most_common(10)]\n\ndef frequent_5plus(user_ids: List[int]) -> List[int]:\n    """Return IDs appearing more than 5 times."""\n    counter = Counter(user_ids)\n    return [uid for uid, count in counter.items() if count > 5]\n\n# Test\nimport random\nids = [random.randint(1, 100) for _ in range(10000)]\nprint(top_10(ids))        # [42, 17, 88, ...] most common\nprint(frequent_5plus(ids))  # all IDs appearing > 5 times',
+          solutionLanguage: 'python'
+        },
+        {
+          prompt: 'Implement a function that takes two lists and returns items in list1 but not in list2, using set operations. Should be O(n) not O(n²).',
+          starterCode: 'def difference(list1: list, list2: list) -> list:\n    # your code\n    pass\n',
+          hint: 'Convert list2 to set, then use list comprehension with `not in`.',
+          solution: 'def difference(list1: list, list2: list) -> list:\n    """Return items in list1 but not in list2. O(n) complexity."""\n    set2 = set(list2)  # O(m) build, O(1) lookup\n    return [item for item in list1 if item not in set2]  # O(n)\n\n# Test\nprint(difference([1, 2, 3, 4, 5], [2, 4, 6]))\n# [1, 3, 5]',
           solutionLanguage: 'python'
         },
       ],
       quiz: [
         {
-          question: 'What does a fixture with yield do?',
-          options: ['Returns a generator', 'Setup before yield, teardown after', 'Same as return', 'Caches the value'],
+          question: 'What is the time complexity of `x in my_list` vs `x in my_set`?',
+          options: [
+            'Both O(1)',
+            'Both O(n)',
+            'list O(n), set O(1)',
+            'list O(1), set O(n)',
+          ],
+          correctIndex: 2,
+          explanation: 'List scans all elements O(n). Set uses hash table for O(1) lookup. For 1M items: list ~100ms, set ~0.0001ms.'
+        },
+        {
+          question: 'When should you use a tuple instead of a list?',
+          options: [
+            'When you need to add items',
+            'When the data is fixed/immutable and you need it hashable (e.g., as dict key)',
+            'Never, lists are always better',
+            'When you need to sort',
+          ],
           correctIndex: 1,
-          explanation: 'Code before yield is setup, code after is teardown. The yielded value is injected into the test.'
+          explanation: 'Tuples are immutable and hashable — use for fixed records (coordinates, RGB values) and as dict keys. Lists are mutable and not hashable.'
         },
-      ],
-      keyTakeaways: [
-        'pytest uses plain assert with detailed failure messages',
-        'Fixtures (with yield) provide reusable setup/teardown',
-        'Use @pytest.mark.parametrize for data-driven tests',
-        'Mock with @patch or pytest-mock - replace dependencies',
-        'conftest.py shares fixtures across test files',
-      ],
-      resources: [
-        { title: 'pytest Documentation', url: 'https://docs.pytest.org/', type: 'docs' },
-        { title: 'Obey the Testing Goat (free book)', url: 'https://www.obeythetestinggoat.com/', type: 'book', isHiddenGem: true },
-      ]
-    },
-
-    {
-      id: 'py-13',
-      title: 'Modules, Packages & Virtual Environments',
-      subtitle: 'Organize code, pip, venv, pyproject.toml',
-      duration: 50,
-      difficulty: 'Intermediate',
-      phase: 'Real-World',
-      content: [
-        'A module is any .py file. A package is a directory containing modules with an __init__.py file. Use `import module` or `from module import name`.',
-        'Virtual environments isolate project dependencies. Use `python -m venv .venv` to create one, then activate it. On modern Python use `uv` for blazing fast dependency management.',
-        'Modern Python uses pyproject.toml as the single source of truth for project metadata, dependencies, and build configuration.',
-        'When creating your own package, structure it as: mypackage/ (with __init__.py), pyproject.toml at root, src/ layout preferred.',
-      ],
-      codeExamples: [
         {
-          filename: 'pyproject.toml',
-          language: 'toml',
-          code: '# pyproject.toml - modern Python project config\n[build-system]\nrequires = ["hatchling"]\nbuild-backend = "hatchling.build"\n\n[project]\nname = "mypackage"\nversion = "0.1.0"\ndescription = "My awesome Python package"\nreadme = "README.md"\nrequires-python = ">=3.10"\nlicense = {text = "MIT"}\nauthors = [\n    {name = "Your Name", email = "you@example.com"}\n]\ndependencies = [\n    "requests>=2.31",\n    "pydantic>=2.0",\n]\n\n[project.optional-dependencies]\ndev = [\n    "pytest>=7.0",\n    "ruff>=0.1",\n    "mypy>=1.0",\n]\n\n[project.scripts]\nmyapp = "mypackage.cli:main"\n\n# Tool configs in same file\n[tool.ruff]\nline-length = 100\ntarget-version = "py310"\n\n[tool.pytest.ini_options]\ntestpaths = ["tests"]',
-          explanation: 'pyproject.toml is the modern standard. Define project metadata, dependencies, optional deps (dev), CLI scripts, and tool configs all in one file.'
-        },
-      ],
-      exercises: [
-        {
-          prompt: 'Create a package `stringtools` with reverse(), count_vowels(), and is_palindrome() functions.',
-          starterCode: '# stringtools/__init__.py\n',
-          hint: 'Define functions in __init__.py or import them from submodules.',
-          solution: '# stringtools/__init__.py\ndef reverse(s: str) -> str:\n    return s[::-1]\n\ndef count_vowels(s: str) -> int:\n    return sum(1 for c in s.lower() if c in "aeiou")\n\ndef is_palindrome(s: str) -> bool:\n    cleaned = "".join(c.lower() for c in s if c.isalnum())\n    return cleaned == cleaned[::-1]\n\n__all__ = ["reverse", "count_vowels", "is_palindrome"]\n__version__ = "0.1.0"',
-          solutionLanguage: 'python'
-        },
-      ],
-      quiz: [
-        {
-          question: 'What does `if __name__ == "__main__":` do?',
-          options: ['Imports the module', 'Runs code only when file is executed directly', 'Defines the main module', 'Nothing'],
+          question: 'What does defaultdict(int) do?',
+          options: [
+            'Creates a dict with only integer keys',
+            'Creates a dict that auto-creates missing keys with default value 0',
+            'Same as regular dict',
+            'Creates a dict that only stores integers',
+          ],
           correctIndex: 1,
-          explanation: 'Code inside this block runs only when the file is run directly, not when imported as a module.'
-        },
-      ],
-      keyTakeaways: [
-        'A module is any .py file, a package is a directory with __init__.py',
-        'Always use `if __name__ == "__main__":` guard for script code',
-        'Virtual environments isolate dependencies - one per project',
-        'pyproject.toml is the modern standard for project config',
-        'Use `pip install -e .` for editable development installs',
-      ],
-      resources: [
-        { title: 'Python Modules Tutorial', url: 'https://docs.python.org/3/tutorial/modules.html', type: 'docs' },
-        { title: 'uv - fast package manager', url: 'https://github.com/astral-sh/uv', type: 'tool', isHiddenGem: true },
-      ]
-    },
-
-    {
-      id: 'py-14',
-      title: 'Logging, Configuration & CLI Apps',
-      subtitle: 'logging module, .env, click/argparse for CLIs',
-      duration: 50,
-      difficulty: 'Intermediate',
-      phase: 'Real-World',
-      content: [
-        'Never use print() for production logging - use the logging module. It supports levels (DEBUG, INFO, WARNING, ERROR, CRITICAL), formatters, handlers (console, file, network), and rotation.',
-        'Configuration: use pydantic-settings or python-dotenv to load .env files. Never hardcode secrets. Use environment variables for everything that changes between environments.',
-        'For CLI apps, use Click (modern, decorator-based) or Typer (Click + type hints). They handle argument parsing, validation, help text, and subcommands automatically.',
-        'Structure: config.py (settings), logger.py (logging setup), cli.py (commands), services/ (business logic). This separation makes testing easy.',
-      ],
-      codeExamples: [
-        {
-          filename: 'logging_config.py',
-          language: 'python',
-          code: 'import logging\nimport sys\nfrom logging.handlers import RotatingFileHandler\nfrom pathlib import Path\n\ndef setup_logger(name: str = "app", log_file: str = "app.log") -> logging.Logger:\n    """Configure a production-ready logger."""\n    logger = logging.getLogger(name)\n    logger.setLevel(logging.DEBUG)\n    logger.handlers.clear()  # avoid duplicate handlers\n\n    # Format: timestamp | logger | level | message\n    fmt = logging.Formatter(\n        "%(asctime)s | %(name)s | %(levelname)-8s | %(message)s",\n        datefmt="%Y-%m-%d %H:%M:%S",\n    )\n\n    # Console handler (INFO+)\n    console = logging.StreamHandler(sys.stdout)\n    console.setLevel(logging.INFO)\n    console.setFormatter(fmt)\n    logger.addHandler(console)\n\n    # File handler with rotation (10MB, keep 5 backups)\n    Path(log_file).parent.mkdir(parents=True, exist_ok=True)\n    file_handler = RotatingFileHandler(\n        log_file, maxBytes=10_000_000, backupCount=5\n    )\n    file_handler.setLevel(logging.DEBUG)\n    file_handler.setFormatter(fmt)\n    logger.addHandler(file_handler)\n\n    return logger\n\n# Usage\nlogger = setup_logger("myapp", "logs/app.log")\nlogger.info("Application started")\nlogger.warning("Disk space low")\nlogger.error("Failed to connect", exc_info=True)\nlogger.debug("This only goes to file")',
-          explanation: 'Production logger with: multiple handlers, log rotation, different levels per handler. This is what real applications use.'
+          explanation: 'defaultdict(int) auto-creates missing keys with int() = 0. Perfect for counting: `counts[word] += 1` never raises KeyError.'
         },
         {
-          filename: 'click_cli.py',
-          language: 'python',
-          code: '# pip install click\nimport click\nfrom pathlib import Path\n\n@click.group()\ndef cli():\n    """Task manager CLI."""\n    pass\n\n@cli.command()\n@click.argument("title")\n@click.option("--priority", default="medium",\n              type=click.Choice(["low", "medium", "high"]))\n@click.option("--due", help="Due date YYYY-MM-DD")\ndef add(title, priority, due):\n    """Add a new task."""\n    click.echo(f"Added: {title} (priority={priority}, due={due})")\n\n@cli.command()\n@click.option("--status", default="all",\n              type=click.Choice(["all", "pending", "done"]))\ndef list(status):\n    """List tasks."""\n    click.echo(f"Listing {status} tasks...")\n\n@cli.command()\n@click.argument("task_id", type=int)\ndef done(task_id):\n    """Mark task as done."""\n    click.echo(f"Marked task {task_id} as done")\n\nif __name__ == "__main__":\n    cli()\n\n# Usage:\n# python cli.py add "Buy groceries" --priority high --due 2024-12-31\n# python cli.py list --status pending\n# python cli.py done 5\n# python cli.py --help',
-          explanation: 'Click handles argument parsing, validation, help text, and subcommands. Much cleaner than argparse.'
+          question: 'Why use Counter instead of dict for counting?',
+          options: [
+            'Faster',
+            'Provides .most_common() method and supports arithmetic (+, -, &, |)',
+            'Uses less memory',
+            'Required for counting',
+          ],
+          correctIndex: 1,
+          explanation: 'Counter has most_common(n), supports + (combine counts), - (subtract), & (intersection), | (union). Much more convenient than plain dict.'
         },
       ],
       keyTakeaways: [
-        'Use logging module, not print(), for production logs',
-        'Configure handlers: console (INFO+), file with rotation (DEBUG+)',
-        'Load config from .env with pydantic-settings or python-dotenv',
-        'Use Click or Typer for CLIs - handles parsing, validation, help',
-        'Separate config, logger, CLI, and services for testability',
+        'Sets give O(1) membership testing — use whenever you check `x in collection` often',
+        'Dicts give O(1) lookup by key — index your data: {id: item}',
+        'defaultdict avoids KeyError — perfect for grouping and counting',
+        'Counter is the standard way to count things — use most_common()',
+        'Tuples are immutable and hashable — use as dict keys and for fixed records',
+        'Lists: O(1) append/pop, but O(n) insert(0)/pop(0) — use deque for queues',
+        'Prefer dataclass over namedtuple for new code (more flexible)',
+        'For large numerical data, use numpy arrays (10-100x faster than lists)',
       ],
       resources: [
-        { title: 'logging Documentation', url: 'https://docs.python.org/3/library/logging.html', type: 'docs' },
-        { title: 'Click Documentation', url: 'https://click.palletsprojects.com/', type: 'docs' },
+        { title: 'Python Collections', url: 'https://docs.python.org/3/library/collections.html', type: 'docs' },
+        { title: 'Time Complexity Wiki', url: 'https://wiki.python.org/moin/TimeComplexity', type: 'article', isHiddenGem: true },
+        { title: 'Real Python — Lists and Tuples', url: 'https://realpython.com/python-lists-tuples/', type: 'article' },
+        { title: 'Real Python — Dictionaries', url: 'https://realpython.com/python-dicts/', type: 'article' },
       ]
-    },
-
-    {
-      id: 'py-15',
-      title: 'Capstone: Build a Complete CLI Task Manager',
-      subtitle: 'Put it all together - SQLAlchemy, Click, tests, packaging',
-      duration: 120,
-      difficulty: 'Advanced',
-      phase: 'Real-World',
-      content: [
-        'Time to combine everything you\'ve learned into a real application. We\'ll build a CLI task manager with: SQLite persistence (SQLAlchemy), rich CLI output (Click), proper logging, tests (pytest), and packaging (pyproject.toml).',
-        'This capstone ties together: OOP (Task, TaskService classes), error handling (validation, DB errors), file I/O (JSON export), type hints (throughout), testing (pytest with fixtures), packaging (pyproject.toml).',
-        'Architecture: CLI Layer (commands.py) → Service Layer (services.py) → Data Layer (models.py + database.py). This separation means you can swap the CLI for a web UI without touching business logic.',
-        'After completing this, you\'ll have a real, installable Python package you can `pip install` and use daily. This is the kind of project that demonstrates production Python skills.',
-      ],
-      visualization: {
-        title: 'Task Manager Architecture',
-        type: 'architecture',
-        diagram: `┌─────────────────────────────────────────────┐
-│            User (terminal)                  │
-└──────────────┬──────────────────────────────┘
-               │ CLI commands (Click)
-               ▼
-┌─────────────────────────────────────────────┐
-│  CLI Layer (cli.py)                         │
-│  • add • list • done • delete • export      │
-│  • Parses arguments                         │
-│  • Formats output (Rich)                    │
-└──────────────┬──────────────────────────────┘
-               │ Service calls
-               ▼
-┌─────────────────────────────────────────────┐
-│  Service Layer (services.py)                │
-│  • Business logic (validation, rules)       │
-│  • Coordinates DB + export                  │
-│  • Raises domain exceptions                 │
-└──────┬───────────────────────────┬──────────┘
-       │                           │
-       ▼                           ▼
-┌──────────────┐         ┌──────────────────┐
-│ SQLite DB    │         │  Export/Import   │
-│ (SQLAlchemy) │         │  JSON / CSV      │
-│ models.py    │         │  exporters.py    │
-└──────────────┘         └──────────────────┘
-
-Files:
-├── pyproject.toml     # Package config + deps
-├── src/taskmanager/
-│   ├── __init__.py
-│   ├── cli.py         # Click commands
-│   ├── models.py      # SQLAlchemy models
-│   ├── database.py    # Engine, session
-│   ├── services.py    # Business logic
-│   └── exporters.py   # JSON/CSV export
-└── tests/
-    ├── conftest.py    # Fixtures
-    ├── test_services.py
-    └── test_cli.py`,
-        legend: [
-          'Layers separate concerns - each has one job',
-          'CLI knows nothing about DB - only calls services',
-          'Services know nothing about CLI - only business logic',
-          'Easy to test: test services without CLI, test DB without services',
-        ],
-      },
-      lab: {
-        title: 'Build the Task Manager Step by Step',
-        objective: 'Build a complete, installable CLI task manager',
-        estTime: '6-8 hours',
-        difficulty: 'Intermediate',
-        setup: [
-          'Create project: mkdir taskmanager && cd taskmanager',
-          'Create venv: python -m venv .venv && source .venv/bin/activate',
-          'Install deps: pip install click sqlalchemy rich pytest',
-          'Create structure: mkdir -p src/taskmanager tests',
-        ],
-        steps: [
-          {
-            title: 'Step 1: Create pyproject.toml',
-            instruction: 'Define the package metadata and dependencies',
-            code: '[build-system]\nrequires = ["hatchling"]\nbuild-backend = "hatchling.build"\n\n[project]\nname = "taskmanager"\nversion = "0.1.0"\ndescription = "CLI task manager"\nrequires-python = ">=3.10"\ndependencies = [\n    "click>=8.0",\n    "sqlalchemy>=2.0",\n    "rich>=13.0",\n]\n\n[project.optional-dependencies]\ndev = ["pytest>=7.0"]\n\n[project.scripts]\ntask = "taskmanager.cli:cli"\n\n[tool.hatch.build.targets.wheel]\npackages = ["src/taskmanager"]',
-            codeLanguage: 'toml',
-            explanation: 'This makes `task` available as a command after pip install.',
-          },
-          {
-            title: 'Step 2: Create database.py',
-            instruction: 'Set up SQLAlchemy engine and session',
-            code: '# src/taskmanager/database.py\nfrom sqlalchemy import create_engine\nfrom sqlalchemy.orm import sessionmaker, DeclarativeBase\nfrom pathlib import Path\n\nclass Base(DeclarativeBase):\n    pass\n\nDB_PATH = Path.home() / ".taskmanager" / "tasks.db"\nDB_PATH.parent.mkdir(parents=True, exist_ok=True)\n\nengine = create_engine(f"sqlite:///{DB_PATH}", echo=False)\nSessionLocal = sessionmaker(bind=engine)\n\ndef init_db():\n    from . import models\n    Base.metadata.create_all(engine)\n\ndef get_session():\n    return SessionLocal()',
-            codeLanguage: 'python',
-            explanation: 'SQLite DB in ~/.taskmanager/tasks.db. Creates the dir if missing.',
-          },
-          {
-            title: 'Step 3: Create models.py',
-            instruction: 'Define the Task model',
-            code: '# src/taskmanager/models.py\nfrom sqlalchemy import String, Integer, Boolean, DateTime, Text\nfrom sqlalchemy.orm import Mapped, mapped_column\nfrom datetime import datetime\nfrom .database import Base\n\nclass Task(Base):\n    __tablename__ = "tasks"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    title: Mapped[str] = mapped_column(String(200))\n    description: Mapped[str | None] = mapped_column(Text, nullable=True)\n    priority: Mapped[str] = mapped_column(String(20), default="medium")\n    completed: Mapped[bool] = mapped_column(Boolean, default=False)\n    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)\n    completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)\n\n    def __repr__(self):\n        status = "✓" if self.completed else "○"\n        return f"{status} [{self.id}] {self.title} ({self.priority})"',
-            codeLanguage: 'python',
-          },
-          {
-            title: 'Step 4: Create services.py',
-            instruction: 'Business logic layer',
-            code: '# src/taskmanager/services.py\nfrom sqlalchemy import select\nfrom sqlalchemy.orm import Session\nfrom .models import Task\nfrom datetime import datetime\n\nclass TaskService:\n    def __init__(self, session: Session):\n        self.session = session\n\n    def add_task(self, title: str, priority: str = "medium",\n                 description: str | None = None) -> Task:\n        task = Task(title=title, priority=priority, description=description)\n        self.session.add(task)\n        self.session.commit()\n        self.session.refresh(task)\n        return task\n\n    def list_tasks(self, status: str = "all") -> list[Task]:\n        stmt = select(Task).order_by(Task.created_at.desc())\n        if status == "pending":\n            stmt = stmt.where(Task.completed == False)\n        elif status == "done":\n            stmt = stmt.where(Task.completed == True)\n        return list(self.session.execute(stmt).scalars().all())\n\n    def complete_task(self, task_id: int) -> Task | None:\n        task = self.session.get(Task, task_id)\n        if task and not task.completed:\n            task.completed = True\n            task.completed_at = datetime.utcnow()\n            self.session.commit()\n            self.session.refresh(task)\n        return task\n\n    def delete_task(self, task_id: int) -> bool:\n        task = self.session.get(Task, task_id)\n        if task:\n            self.session.delete(task)\n            self.session.commit()\n            return True\n        return False\n\n    def search(self, query: str) -> list[Task]:\n        stmt = select(Task).where(Task.title.ilike(f"%{query}%"))\n        return list(self.session.execute(stmt).scalars().all())',
-            codeLanguage: 'python',
-          },
-          {
-            title: 'Step 5: Create cli.py',
-            instruction: 'CLI commands with Click + Rich output',
-            code: '# src/taskmanager/cli.py\nimport click\nfrom rich.console import Console\nfrom rich.table import Table\nfrom .database import init_db, get_session\nfrom .services import TaskService\n\nconsole = Console()\n\n@click.group()\ndef cli():\n    """Task manager CLI."""\n    init_db()\n\n@cli.command()\n@click.argument("title")\n@click.option("-p", "--priority", default="medium",\n              type=click.Choice(["low", "medium", "high"]))\n@click.option("-d", "--description")\ndef add(title, priority, description):\n    """Add a new task."""\n    with get_session() as session:\n        svc = TaskService(session)\n        task = svc.add_task(title, priority, description)\n        console.print(f"[green]Added:[/] {task}")\n\n@cli.command(name="list")\n@click.option("-s", "--status", default="all",\n              type=click.Choice(["all", "pending", "done"]))\ndef list_tasks(status):\n    """List tasks."""\n    with get_session() as session:\n        svc = TaskService(session)\n        tasks = svc.list_tasks(status)\n        if not tasks:\n            console.print("[yellow]No tasks found.[/]")\n            return\n        table = Table(show_header=True)\n        table.add_column("ID", style="cyan")\n        table.add_column("Status")\n        table.add_column("Title")\n        table.add_column("Priority")\n        for t in tasks:\n            status = "[green]✓[/]" if t.completed else "[yellow]○[/]"\n            table.add_row(str(t.id), status, t.title, t.priority)\n        console.print(table)\n\n@cli.command()\n@click.argument("task_id", type=int)\ndef done(task_id):\n    """Mark task as done."""\n    with get_session() as session:\n        svc = TaskService(session)\n        task = svc.complete_task(task_id)\n        if task:\n            console.print(f"[green]Completed:[/] {task}")\n        else:\n            console.print(f"[red]Task {task_id} not found.[/]")\n\n@cli.command()\n@click.argument("task_id", type=int)\ndef delete(task_id):\n    """Delete a task."""\n    with get_session() as session:\n        svc = TaskService(session)\n        if svc.delete_task(task_id):\n            console.print(f"[green]Deleted task {task_id}[/]")\n        else:\n            console.print(f"[red]Task {task_id} not found.[/]")\n\nif __name__ == "__main__":\n    cli()',
-            codeLanguage: 'python',
-          },
-          {
-            title: 'Step 6: Install and test',
-            instruction: 'Install in development mode and use it',
-            code: '# Install (editable mode)\npip install -e ".[dev]"\n\n# Use it!\ntask add "Buy groceries" --priority high\ntask add "Write blog post" --priority medium -d "About Python"\ntask list\ntask list --status pending\ntask done 1\ntask list\ntask delete 2\ntask --help',
-            codeLanguage: 'bash',
-            expectedOutput: '$ task list\n┏━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┓\n┃ ID   ┃ Status ┃ Title            ┃ Priority ┃\n┡━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━┩\n│ 1    │ ✓      │ Buy groceries    │ high     │\n│ 2    │ ○      │ Write blog post  │ medium   │\n└──────┴────────┴──────────────────┴──────────┘',
-          },
-          {
-            title: 'Step 7: Write tests',
-            instruction: 'Test the service layer with pytest',
-            code: '# tests/test_services.py\nimport pytest\nfrom sqlalchemy import create_engine\nfrom sqlalchemy.orm import sessionmaker\nfrom taskmanager.database import Base\nfrom taskmanager.services import TaskService\n\n@pytest.fixture\ndef session():\n    engine = create_engine("sqlite:///:memory:")\n    Base.metadata.create_all(engine)\n    Session = sessionmaker(bind=engine)\n    s = Session()\n    yield s\n    s.close()\n\ndef test_add_task(session):\n    svc = TaskService(session)\n    task = svc.add_task("Test task", priority="high")\n    assert task.id is not None\n    assert task.title == "Test task"\n    assert task.priority == "high"\n    assert task.completed is False\n\ndef test_complete_task(session):\n    svc = TaskService(session)\n    task = svc.add_task("Test")\n    completed = svc.complete_task(task.id)\n    assert completed.completed is True\n    assert completed.completed_at is not None\n\ndef test_list_pending(session):\n    svc = TaskService(session)\n    svc.add_task("Task 1")\n    svc.add_task("Task 2")\n    svc.complete_task(1)\n    pending = svc.list_tasks(status="pending")\n    assert len(pending) == 1\n    assert pending[0].title == "Task 2"\n\ndef test_delete_task(session):\n    svc = TaskService(session)\n    task = svc.add_task("To delete")\n    assert svc.delete_task(task.id) is True\n    assert svc.delete_task(task.id) is False  # already gone\n\n# Run: pytest -v',
-            codeLanguage: 'python',
-            explanation: 'Use in-memory SQLite for fast tests. Fixtures provide clean DB per test.',
-          },
-        ],
-        verification: 'Run `task --help`, `task add "test"`, `task list` - all should work. Run `pytest` - all tests should pass.',
-      },
-      keyTakeaways: [
-        'Layered architecture: CLI → Service → Data',
-        'Use Click for CLIs, SQLAlchemy for DB, Rich for output',
-        'Test the service layer with in-memory SQLite',
-        'Package with pyproject.toml and `pip install -e .`',
-        'This is a real, installable Python application!',
-      ],
-      resources: [
-        { title: 'Click Documentation', url: 'https://click.palletsprojects.com/', type: 'docs' },
-        { title: 'Rich Documentation', url: 'https://rich.readthedocs.io/', type: 'docs' },
-      ],
-      miniProject: {
-        title: 'Extend the Task Manager',
-        description: 'Add features to the task manager: due dates, tags, JSON export/import, search.',
-        requirements: [
-          'Add due_date field with overdue detection',
-          'Add tags (many-to-many with Tag model)',
-          'Export tasks to JSON',
-          'Import tasks from JSON',
-          'Search by keyword with task search --query',
-          'Add tests for new features',
-        ],
-        estTime: '3-4 hours',
-        solutionCode: '# See the full implementation in the lab steps above.\n# Key additions:\n# 1. Add due_date: Mapped[datetime | None] to Task model\n# 2. Add Tag model + association table for many-to-many\n# 3. Add export_json() and import_json() to TaskService\n# 4. Add search() method (already in services.py)\n# 5. Add CLI commands: task export, task import, task search',
-        solutionLanguage: 'python'
-      }
     },
   ]
 };

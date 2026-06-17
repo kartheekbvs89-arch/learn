@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
     "*.chatglm.cn",
     "localhost",
     "127.0.0.1",
+    "21.0.10.124",
+    "*.preview-*.space-z.ai",
   ],
 };
 
