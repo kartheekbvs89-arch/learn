@@ -7,6 +7,32 @@ export const devopsModule: Module = {
   color: '#181717',
   gradient: 'linear-gradient(135deg, #6e5494 0%, #f34f29 100%)',
   description: 'Git, GitHub Actions CI/CD, Redis caching, Celery async tasks, testing with pytest. The essential tools for production Python development.',
+  learningPath: {
+    title: 'Complete Learning Path',
+    description: 'Master this technology from basics to production.',
+    phases: [
+      {
+        name: 'Foundation',
+        description: 'Core concepts and basics',
+        outcomes: ['Understand fundamentals', 'Write basic code', 'Set up environment'],
+      },
+      {
+        name: 'Intermediate',
+        description: 'Practical patterns and techniques',
+        outcomes: ['Build real features', 'Handle common scenarios', 'Apply best practices'],
+      },
+      {
+        name: 'Advanced',
+        description: 'Performance, security, scaling',
+        outcomes: ['Optimize performance', 'Handle edge cases', 'Production-ready code'],
+      },
+      {
+        name: 'Real-World',
+        description: 'Production deployment and integration',
+        outcomes: ['Deploy to production', 'Integrate with other systems', 'Debug real issues'],
+      },
+    ],
+  },
   level: 'Intermediate',
   lessons: [
     {
@@ -15,6 +41,7 @@ export const devopsModule: Module = {
       subtitle: 'Commits, branches, merge, rebase, pull requests',
       duration: 50,
       difficulty: 'Beginner',
+      phase: 'Foundation',
       content: [
         'Git is a distributed version control system created by Linus Torvalds in 2005. It tracks changes to files over time, lets you branch and merge work, and collaborate with others. GitHub/GitLab/Bitbucket are hosting services that add collaboration features (PRs, issues, CI/CD).',
         'The core workflow: edit files, `git add` to stage, `git commit -m "msg"` to save snapshot, `git push` to upload to remote. Branches let you work in isolation - `git checkout -b feature` creates and switches to a new branch. Merge with `git merge` or via Pull Request.',
@@ -85,6 +112,7 @@ export const devopsModule: Module = {
       subtitle: 'Automate testing, building, deployment',
       duration: 50,
       difficulty: 'Intermediate',
+      phase: 'Foundation',
       content: [
         'GitHub Actions is GitHub\'s built-in CI/CD. Define workflows in YAML files in .github/workflows/. Workflows trigger on events (push, PR, schedule, manual). Each workflow has jobs, each job has steps. Runners can be GitHub-hosted (Ubuntu, Windows, macOS) or self-hosted.',
         'Common patterns: run tests on every push, build and push Docker image on merge to main, deploy on tagged release, run nightly security scans. Use caching to speed up builds (pip, npm, Docker layers). Use secrets for credentials.',
@@ -155,6 +183,7 @@ export const devopsModule: Module = {
       subtitle: 'In-memory data store for caching, sessions, queues',
       duration: 45,
       difficulty: 'Intermediate',
+      phase: 'Foundation',
       content: [
         'Redis is an in-memory key-value store. Blazing fast (microseconds), supports many data structures: strings, lists, sets, sorted sets, hashes, streams, bitmaps, hyperloglog. Use cases: caching, session storage, rate limiting, pub/sub, queues, leaderboards.',
         'Common patterns: cache expensive DB queries (set with TTL), session storage (key=session_id, value=user data), rate limiting (incr + expire), real-time leaderboards (sorted sets), pub/sub for notifications, message queues (lists with brpop).',
@@ -225,6 +254,7 @@ export const devopsModule: Module = {
       subtitle: 'Background jobs, scheduled tasks, retries',
       duration: 50,
       difficulty: 'Advanced',
+      phase: 'Advanced',
       content: [
         'Celery is the most popular Python task queue. It distributes work across workers, perfect for long-running tasks (email sending, video processing, ML training, report generation). Uses a broker (Redis/RabbitMQ) to pass messages between your app and workers.',
         'Architecture: 1) Your app calls task.delay() - this puts a message on the broker, 2) Worker process picks up the message and executes the task, 3) Results stored in result backend (optional). Workers can scale horizontally - run as many as you need.',
@@ -294,6 +324,7 @@ export const devopsModule: Module = {
       subtitle: 'Write tests, fixtures, parametrize, mocking, coverage',
       duration: 50,
       difficulty: 'Intermediate',
+      phase: 'Intermediate',
       content: [
         'pytest is the most popular Python testing framework. Simpler than unittest, more powerful. Discover tests automatically (test_*.py files, test_* functions). Use plain assert statements - pytest gives detailed failure messages.',
         'Fixtures are setup functions reused across tests. Use @pytest.fixture. Scope: function (default, runs per test), class, module, session. Use yield for setup/teardown. Fixtures can depend on other fixtures (just add as parameter).',

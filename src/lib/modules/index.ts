@@ -5,13 +5,19 @@ import { sqlalchemyModule } from './sqlalchemy';
 import { dockerModule } from './docker';
 import { mlModule } from './ml';
 import { devopsModule } from './devops';
+import { kubernetesModule } from './kubernetes';
+import { dataScienceModule } from './datascience';
+import { tensorflowModule } from './tensorflow';
 
 export const allModules: Module[] = [
   pythonModule,
   fastapiModule,
   sqlalchemyModule,
-  dockerModule,
+  dataScienceModule,
   mlModule,
+  tensorflowModule,
+  dockerModule,
+  kubernetesModule,
   devopsModule,
 ];
 

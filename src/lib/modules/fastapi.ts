@@ -7,6 +7,32 @@ export const fastapiModule: Module = {
   color: '#009688',
   gradient: 'linear-gradient(135deg, #009688 0%, #00BCD4 100%)',
   description: 'Build production-grade REST APIs with FastAPI. From first route to authentication, middleware, websockets, and deployment.',
+  learningPath: {
+    title: 'Complete Learning Path',
+    description: 'Master this technology from basics to production.',
+    phases: [
+      {
+        name: 'Foundation',
+        description: 'Core concepts and basics',
+        outcomes: ['Understand fundamentals', 'Write basic code', 'Set up environment'],
+      },
+      {
+        name: 'Intermediate',
+        description: 'Practical patterns and techniques',
+        outcomes: ['Build real features', 'Handle common scenarios', 'Apply best practices'],
+      },
+      {
+        name: 'Advanced',
+        description: 'Performance, security, scaling',
+        outcomes: ['Optimize performance', 'Handle edge cases', 'Production-ready code'],
+      },
+      {
+        name: 'Real-World',
+        description: 'Production deployment and integration',
+        outcomes: ['Deploy to production', 'Integrate with other systems', 'Debug real issues'],
+      },
+    ],
+  },
   level: 'All Levels',
   lessons: [
     {
@@ -15,6 +41,7 @@ export const fastapiModule: Module = {
       subtitle: 'Set up FastAPI, define routes, handle path and query params',
       duration: 40,
       difficulty: 'Beginner',
+      phase: 'Foundation',
       content: [
         'FastAPI is a modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints. It was created by Sebastian Ramirez in 2018. Key features: automatic OpenAPI/Swagger docs, async support, type validation via Pydantic, and incredible speed (on par with Node.js and Go).',
         'Install FastAPI and uvicorn (ASGI server): `pip install fastapi uvicorn`. Run a dev server with `uvicorn main:app --reload`. The --reload flag auto-restarts on code changes. For production, use `gunicorn -k uvicorn.workers.UvicornWorker main:app`.',
@@ -85,6 +112,7 @@ export const fastapiModule: Module = {
       subtitle: 'Define schemas, validate data, nested models, custom validators',
       duration: 55,
       difficulty: 'Beginner',
+      phase: 'Foundation',
       content: [
         'Pydantic is the heart of FastAPI. It defines data schemas with Python type hints and validates incoming/outgoing data. Pydantic v2 (2023) is rewritten in Rust and 5-50x faster than v1. Use BaseModel to define schemas.',
         'Pydantic models support: optional fields, default values, complex types (EmailStr, HttpUrl, UUID, datetime), nested models, lists, dicts, enums, and custom validators. Validation happens automatically when data is parsed.',
@@ -154,6 +182,7 @@ export const fastapiModule: Module = {
       subtitle: 'Depends(), reusable dependencies, yield dependencies, classes',
       duration: 50,
       difficulty: 'Intermediate',
+      phase: 'Foundation',
       content: [
         'FastAPI has a powerful dependency injection system. Use `Depends()` to declare dependencies - FastAPI calls them and injects the return value. Dependencies can themselves have dependencies, forming a graph. This is great for: database sessions, authentication, configuration, common parameters.',
         'Dependencies are cached per-request by default. If multiple routes depend on the same function, it is called once per request. Use `use_cache=False` to disable caching. Class-based dependencies are instantiated per request.',
@@ -217,6 +246,7 @@ export const fastapiModule: Module = {
       subtitle: 'Connect Postgres, define models, CRUD, async sessions',
       duration: 60,
       difficulty: 'Intermediate',
+      phase: 'Intermediate',
       content: [
         'FastAPI works great with SQLAlchemy. Use async SQLAlchemy 2.0 for non-blocking DB operations. The pattern: define models in models.py, create an async engine and session factory, use a yield dependency to provide sessions to routes.',
         'For async SQLAlchemy, use `create_async_engine` with asyncpg driver (PostgreSQL) or aiosqlite (SQLite). Use `AsyncSession` and `async_sessionmaker`. Always await session.execute() - it returns a Result object, use .scalars()/.first()/.all() to get data.',
@@ -286,6 +316,7 @@ export const fastapiModule: Module = {
       subtitle: 'OAuth2 with password flow, JWT tokens, password hashing',
       duration: 65,
       difficulty: 'Advanced',
+      phase: 'Advanced',
       content: [
         'JSON Web Tokens (JWT) are the standard for stateless authentication. A JWT contains: header (algorithm), payload (claims like user_id, exp), and signature. The server signs it with a secret key. Clients send it in the Authorization header as "Bearer <token>".',
         'The OAuth2 password flow: 1) User POSTs username/password to /token, 2) Server validates, returns access_token, 3) Client includes token in subsequent requests, 4) Server validates token, extracts user. FastAPI has built-in OAuth2PasswordBearer for this.',
@@ -350,6 +381,7 @@ export const fastapiModule: Module = {
       subtitle: 'Custom middleware, CORS, exception handlers, lifespan',
       duration: 50,
       difficulty: 'Intermediate',
+      phase: 'Intermediate',
       content: [
         'Middleware runs before and after every request. Use it for: logging, CORS, rate limiting, request IDs, GZip compression, timing. FastAPI middleware are ASGI middleware - they can be async. Add with @app.middleware("http") or app.add_middleware().',
         'CORS (Cross-Origin Resource Sharing) is essential when your API and frontend are on different domains. Use CORSMiddleware with allow_origins, allow_methods, allow_headers, allow_credentials. Never use allow_origins=["*"] with allow_credentials=True - browsers reject it.',
@@ -420,6 +452,7 @@ export const fastapiModule: Module = {
       subtitle: 'BackgroundTasks, websockets, real-time communication',
       duration: 50,
       difficulty: 'Advanced',
+      phase: 'Real-World',
       content: [
         'FastAPI BackgroundTasks let you run functions after the response is sent. Use for: sending emails, writing to log files, processing small files. For heavy work (ML training, video processing), use Celery or RQ instead.',
         'WebSockets enable real-time bidirectional communication. Unlike HTTP (request-response), WebSockets keep a connection open. Perfect for: chat apps, live dashboards, notifications, multiplayer games.',
@@ -489,6 +522,7 @@ export const fastapiModule: Module = {
       subtitle: 'TestClient, fixtures, async tests, test databases',
       duration: 45,
       difficulty: 'Intermediate',
+      phase: 'Intermediate',
       content: [
         'FastAPI testing is easy with TestClient (uses httpx under the hood). For async code (DB, external APIs), use httpx.AsyncClient with pytest-asyncio. Tests run in milliseconds - no need to spin up a real server.',
         'Use fixtures for setup/teardown. Database fixtures should use a separate test database, rollback after each test for isolation. Override the get_db dependency to use the test DB. Fixtures can be scoped: function (default), class, module, session.',
@@ -558,6 +592,7 @@ export const fastapiModule: Module = {
       subtitle: 'Organize larger apps, routers, settings, production tips',
       duration: 50,
       difficulty: 'Advanced',
+      phase: 'Real-World',
       content: [
         'As your app grows, split it into modules. Common structure: app/main.py (entry), app/api/ (routes by domain), app/core/ (config, security), app/db/ (database), app/models/ (SQLAlchemy), app/schemas/ (Pydantic), app/services/ (business logic), app/tests/.',
         'Use APIRouter to split routes into files. Each router handles a domain (users, items, auth). Mount with app.include_router(user_router, prefix="/users", tags=["users"]). Tags group endpoints in the Swagger docs.',

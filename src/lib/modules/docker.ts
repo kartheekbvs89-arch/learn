@@ -7,6 +7,32 @@ export const dockerModule: Module = {
   color: '#2496ED',
   gradient: 'linear-gradient(135deg, #2496ED 0%, #0DB7ED 100%)',
   description: 'Containerize applications, manage multi-service stacks with Compose, and deploy to production.',
+  learningPath: {
+    title: 'Complete Learning Path',
+    description: 'Master this technology from basics to production.',
+    phases: [
+      {
+        name: 'Foundation',
+        description: 'Core concepts and basics',
+        outcomes: ['Understand fundamentals', 'Write basic code', 'Set up environment'],
+      },
+      {
+        name: 'Intermediate',
+        description: 'Practical patterns and techniques',
+        outcomes: ['Build real features', 'Handle common scenarios', 'Apply best practices'],
+      },
+      {
+        name: 'Advanced',
+        description: 'Performance, security, scaling',
+        outcomes: ['Optimize performance', 'Handle edge cases', 'Production-ready code'],
+      },
+      {
+        name: 'Real-World',
+        description: 'Production deployment and integration',
+        outcomes: ['Deploy to production', 'Integrate with other systems', 'Debug real issues'],
+      },
+    ],
+  },
   level: 'Intermediate',
   lessons: [
     {
@@ -15,6 +41,7 @@ export const dockerModule: Module = {
       subtitle: 'Why containers, images, layers, registries',
       duration: 40,
       difficulty: 'Beginner',
+      phase: 'Foundation',
       content: [
         'Docker is a platform for developing, shipping, and running applications in containers. A container is a lightweight, standalone package that includes everything an app needs to run: code, runtime, libraries, system tools. Containers share the host OS kernel - making them much lighter than VMs.',
         'VMs virtualize hardware - each VM has a full OS. Containers virtualize at the OS level - they share the kernel but isolate processes. A VM might be 2GB, a container might be 50MB. VMs take minutes to start, containers take seconds.',
@@ -85,6 +112,7 @@ export const dockerModule: Module = {
       subtitle: 'Define, run, connect multiple containers',
       duration: 50,
       difficulty: 'Intermediate',
+      phase: 'Foundation',
       content: [
         'Docker Compose defines multi-container applications in a docker-compose.yml file. One command (`docker compose up`) starts everything: API, database, cache, frontend. Perfect for development environments and small production deployments.',
         'Services in compose can communicate via service name as hostname. The web service can connect to db at `db:5432` - Compose sets up DNS automatically. Use `depends_on` for startup order (but use healthchecks for true readiness).',
@@ -154,6 +182,7 @@ export const dockerModule: Module = {
       subtitle: 'Multi-stage builds, security, Nginx reverse proxy, CI/CD',
       duration: 60,
       difficulty: 'Advanced',
+      phase: 'Advanced',
       content: [
         'Multi-stage builds create smaller production images. Use one stage to build (with compilers), another to run (only runtime). Final image can be 10x smaller. Especially important for compiled languages (Go, Rust) but also useful for Python (separate build deps from runtime).',
         'Security best practices: 1) Run as non-root user, 2) Use minimal base images (alpine, distroless), 3) Scan with trivy/grype, 4) Never bake secrets into images - use env vars/vaults, 5) Pin versions (not :latest), 6) Use .dockerignore to exclude sensitive files, 7) Enable Docker Content Trust.',

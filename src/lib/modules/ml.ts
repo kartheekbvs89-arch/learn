@@ -7,6 +7,32 @@ export const mlModule: Module = {
   color: '#FF6F00',
   gradient: 'linear-gradient(135deg, #FF6F00 0%, #FFC107 100%)',
   description: 'Build, train, and deploy ML models. scikit-learn, PyTorch, TensorFlow, XGBoost, ONNX - from basics to production.',
+  learningPath: {
+    title: 'Complete Learning Path',
+    description: 'Master this technology from basics to production.',
+    phases: [
+      {
+        name: 'Foundation',
+        description: 'Core concepts and basics',
+        outcomes: ['Understand fundamentals', 'Write basic code', 'Set up environment'],
+      },
+      {
+        name: 'Intermediate',
+        description: 'Practical patterns and techniques',
+        outcomes: ['Build real features', 'Handle common scenarios', 'Apply best practices'],
+      },
+      {
+        name: 'Advanced',
+        description: 'Performance, security, scaling',
+        outcomes: ['Optimize performance', 'Handle edge cases', 'Production-ready code'],
+      },
+      {
+        name: 'Real-World',
+        description: 'Production deployment and integration',
+        outcomes: ['Deploy to production', 'Integrate with other systems', 'Debug real issues'],
+      },
+    ],
+  },
   level: 'Advanced',
   lessons: [
     {
@@ -15,6 +41,7 @@ export const mlModule: Module = {
       subtitle: 'Supervised/unsupervised, train/test split, first model',
       duration: 60,
       difficulty: 'Beginner',
+      phase: 'Foundation',
       content: [
         'Machine Learning is teaching computers to learn patterns from data instead of explicit programming. Three main types: supervised (labeled data - classification, regression), unsupervised (no labels - clustering, dimensionality reduction), reinforcement (learn by reward).',
         'The ML workflow: 1) Collect data, 2) Clean and explore, 3) Split into train/test, 4) Choose a model, 5) Train (fit), 6) Evaluate on test set, 7) Tune hyperparameters, 8) Deploy. The biggest leap in modern ML: do steps 1-3 well and even simple models work great.',
@@ -85,6 +112,7 @@ export const mlModule: Module = {
       subtitle: 'Tensors, autograd, build a neural network, train it',
       duration: 90,
       difficulty: 'Advanced',
+      phase: 'Advanced',
       content: [
         'PyTorch is the most popular deep learning framework for research and production. Created by Facebook/Meta in 2016. Key features: dynamic computation graphs (eager execution), Pythonic API, strong GPU support, and excellent for both research (flexible) and production (TorchScript, TorchServe).',
         'A tensor is a multi-dimensional array (like NumPy ndarray) that can run on GPU. Tensors track gradients automatically (autograd). Build models with nn.Module - define layers in __init__, forward pass in forward().',
@@ -155,6 +183,7 @@ export const mlModule: Module = {
       subtitle: 'Export models, serve with FastAPI, monitoring, versioning',
       duration: 60,
       difficulty: 'Advanced',
+      phase: 'Advanced',
       content: [
         'ONNX (Open Neural Network Exchange) is an interchange format for ML models. Export PyTorch/TensorFlow/scikit-learn to ONNX, then run with ONNX Runtime (faster inference, works in any language: Python, C++, Java, JS, C#). One model, many runtimes.',
         'ML serving patterns: 1) Embedded (model in API - simple, low latency), 2) Batch (offline predictions stored in DB), 3) Microservice (separate model server like TorchServe, TF Serving, Triton), 4) Streaming (model consumes from Kafka, publishes predictions).',

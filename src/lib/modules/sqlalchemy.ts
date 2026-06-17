@@ -7,6 +7,32 @@ export const sqlalchemyModule: Module = {
   color: '#336791',
   gradient: 'linear-gradient(135deg, #336791 0%, #4EC5F1 100%)',
   description: 'Master the most popular Python ORM. From raw SQL to relationships, migrations, and async queries.',
+  learningPath: {
+    title: 'Complete Learning Path',
+    description: 'Master this technology from basics to production.',
+    phases: [
+      {
+        name: 'Foundation',
+        description: 'Core concepts and basics',
+        outcomes: ['Understand fundamentals', 'Write basic code', 'Set up environment'],
+      },
+      {
+        name: 'Intermediate',
+        description: 'Practical patterns and techniques',
+        outcomes: ['Build real features', 'Handle common scenarios', 'Apply best practices'],
+      },
+      {
+        name: 'Advanced',
+        description: 'Performance, security, scaling',
+        outcomes: ['Optimize performance', 'Handle edge cases', 'Production-ready code'],
+      },
+      {
+        name: 'Real-World',
+        description: 'Production deployment and integration',
+        outcomes: ['Deploy to production', 'Integrate with other systems', 'Debug real issues'],
+      },
+    ],
+  },
   level: 'Intermediate',
   lessons: [
     {
@@ -15,6 +41,7 @@ export const sqlalchemyModule: Module = {
       subtitle: 'Relational model, SQL CRUD, SQLAlchemy 2.0 architecture',
       duration: 50,
       difficulty: 'Beginner',
+      phase: 'Foundation',
       content: [
         'A relational database organizes data into tables (rows and columns). Tables can have relationships: one-to-many (a user has many posts), many-to-many (posts and tags), one-to-one (user and profile). SQL (Structured Query Language) is the standard language for working with relational databases.',
         'PostgreSQL is the most powerful open-source relational database. It supports JSON, full-text search, geospatial data (PostGIS), and has excellent concurrency. SQLite is great for development (single file, no server). MySQL/MariaDB are popular for web apps.',
@@ -85,6 +112,7 @@ export const sqlalchemyModule: Module = {
       subtitle: 'Tables, columns, relationships, constraints',
       duration: 55,
       difficulty: 'Intermediate',
+      phase: 'Foundation',
       content: [
         'SQLAlchemy 2.0 uses Mapped[] type annotations for columns. This gives IDE autocompletion, type checking with mypy/pyright, and clean syntax. Use mapped_column() for column options (primary_key, default, nullable, etc.).',
         'Define relationships with relationship() and ForeignKey(). Common types: one-to-many (use relationship on the "one" side, ForeignKey on the "many" side), many-to-many (use an association table), one-to-one (use uselist=False).',
@@ -148,6 +176,7 @@ export const sqlalchemyModule: Module = {
       subtitle: 'select(), where, joins, aggregates, pagination',
       duration: 60,
       difficulty: 'Intermediate',
+      phase: 'Foundation',
       content: [
         'SQLAlchemy 2.0 uses select() for queries (replacing the legacy Query API). Execute with session.execute(stmt), then use .scalars() to get ORM objects, .first() for one, .all() for list, .one() (raises if not found), .scalar_one_or_none() for optional.',
         'Filter with .where() (chainable). Comparison operators: ==, !=, <, >, <=, >=, .in_(), .like(), .ilike(), .is_(None), .between(). Combine with and_(), or_(), not_(). Use func for SQL functions (count, sum, avg, max, min).',
@@ -217,6 +246,7 @@ export const sqlalchemyModule: Module = {
       subtitle: 'Version control your database schema',
       duration: 40,
       difficulty: 'Intermediate',
+      phase: 'Intermediate',
       content: [
         'Alembic is SQLAlchemy\'s migration tool. It tracks schema changes as Python scripts. Each migration is a snapshot - you can upgrade or downgrade. Migrations are version-controlled alongside your code, so the DB schema evolves with the application.',
         'Setup: 1) `alembic init alembic` creates the alembic/ directory, 2) Edit alembic.ini to set sqlalchemy.url, 3) Edit alembic/env.py to import your Base.metadata, 4) `alembic revision --autogenerate -m "create users"` generates a migration from your models, 5) `alembic upgrade head` applies it.',
@@ -286,6 +316,7 @@ export const sqlalchemyModule: Module = {
       subtitle: 'ACID, isolation levels, indexing strategy, query optimization',
       duration: 50,
       difficulty: 'Advanced',
+      phase: 'Advanced',
       content: [
         'Transactions are units of work that are atomic (all or nothing), consistent, isolated, and durable (ACID). In SQLAlchemy, a session is a transaction - commit() to save, rollback() to undo. Use nested transactions with begin_nested() for savepoints.',
         'Indexes speed up queries but slow down writes. Add indexes on: foreign keys, columns in WHERE clauses, columns in ORDER BY/GROUP BY. Avoid indexes on: low-cardinality columns (boolean), frequently updated columns, small tables. Use EXPLAIN ANALYZE to see query plans.',
