@@ -1,0 +1,333 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1rem 0}
+.hdr{margin-bottom:1rem}
+.hdr h1{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.hdr p{font-size:12px;color:var(--color-text-secondary)}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tab{font-size:12px;padding:5px 12px;border-radius:20px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary)}
+.tab.active{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent}
+.panel{display:none}
+.panel.active{display:block}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:12px;font-size:11.5px;font-family:var(--font-mono);color:var(--color-text-primary);white-space:pre-wrap;word-break:break-word;line-height:1.65;max-height:480px;overflow-y:auto}
+.actions{display:flex;gap:8px;margin-top:10px;align-items:center}
+.btn{font-size:12px;padding:6px 14px;border-radius:8px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-primary);display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--color-background-secondary)}
+.btn.primary{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent}
+.ok{font-size:12px;color:var(--color-text-success);margin-left:4px}
+.note{font-size:12px;color:var(--color-text-secondary);margin-top:8px;padding:8px 12px;background:var(--color-background-secondary);border-radius:8px;line-height:1.6}
+.tag{font-size:11px;padding:2px 7px;border-radius:12px;background:var(--color-background-warning);color:var(--color-text-warning);font-weight:500}
+</style>
+<div class="wrap">
+<h2 class="sr-only">Prompt panels for filling lesson content in LearnStack</h2>
+<div class="hdr">
+  <h1>Lesson content fill prompts <span class="tag">Paste into your builder</span></h1>
+  <p>4 prompts — run them in order. Each targets a specific part of the content system.</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show(0)">1 — Content data structure</button>
+  <button class="tab" onclick="show(1)">2 — Python L1–L7 content</button>
+  <button class="tab" onclick="show(2)">3 — Python L8–L14 content</button>
+  <button class="tab" onclick="show(3)">4 — Python L15–L21 + wiring</button>
+</div>
+
+<div class="panel active" id="p0">
+<pre id="t0">PROMPT 1 — Replace the "Content Coming Soon" placeholder with a real content data structure.
+
+The lesson page currently shows "Content Coming Soon" for every lesson because there is no content data. Do the following:
+
+1. Create a new file: src/data/lessonContent.ts (or .js)
+
+2. Define and export a TypeScript type called LessonContent:
+
+type CodeExample = {
+  title: string;           // e.g. "Minimal example"
+  filename: string;        // e.g. "main.py"
+  language: string;        // e.g. "python"
+  code: string;            // the actual code as a multiline string
+  explanation: string;     // 1-2 sentences explaining what this shows
+}
+
+type LabStep = {
+  step: number;
+  title: string;
+  command: string;         // the bash/python command to run
+  expectedOutput: string;  // what the student should see
+  explanation: string;
+}
+
+type QuizQuestion = {
+  question: string;
+  options: string[];       // 4 options
+  correctIndex: number;    // 0-3
+  explanation: string;     // shown after answering
+}
+
+type LessonContent = {
+  moduleSlug: string;      // e.g. "python"
+  lessonSlug: string;      // e.g. "types-variables-operators"
+  objective: string[];     // 3-5 bullet strings of what student will learn
+  whyItMatters: string;    // 2-3 sentences: real-world relevance
+  concepts: {
+    title: string;
+    body: string;          // prose explanation
+    diagram?: string;      // ASCII art string (optional)
+  }[];
+  codeExamples: CodeExample[];
+  commonErrors: {
+    errorMessage: string;
+    cause: string;
+    fix: string;
+  }[];
+  labSteps: LabStep[];
+  quiz: QuizQuestion[];
+  resources: {
+    title: string;
+    url: string;
+    type: 'docs' | 'article' | 'repo' | 'cheatsheet';
+  }[];
+}
+
+3. Export a const: export const lessonContentMap: Record<string, LessonContent> = {}
+   The key format is: "moduleSlug/lessonSlug" e.g. "python/types-variables-operators"
+
+4. Update the lesson page component ([module]/[lesson]/page.tsx) to:
+   - Import lessonContentMap
+   - Look up content by `${moduleSlug}/${lessonSlug}`
+   - If found, render the full content
+   - If not found, keep the "Coming Soon" placeholder (DO NOT REMOVE IT — it is a fallback)
+
+5. Build the content rendering components:
+   - <ObjectiveSection content={...} />  — bulleted objectives + whyItMatters callout box
+   - <ConceptSection content={...} />    — for each concept: title, body, optional ASCII diagram in a <pre>
+   - <CodeExamplesSection content={...} /> — tabs or stacked blocks, each with filename, syntax highlight, explanation
+   - <LabSection content={...} />        — numbered steps, command in code block, "Run" button, expected output
+   - <CommonErrorsSection content={...} /> — accordion list of errors
+   - <QuizSection content={...} />       — multiple choice, show explanation on answer, lock next until 4/5
+   - <ResourcesSection content={...} />  — link cards with type badge
+
+DO NOT delete the tab structure (Objective/Concepts/Code/Lab/Quiz/Resources). Wire each tab to its section component.</pre>
+<div class="actions">
+  <button class="btn primary" onclick="copy('t0',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy prompt 1</button>
+  <span class="ok" id="ok0"></span>
+</div>
+</div>
+
+<div class="panel" id="p1">
+<pre id="t1">PROMPT 2 — Write the actual lesson content for Python module lessons 1 through 7. Add them into lessonContentMap in src/data/lessonContent.ts.
+
+For EVERY lesson below, write a complete LessonContent object with NO placeholder text. Every field must have real content. Follow the exact type structure from Prompt 1.
+
+RULES FOR CONTENT QUALITY (non-negotiable):
+- codeExamples: minimum 3 per lesson. Example 1 = minimal working. Example 2 = real-world. Example 3 = production-grade with type hints, error handling, logging.
+- labSteps: minimum 5 steps. Step 1 always scaffolds the project (mkdir, venv, install). Last step always adds one real-world feature.
+- commonErrors: minimum 4 real errors a beginner hits on this exact topic (include the actual Python traceback message).
+- quiz: exactly 5 questions. Last one must be "what does this code output?" with a code snippet.
+- concepts: minimum 2 concept blocks per lesson. Each block has a body of at least 150 words.
+- All code must be syntactically correct Python 3.12. Type hints required on all functions.
+
+LESSONS TO WRITE:
+
+"python/pyenv-venv-pyproject" — pyenv, uv, venv, pyproject.toml, project structure
+  Concepts: Python version management problem, virtual env isolation, pyproject.toml as the modern config standard
+  Code examples: pyenv install commands + shell config, full pyproject.toml with every section annotated, uv vs pip speed comparison script
+  Lab: install pyenv → install Python 3.12 → create project with uv → add dependencies → run first script
+  Errors: pyenv command not found, python not found after pyenv install, ModuleNotFoundError (no venv), wrong Python version in venv
+
+"python/types-variables-operators" — types, variables, operators, type hints
+  Concepts: Python's dynamic typing + how type hints add safety without changing runtime, operator precedence
+  Code examples: all primitive types with type() calls, type hints on variables/functions/returns, walrus operator := in real use
+  Lab: build a typed calculator module with full type annotations and run mypy on it
+  Errors: TypeError arithmetic on wrong types, NameError undefined variable, annotation not enforced at runtime (misconception)
+
+"python/strings-regex-formatting" — strings, all methods, f-strings, regex
+  Concepts: String immutability and why it matters for performance, regex engine basics (NFA)
+  Code examples: all 40+ string methods in a reference script with comments, f-string advanced (format spec, !r !s !a, =), full regex reference (groups, lookahead, flags, re.compile)
+  Lab: build a log parser that extracts timestamp + level + message from a log file using regex
+  Errors: AttributeError wrong method name, regex no match returns None (forgot to check), backslash hell in raw strings
+
+"python/lists-dicts-sets-tuples" — all collection types, O(1) vs O(n), comprehensions
+  Concepts: Hash table internals (why dict/set lookup is O(1)), when tuples beat lists (hashable, faster iteration)
+  Code examples: list operations with time complexity comments, dict deep (defaultdict/Counter/OrderedDict/ChainMap), set operations for deduplication and membership, comprehensions (list/dict/set/generator)
+  Lab: build a word frequency counter using Counter, then optimize with defaultdict, benchmark both with timeit
+  Errors: KeyError on missing dict key, unhashable type list as dict key, modifying list while iterating
+
+"python/control-flow-comprehensions" — if/elif/else, for/while, match-case, comprehensions
+  Concepts: Python's match-case structural pattern matching (Python 3.10+, NOT a switch statement), generator expressions vs list comprehensions (lazy vs eager)
+  Code examples: match-case with class patterns (match a dataclass), nested comprehensions with conditions, walrus in while loop
+  Lab: build a command-line menu system using match-case that dispatches to functions
+  Errors: IndentationError, infinite loop (missing break), comprehension scope leak (Python 2 vs 3 difference)
+
+"python/functions-closures-type-hints" — *args, **kwargs, closures, decorators intro, type hints
+  Concepts: How closures capture variables (cell objects), the difference between *args (positional) and **kwargs (keyword) in call vs definition
+  Code examples: all function signature patterns (*args, **kwargs, keyword-only, positional-only with /), closure factory with mutable state using nonlocal, functools.partial and functools.lru_cache
+  Lab: build a rate limiter using closures that limits function calls per second
+  Errors: TypeError too many positional args, nonlocal required for mutable closure var, mutable default argument bug (the classic [])
+
+"python/file-io-pathlib-json-csv" — pathlib, open(), JSON, CSV, YAML, TOML
+  Concepts: pathlib vs os.path (why pathlib is always preferred now), context managers for file handling (why with is non-negotiable)
+  Code examples: pathlib full reference (glob, rglob, stat, mkdir, write_text, read_text), JSON read/write with custom encoder for datetime/Enum, CSV reader/writer + DictReader/DictWriter
+  Lab: build a config file manager that reads/writes JSON config, backs up on write, handles missing files gracefully
+  Errors: FileNotFoundError, JSONDecodeError on malformed JSON, UnicodeDecodeError (encoding param missing), PermissionError</pre>
+<div class="actions">
+  <button class="btn primary" onclick="copy('t1',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy prompt 2</button>
+  <span class="ok" id="ok1"></span>
+</div>
+<div class="note">This prompt writes the raw lesson data. After running it, reload the lesson pages — they should render full content immediately.</div>
+</div>
+
+<div class="panel" id="p2">
+<pre id="t2">PROMPT 3 — Continue writing lesson content for Python module lessons 8 through 14. Append them to lessonContentMap in src/data/lessonContent.ts.
+
+Same quality rules from Prompt 2 apply. Every field must be real. No placeholder text.
+
+LESSONS TO WRITE:
+
+"python/error-handling-exceptions" — try/except/finally, custom exceptions, context managers
+  Concepts: Python exception hierarchy (BaseException → Exception → your exceptions), context managers as the correct resource-cleanup pattern
+  Code examples: exception chaining (raise X from Y), custom exception hierarchy for an API project, __enter__/__exit__ context manager class + @contextmanager generator version
+  Lab: build a retry decorator with exponential backoff using custom exceptions
+  Errors: bare except (anti-pattern), swallowing exceptions silently, ResourceWarning (file not closed)
+
+"python/oop-classes-dataclasses" — classes, inheritance, MRO, magic methods, dataclasses, slots
+  Concepts: Python MRO (C3 linearization) — what order methods are resolved in multiple inheritance, dataclasses vs NamedTuple vs TypedDict (when to use each)
+  Code examples: full class with all useful magic methods (__str__ __repr__ __eq__ __hash__ __lt__ __len__ __iter__ __getitem__), dataclass with field() validators + post_init, __slots__ for memory optimization with benchmark
+  Lab: build an event system (EventEmitter class) with type-safe handlers using dataclasses
+  Errors: TypeError unhashable (mutable + __eq__ without __hash__), infinite recursion in __repr__, MRO TypeError
+
+"python/decorators" — function decorators, class decorators, @wraps, parametrized
+  Concepts: The decorator protocol — any callable that takes a callable and returns a callable, why @wraps is non-negotiable (preserves __name__ __doc__ __wrapped__)
+  Code examples: decorator from scratch (function wrapper), parametrized decorator (3-layer nesting), class as decorator with __call__, built-ins (@property @staticmethod @classmethod @cached_property with real use cases)
+  Lab: build a @timer, @retry(times=3), and @cache(ttl=60) decorator, compose them on a function
+  Errors: forgetting @wraps (breaks introspection), calling the decorator instead of applying it, decorator vs decorator factory confusion
+
+"python/iterators-generators-itertools" — __iter__, __next__, yield, yield from, itertools
+  Concepts: Iterator protocol vs iterable (the difference), generator functions vs generator expressions — lazy evaluation and why it matters for large data
+  Code examples: custom iterator class, generator pipeline (read file → parse → filter → transform without loading all to memory), itertools full reference (chain, islice, groupby, product, combinations, accumulate)
+  Lab: build a CSV streaming pipeline that processes a 1GB file in constant memory using generators
+  Errors: StopIteration raised manually (wrong), exhausting a generator (can only iterate once), groupby requires sorted input
+
+"python/modules-packages-imports" — __init__.py, relative imports, namespace packages, importlib
+  Concepts: How Python's import system works (sys.path, finders, loaders), the difference between packages and namespace packages
+  Code examples: proper package structure with __init__.py that exports a clean public API, relative imports (when to use dot notation), dynamic imports with importlib.import_module for plugin systems
+  Lab: build a plugin loader that auto-discovers and loads modules from a plugins/ directory
+  Errors: ImportError circular imports, ModuleNotFoundError (wrong sys.path), relative import outside package
+
+"python/standard-library-deep" — collections, functools, contextlib, pathlib, datetime, enum, abc
+  Concepts: The stdlib is massive — focus on the 20% you use 80% of the time in real projects
+  Code examples: collections (deque as fast queue, namedtuple, ChainMap for config layering), functools (lru_cache, partial, reduce, singledispatch), enum (IntEnum, Flag, auto(), value access patterns)
+  Lab: build a config system using ChainMap (defaults → file config → env vars → CLI args, priority order)
+  Errors: datetime naive vs aware timezone bug, enum comparison with == vs is, lru_cache on mutable args
+
+"python/async-await-asyncio" — event loop, asyncio, aiohttp, threading vs multiprocessing
+  Concepts: The event loop model (single thread, cooperative multitasking), when to use async vs threading vs multiprocessing (I/O-bound vs CPU-bound)
+  Code examples: async/await from scratch (async def, await, asyncio.run), concurrent HTTP requests with aiohttp + asyncio.gather, asyncio.Queue for producer-consumer pattern
+  Lab: build an async web scraper that fetches 50 URLs concurrently with rate limiting (semaphore)
+  Errors: calling async function without await (returns coroutine object), blocking call inside async (freezes event loop), nested asyncio.run()</pre>
+<div class="actions">
+  <button class="btn primary" onclick="copy('t2',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy prompt 3</button>
+  <span class="ok" id="ok2"></span>
+</div>
+</div>
+
+<div class="panel" id="p3">
+<pre id="t3">PROMPT 4 — Write remaining Python lessons 15–21, then wire everything up so the lesson pages render correctly.
+
+PART A — Write lesson content for Python lessons 15–21. Append to lessonContentMap.
+
+"python/metaclasses-descriptors" — metaclasses, descriptors, __class__, __init_subclass__
+  Concepts: Metaclasses as "classes that create classes" — the class creation pipeline (__prepare__, __new__, __init__), descriptors as the mechanism behind @property
+  Code examples: singleton using metaclass, descriptor protocol (__get__ __set__ __delete__) to build a validated attribute system, __init_subclass__ to auto-register subclasses
+  Lab: build a declarative ORM column validator using descriptors (like SQLAlchemy's Column but minimal)
+
+"python/memory-performance-profiling" — cProfile, memory_profiler, slots, gc, weakref
+  Concepts: Python object memory layout (reference counting + cyclic GC), __slots__ eliminates __dict__ per instance (saves 50-200 bytes per object at scale)
+  Code examples: cProfile usage + pstats sorting, memory_profiler @profile decorator, __slots__ before/after benchmark with sys.getsizeof, weakref.WeakValueDictionary for cache that doesn't prevent GC
+  Lab: profile a slow function, identify the bottleneck with cProfile, optimize it (3 iterations)
+
+"python/type-system-mypy" — TypeVar, Generic, Protocol, overload, TYPE_CHECKING, mypy
+  Concepts: Structural typing (Protocol) vs nominal typing (ABC) — Python's duck typing made explicit, TypeVar bounds and variance (covariant/contravariant)
+  Code examples: Generic class (Stack[T]), Protocol for duck-typed interfaces (Drawable), @overload for functions with multiple signatures, TYPE_CHECKING guard to avoid circular imports
+  Lab: add mypy strict mode to an existing module, fix all type errors
+
+"python/testing-pytest" — fixtures, parametrize, monkeypatch, tmp_path, coverage, hypothesis
+  Concepts: Test isolation (why fixtures > global state), parametrize vs separate tests (DRY testing)
+  Code examples: fixture with scope (function/module/session), parametrize with indirect, monkeypatch for env vars and external calls, hypothesis for property-based testing
+  Lab: write a test suite for the file I/O config manager from lesson 7 — 95%+ coverage
+
+"python/logging-configuration" — structlog, logging module, dynaconf, pydantic-settings, .env
+  Concepts: Structured logging (JSON) vs unstructured (text) — why structured is non-negotiable in production (searchable in Grafana/Splunk)
+  Code examples: stdlib logging with rotating file handler + console handler, structlog with bound context (request_id, user_id), pydantic-settings loading from .env with validation
+  Lab: add structured logging to the FastAPI-style app from earlier lessons
+
+"python/cli-apps-typer-rich" — argparse, Click, Typer, rich (tables, progress, panels)
+  Concepts: CLI apps as first-class citizens (not an afterthought) — Typer generates --help automatically from type hints
+  Code examples: Typer app with subcommands, rich Table + Panel + Progress, Click callback groups
+  Lab: build a CLI tool that reads a CSV, shows a rich table, and exports a filtered JSON
+
+"python/packaging-pypi-cicd" — pyproject.toml full spec, build, twine, GitHub Actions
+  Concepts: The modern Python packaging stack (pyproject.toml + build backend + twine), semantic versioning
+  Code examples: complete pyproject.toml for a publishable library, GitHub Actions workflow for test → build → publish to PyPI on tag
+  Lab: package the config manager from lesson 7 as a real library, publish to TestPyPI
+
+---
+
+PART B — Wire up the rendering so every lesson shows content:
+
+1. In the lesson page component, update the content lookup:
+   const content = lessonContentMap[`${params.module}/${params.lesson}`]
+
+2. For the Objective tab — render content.objective as a <ul> and content.whyItMatters in a highlighted callout box (amber left border, light amber bg)
+
+3. For the Concepts tab — render each concept block: <h3> title, <p> body (preserve paragraphs with split on \n\n), and if diagram exists show it in a <pre> with monospace font
+
+4. For the Code tab — render each codeExample as a stacked card:
+   - Header: filename pill (dark bg, mono font) + explanation text
+   - Body: syntax-highlighted code block using Prism.js or highlight.js
+   - Each example separated by a thin divider
+
+5. For the Lab tab — render numbered steps:
+   - Step number circle (accent color)
+   - Title + explanation
+   - Command in a code block with a "Copy" button
+   - Expected output in a muted code block below
+   - Green checkmark button: "Mark complete" (saves to localStorage)
+
+6. For the Errors tab (add this tab) — accordion: click error message to expand cause + fix
+
+7. For the Quiz tab — render 5 questions sequentially:
+   - Show one at a time (or all stacked, student's choice)
+   - On answer: green/red highlight + show explanation
+   - Show score at end: "4/5 — Lesson complete! +100 XP" with confetti (use canvas-confetti from CDN)
+   - Only mark lesson complete in localStorage after passing quiz
+
+8. For the Resources tab — link cards with type badge (docs/article/repo/cheatsheet) and external link icon
+
+9. Progress persistence:
+   - On lesson complete: update localStorage key "learnstack_progress" with { [moduleSlug]: { [lessonSlug]: { completed: true, xp: N, completedAt: ISO } } }
+   - Sidebar reads this and shows green checkmarks + updates progress bar
+   - Dashboard XP total sums all completed lessons</pre>
+<div class="actions">
+  <button class="btn primary" onclick="copy('t3',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy prompt 4</button>
+  <span class="ok" id="ok3"></span>
+</div>
+<div class="note">Run prompts 1 → 2 → 3 → 4 in order. Each builds on the previous. After prompt 4, all 21 Python lessons will have full content and the quiz-to-progress pipeline will work.</div>
+</div>
+</div>
+
+<script>
+function show(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',j===i));
+}
+function copy(id,btn){
+  const text=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const ok=btn.parentElement.querySelector('.ok');
+    ok.textContent='Copied!';
+    setTimeout(()=>{ok.textContent=''},2000);
+  });
+}
+</script>
